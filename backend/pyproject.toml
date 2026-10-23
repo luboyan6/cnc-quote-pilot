@@ -46,6 +46,9 @@ dependencies = [
 # 数据库驱动按需安装：uv sync --extra mysql / --extra postgres / --extra sqlite
 # 默认（不指定 extra）只装核心依赖，启动时会提示缺少对应驱动
 [project.optional-dependencies]
+browser = [
+    "playwright==1.58.0",                   # 可选 CNC 浏览器执行器；浏览器二进制需单独安装
+]
 mysql = [
     "aiomysql>=0.2.0",                       # 异步驱动（ASYNC_DB_URI）
     "pymysql==1.2.0",                        # 同步驱动（DB_URI）
@@ -68,10 +71,14 @@ all-db = [
 
 [dependency-groups]
 dev = [
-    "fakeredis>=2.21.0,<3",   # 测试：内存 Redis，配合 TESTING
+    "basedpyright==1.40.2",          # Python 类型检查
+    "fakeredis>=2.21.0,<3",          # 测试：内存 Redis，配合 TESTING
+    "nodejs-wheel-binaries==24.19.0", # basedpyright 运行时 Node.js 二进制
+    "playwright==1.58.0",            # CNC 浏览器执行器
+    "pyee==13.0.1",                  # Playwright 事件依赖
     "pytest==9.0.2",
-    "pytest-asyncio>=0.24.0",  # 异步测试支持
-    "ruff==0.14.13",          # 代码检查/格式化
+    "pytest-asyncio>=0.24.0",        # 异步测试支持
+    "ruff==0.14.13",                 # 代码检查/格式化
 ]
 
 [tool.uv]

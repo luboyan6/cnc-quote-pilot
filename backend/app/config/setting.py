@@ -98,7 +98,7 @@ class Settings(BaseSettings):
     EXPIRE_ON_COMMIT: bool = False  # 是否在提交时过期
 
     # MySQL/PostgreSQL数据库连接
-    DATABASE_TYPE: Literal["mysql", "postgres", "sqlite"] = "mysql"
+    DATABASE_TYPE: Literal["mysql", "postgres", "sqlite"] = "postgres"
     DATABASE_HOST: str = "localhost"
     DATABASE_PORT: int = 3306
     DATABASE_USER: str = "root"

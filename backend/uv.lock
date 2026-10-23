@@ -228,6 +228,9 @@ all-db = [
     { name = "psycopg", extra = ["binary"] },
     { name = "pymysql" },
 ]
+browser = [
+    { name = "playwright" },
+]
 mysql = [
     { name = "aiomysql" },
     { name = "pymysql" },
@@ -242,7 +245,11 @@ sqlite = [
 
 [package.dev-dependencies]
 dev = [
+    { name = "basedpyright" },
     { name = "fakeredis" },
+    { name = "nodejs-wheel-binaries" },
+    { name = "playwright" },
+    { name = "pyee" },
     { name = "pytest" },
     { name = "pytest-asyncio" },
     { name = "ruff" },
@@ -277,6 +284,7 @@ requires-dist = [
     { name = "openai", specifier = "==2.46.0" },
     { name = "openpyxl", specifier = "==3.1.5" },
     { name = "paramiko", specifier = "==5.0.0" },
+    { name = "playwright", marker = "extra == 'browser'", specifier = "==1.58.0" },
     { name = "psutil", specifier = "==7.2.2" },
     { name = "psycopg", extras = ["binary"], marker = "extra == 'all-db'", specifier = "==3.3.2" },
     { name = "psycopg", extras = ["binary"], marker = "extra == 'postgres'", specifier = "==3.3.2" },
@@ -297,14 +305,30 @@ requires-dist = [
     { name = "uvicorn", specifier = "==0.49.0" },
     { name = "websockets", specifier = ">=16.0,<17.0" },
 ]
-provides-extras = ["mysql", "postgres", "sqlite", "all-db"]
+provides-extras = ["browser", "mysql", "postgres", "sqlite", "all-db"]
 
 [package.metadata.requires-dev]
 dev = [
+    { name = "basedpyright", specifier = "==1.40.2" },
     { name = "fakeredis", specifier = ">=2.21.0,<3" },
+    { name = "nodejs-wheel-binaries", specifier = "==24.19.0" },
+    { name = "playwright", specifier = "==1.58.0" },
+    { name = "pyee", specifier = "==13.0.1" },
     { name = "pytest", specifier = "==9.0.2" },
     { name = "pytest-asyncio", specifier = ">=0.24.0" },
     { name = "ruff", specifier = "==0.14.13" },
+]
+
+[[package]]
+name = "basedpyright"
+version = "1.40.2"
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
+dependencies = [
+    { name = "nodejs-wheel-binaries" },
+]
+sdist = { url = "https://pypi.tuna.tsinghua.edu.cn/packages/3a/36/1cf637b15704e4c1f09f8bcc48ab3bfaff089e7466565bd34d8d1dcc03e9/basedpyright-1.40.2.tar.gz", hash = "sha256:d4db36d095230379acc66c7e5fba7e4b50ca902f6e803d696782dd031cb8d7d7", size = 25559682, upload-time = "2026-10-04T11:28:30.415Z" }
+wheels = [
+    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/de/53/0031b22e118264a57a3b64dfc0c8f0659b81af5bccd419ac62933013c601/basedpyright-1.40.2-py3-none-any.whl", hash = "sha256:3a53aeb93a86675ded0e12bc27bd8476c1742356de07ad8cab67bff18110c690", size = 13694487, upload-time = "2026-10-04T11:28:26.271Z" },
 ]
 
 [[package]]
@@ -1254,6 +1278,22 @@ wheels = [
 ]
 
 [[package]]
+name = "nodejs-wheel-binaries"
+version = "24.19.0"
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
+sdist = { url = "https://pypi.tuna.tsinghua.edu.cn/packages/c0/76/7e97195e14346598565a0de4ca8bdbd5e634b3fb5b1ba590b7b1b89f8a63/nodejs_wheel_binaries-24.19.0.tar.gz", hash = "sha256:db217eef8cab8551667863379b08db4d9067403f6cbbe87481eb40edceb8aa9b", size = 8058, upload-time = "2026-08-19T21:47:19.671Z" }
+wheels = [
+    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/8c/52/0774b52c7be8151ad9d5aff44edc100c3f13d6d8eb3765f63ffa40e69fe8/nodejs_wheel_binaries-24.19.0-py2.py3-none-macosx_13_0_arm64.whl", hash = "sha256:e12cbfd69089504e42fb14194ce734a9dcf3eb38c820ca63dd511d36fb964e9c", size = 56047203, upload-time = "2026-08-19T21:46:43.448Z" },
+    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/67/3a/4fdbbfecf2c23d52c0e3f68de7f7c1b3c97a26d328c69c5f6c49c48e340e/nodejs_wheel_binaries-24.19.0-py2.py3-none-macosx_13_0_x86_64.whl", hash = "sha256:1c890adf4b7e6556ccc1ca66c866bb81884b6c9a581dee4e530dc7f78fb9d514", size = 56219459, upload-time = "2026-08-19T21:46:48.45Z" },
+    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/5f/a8/0147149415195c59b8a72a594916bfb80d6be4d586f9fbfda313889e0efc/nodejs_wheel_binaries-24.19.0-py2.py3-none-manylinux_2_28_aarch64.whl", hash = "sha256:4e029dadfae1295876063c96b236f673487e8c27379fe146c1e2250283520227", size = 60588256, upload-time = "2026-08-19T21:46:53.298Z" },
+    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/f4/89/6631d0982353da1bb7bc00bb1988f702822c62b42634f57999ee53b5c337/nodejs_wheel_binaries-24.19.0-py2.py3-none-manylinux_2_28_x86_64.whl", hash = "sha256:4196a947bcc883f2003ab101762d729f3e99b5e86b75bd09151563403e2eceb8", size = 61123607, upload-time = "2026-08-19T21:46:58.117Z" },
+    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/32/a2/fa30f0841e4602995782e124359f9b910c7b481d98decf61ef0b2fc3ebfb/nodejs_wheel_binaries-24.19.0-py2.py3-none-musllinux_1_2_aarch64.whl", hash = "sha256:352e048ab4dd35e7de5f338d1cc4fcbf77a0e93da30bf7336a8217ee246b31d7", size = 62632842, upload-time = "2026-08-19T21:47:03.42Z" },
+    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/18/01/22d97ca72213f66cc386ee638db30c2e62757fdf761c6029074bced83d1c/nodejs_wheel_binaries-24.19.0-py2.py3-none-musllinux_1_2_x86_64.whl", hash = "sha256:28d078b2ced9e2069516e652dc4b1380e7a1a7f2d3934eccd1611586d283ba4c", size = 63250653, upload-time = "2026-08-19T21:47:07.938Z" },
+    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/88/d1/e3be8fa327a795bcaf7a19cd84299e338a7bce32ff0665fdce9cfa22573c/nodejs_wheel_binaries-24.19.0-py2.py3-none-win_amd64.whl", hash = "sha256:67e3abeb9c3830cae8c8487ae8a2af7cc27dfa75af06145cee5ca7d1857c81bd", size = 42448503, upload-time = "2026-08-19T21:47:12.093Z" },
+    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/1d/37/34cf28ba1691a060174948a9927fe61091982d6048b2e403071a9acce443/nodejs_wheel_binaries-24.19.0-py2.py3-none-win_arm64.whl", hash = "sha256:d9074c665ea68b04e183d82482c86dc907d3a9bd15eb6cf85542cb785266bb36", size = 40090155, upload-time = "2026-08-19T21:47:16.032Z" },
+]
+
+[[package]]
 name = "openai"
 version = "2.46.0"
 source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
@@ -1306,6 +1346,25 @@ dependencies = [
 sdist = { url = "https://pypi.tuna.tsinghua.edu.cn/packages/62/93/dcc25d52f49022ae6175d15e6bd751f1acc99b98bc61fc55e5155a7be2e7/paramiko-5.0.0.tar.gz", hash = "sha256:36763b5b95c2a0dcfdf1abc48e48156ee425b21efe2f0e787c2dd5a95c0e5e79", size = 1548586, upload-time = "2026-05-09T18:28:52.256Z" }
 wheels = [
     { url = "https://pypi.tuna.tsinghua.edu.cn/packages/82/5b/eadf6d45de38d30ab603f49393b6cd2cbe7e233af8cf90197e32782b68a9/paramiko-5.0.0-py3-none-any.whl", hash = "sha256:b7044611c30140d9a75261653210e2002977b71a0497ff3ba0d98d7edbf62f7c", size = 208919, upload-time = "2026-05-09T18:28:50.295Z" },
+]
+
+[[package]]
+name = "playwright"
+version = "1.58.0"
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
+dependencies = [
+    { name = "greenlet" },
+    { name = "pyee" },
+]
+wheels = [
+    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/f8/c9/9c6061d5703267f1baae6a4647bfd1862e386fbfdb97d889f6f6ae9e3f64/playwright-1.58.0-py3-none-macosx_10_13_x86_64.whl", hash = "sha256:96e3204aac292ee639edbfdef6298b4be2ea0a55a16b7068df91adac077cc606", size = 42251098, upload-time = "2026-01-30T15:09:24.028Z" },
+    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/e0/40/59d34a756e02f8c670f0fee987d46f7ee53d05447d43cd114ca015cb168c/playwright-1.58.0-py3-none-macosx_11_0_arm64.whl", hash = "sha256:70c763694739d28df71ed578b9c8202bb83e8fe8fb9268c04dd13afe36301f71", size = 41039625, upload-time = "2026-01-30T15:09:27.558Z" },
+    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/e1/ee/3ce6209c9c74a650aac9028c621f357a34ea5cd4d950700f8e2c4b7fe2c4/playwright-1.58.0-py3-none-macosx_11_0_universal2.whl", hash = "sha256:185e0132578733d02802dfddfbbc35f42be23a45ff49ccae5081f25952238117", size = 42251098, upload-time = "2026-01-30T15:09:30.461Z" },
+    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/f1/af/009958cbf23fac551a940d34e3206e6c7eed2b8c940d0c3afd1feb0b0589/playwright-1.58.0-py3-none-manylinux1_x86_64.whl", hash = "sha256:c95568ba1eda83812598c1dc9be60b4406dffd60b149bc1536180ad108723d6b", size = 46235268, upload-time = "2026-01-30T15:09:33.787Z" },
+    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/d9/a6/0e66ad04b6d3440dae73efb39540c5685c5fc95b17c8b29340b62abbd952/playwright-1.58.0-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:8f9999948f1ab541d98812de25e3a8c410776aa516d948807140aff797b4bffa", size = 45964214, upload-time = "2026-01-30T15:09:36.751Z" },
+    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/0e/4b/236e60ab9f6d62ed0fd32150d61f1f494cefbf02304c0061e78ed80c1c32/playwright-1.58.0-py3-none-win32.whl", hash = "sha256:1e03be090e75a0fabbdaeab65ce17c308c425d879fa48bb1d7986f96bfad0b99", size = 36815998, upload-time = "2026-01-30T15:09:39.627Z" },
+    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/41/f8/5ec599c5e59d2f2f336a05b4f318e733077cd5044f24adb6f86900c3e6a7/playwright-1.58.0-py3-none-win_amd64.whl", hash = "sha256:a2bf639d0ce33b3ba38de777e08697b0d8f3dc07ab6802e4ac53fb65e3907af8", size = 36816005, upload-time = "2026-01-30T15:09:42.449Z" },
+    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/c8/c4/cc0229fea55c87d6c9c67fe44a21e2cd28d1d558a5478ed4d617e9fb0c93/playwright-1.58.0-py3-none-win_arm64.whl", hash = "sha256:32ffe5c303901a13a0ecab91d1c3f74baf73b84f4bedbb6b935f5bc11cc98e1b", size = 33085919, upload-time = "2026-01-30T15:09:45.71Z" },
 ]
 
 [[package]]
@@ -1554,6 +1613,18 @@ dependencies = [
 sdist = { url = "https://pypi.tuna.tsinghua.edu.cn/packages/07/60/1d1e59c9c90d54591469ada7d268251f71c24bdb765f1a8a832cee8c6653/pydantic_settings-2.14.1.tar.gz", hash = "sha256:e874d3bec7e787b0c9958277956ed9b4dd5de6a80e162188fdaff7c5e26fd5fa", size = 235551, upload-time = "2026-05-08T13:40:06.542Z" }
 wheels = [
     { url = "https://pypi.tuna.tsinghua.edu.cn/packages/ae/8d/f1af3832f5e6eb13ba94ee809e72b8ecb5eef226d27ee0bef7d963d943c7/pydantic_settings-2.14.1-py3-none-any.whl", hash = "sha256:6e3c7edfd8277687cdc598f56e5cff0e9bfff0910a3749deaa8d4401c3a2b9de", size = 60964, upload-time = "2026-05-08T13:40:04.958Z" },
+]
+
+[[package]]
+name = "pyee"
+version = "13.0.1"
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
+dependencies = [
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://pypi.tuna.tsinghua.edu.cn/packages/8b/04/e7c1fe4dc78a6fdbfd6c337b1c3732ff543b8a397683ab38378447baa331/pyee-13.0.1.tar.gz", hash = "sha256:0b931f7c14535667ed4c7e0d531716368715e860b988770fc7eb8578d1f67fc8", size = 31655, upload-time = "2026-02-14T21:12:28.044Z" }
+wheels = [
+    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/a0/c4/b4d4827c93ef43c01f599ef31453ccc1c132b353284fc6c87d535c233129/pyee-13.0.1-py3-none-any.whl", hash = "sha256:af2f8fede4171ef667dfded53f96e2ed0d6e6bd7ee3bb46437f77e3b57689228", size = 15659, upload-time = "2026-02-14T21:12:26.263Z" },
 ]
 
 [[package]]

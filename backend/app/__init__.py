@@ -53,6 +53,9 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
     yield
 
     try:
+        from app.modules.cnc.login.runtime import close_login_sessions
+
+        await close_login_sessions()
         await SchedulerUtil.shutdown(wait=True)
         logger.info("✅ 定时任务调度器已关闭")
         await redis_connect(app, status=False)

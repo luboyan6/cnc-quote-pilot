@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>Synthetic CNC browser test fixture</title>
+<body data-account="__ACCOUNT__" data-auth="__AUTH__">
+  <h1>Synthetic fixture only — no real CNC platform</h1>
+  <label>Synthetic session <input id="session-value"></label>
+  <button id="sign-in">Set synthetic session</button>
+  <p id="identity"></p>
+  <label>STEP file <input id="step" type="file" accept=".step,.stp"></label>
+  <button id="dynamic-picker">Create dynamic file picker</button>
+  <p id="upload-reference" hidden></p>
+  <pre id="upload-json" hidden></pre>
+  <label>Process <select id="process"><option>CNC milling</option><option>CNC turning</option></select></label>
+  <label>Material <select id="material"><option>Aluminium 6061</option><option>Steel 1045</option></select></label>
+  <label>Quantity <input id="quantity" value="1"></label>
+  <label>Finish <select id="finish"><option>As machined</option><option>Anodized</option></select></label>
+  <label>Length unit <select id="length_unit"><option>mm</option><option>inch</option></select></label>
+  <label>Synthetic item <input id="item-id"></label>
+  <label>Synthetic generation <input id="generation"></label>
+  <button id="arm-apply">Arm delayed Apply control</button>
+  <button id="apply" disabled>Apply</button>
+  <pre id="effective-json" hidden></pre>
+  <button id="submit">Calculate synthetic quote</button>
+  <pre id="quote-json" hidden></pre>
+  <pre id="counts"></pre>
+  <pre id="error"></pre>
+  <script>
+    const initialState = __STATE__;
+    const fields = ["process", "material", "quantity", "finish", "length_unit"];
+    function render(state) {
+      document.querySelector("#counts").textContent = JSON.stringify(state.counts);
+      for (const [name, value] of Object.entries(state.effective || {})) {
+        if (fields.includes(name)) document.getElementById(name).value = value;
+      }
+      for (const [selector, value] of [
+        ["#upload-json", state.upload],
+        ["#effective-json", state.effective],
+        ["#quote-json", state.quote],
+      ]) {
+        const output = document.querySelector(selector);
+        output.hidden = value === null;
+        output.textContent = value === null ? "" : JSON.stringify(value);
+      }
+      const reference = document.querySelector("#upload-reference");
+      reference.hidden = state.upload === null;
+      reference.textContent = state.upload?.reference || "";
+      document.querySelector("#identity").textContent =
+        document.body.dataset.account + ":" + document.body.dataset.auth;
+    }
+    async function call(path, payload) {
+      const response = await fetch(path, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(payload),
+      });
+      if (!response.ok) throw new Error("synthetic API failed");
+      const state = await response.json();
+      render(state);
+    }
+    async function upload(event) {
+      const file = event.target.files[0];
+      const buffer = await file.arrayBuffer();
+      const bytes = new Uint8Array(buffer);
+      const digest = new Uint8Array(await crypto.subtle.digest("SHA-256", buffer));
+      await call("/synthetic/upload", {
+        name: file.name,
+        mime_type: file.type,
+        size: file.size,
+        bytes_base64: btoa(String.fromCharCode(...bytes)),
+        sha256: Array.from(digest, b => b.toString(16).padStart(2, "0")).join(""),
+      });
+    }
+    function showError(error) {
+      document.querySelector("#error").textContent = String(error);
+    }
+    document.querySelector("#step").addEventListener("change", event => upload(event).catch(showError));
+    document.querySelector("#dynamic-picker").addEventListener("click", () => {
+      const input = document.createElement("input");
+      input.type = "file";
+      input.id = "dynamic-step";
+      input.hidden = true;
+      input.addEventListener("change", event => upload(event).catch(showError));
+      document.body.append(input);
+      input.click();
+    });
+    document.querySelector("#sign-in").addEventListener("click", () => {
+      const value = document.querySelector("#session-value").value;
+      document.cookie = "synthetic_session=" + encodeURIComponent(value) + "; Secure; SameSite=Strict; Path=/";
+      localStorage.setItem("synthetic_session", value);
+      document.body.dataset.auth = "authenticated";
+      document.querySelector("#identity").textContent = document.body.dataset.account + ":authenticated";
+    });
+    document.querySelector("#arm-apply").addEventListener("click", () => {
+      document.querySelector("#apply").disabled = true;
+      setTimeout(() => {document.querySelector("#apply").disabled = false;}, 250);
+    });
+    document.querySelector("#apply").addEventListener("click", () => {
+      const effective = Object.fromEntries(fields.map(name => [name, document.getElementById(name).value]));
+      call("/synthetic/configure", {
+        effective,
+        item_id: document.querySelector("#item-id").value,
+        generation: document.querySelector("#generation").value,
+      }).catch(showError);
+    });
+    document.querySelector("#submit").addEventListener("click", () => call("/synthetic/submit", {}).catch(showError));
+    render(initialState);
+  </script>
+</body>
+</html>

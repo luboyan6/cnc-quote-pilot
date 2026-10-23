@@ -1,0 +1,9 @@
+# 插件元数据（可选）：供文档、运维与 module_application.portal 展示使用。
+# 不用于运行时 pip 安装依赖；依赖见仓库根目录 pyproject.toml / uv.lock。
+
+name = "cnc"
+title = "图纸文件"
+version = "1.0.0"
+description = "图纸文件模块（cnc_part），由代码生成器产出。"
+optional = true
+tags = ["generated"]
