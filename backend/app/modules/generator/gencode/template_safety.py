@@ -264,6 +264,10 @@ def safe_python_type(value: object, default: str = "str") -> str:
     返回:
     - str: 合法标识符形式的类型名。
     """
+    # 类型注解只遵守 Python 规则；int/float 是 JS 保留字，但必须保留其 Python 类型名。
+    text = "" if value is None else str(value).strip()
+    if _IDENTIFIER_RE.fullmatch(text) and text not in _PYTHON_RESERVED:
+        return text[:_IDENTIFIER_MAX_LENGTH]
     return safe_ident(value, default=default)
 
 

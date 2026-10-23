@@ -89,6 +89,7 @@ def setup_logger() -> None:
         "websockets",
         "sqlalchemy",
         "aiomysql",
+        "aiosqlite",  # DEBUG 包含 DBAPI 绑定值，不能让账号凭据进入日志。
         "tzlocal",
     ):
         logging.getLogger(name).setLevel(logging.WARNING)

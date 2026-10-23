@@ -1,4 +1,5 @@
 import os
+import sys
 from typing import Annotated
 
 import typer
@@ -20,7 +21,7 @@ alembic_cfg: Config = Config(file_="alembic.ini")
 def run(
     env: Annotated[EnvironmentEnum, typer.Option("--env", help="运行环境 (dev, prod)")] = EnvironmentEnum.DEV,
 ) -> None:
-    """按指定环境加载配置并启动 Uvicorn（dev 环境 DEBUG=True 自动开启 reload）。
+    """按指定环境启动 Uvicorn；非 Windows 环境按 DEBUG 自动开启 reload。
 
     参数:
     - env (EnvironmentEnum): 运行环境，对应 `--env`。
@@ -30,17 +31,23 @@ def run(
     """
     os.environ["ENVIRONMENT"] = env.value
 
-    from app.utils.banner import worship
-    typer.secho(message=f"{worship()}", fg=typer.colors.GREEN)
     from app.config.setting import settings
+
+    is_windows = sys.platform == "win32"
+    # A shared listener cannot be registered with a new Windows IOCP after
+    # reload/worker restart (WinError 87). Keep Proactor for Playwright, but
+    # let the serving process create and own its listener.
+    if is_windows and (settings.DEBUG or settings.WORKERS > 1):
+        typer.echo("Windows 使用单进程 Proactor 模式，已关闭热重载和多 worker；修改代码后请手动重启服务。", err=True)
 
     uvicorn.run(
         app="app:create_app",
         factory=True,
         host=settings.SERVER_HOST,
         port=settings.SERVER_PORT,
-        reload=settings.DEBUG,
-        workers=settings.WORKERS,
+        reload=settings.DEBUG and not is_windows,
+        workers=1 if is_windows else settings.WORKERS,
+        loop="app.core.server_loop:subprocess_event_loop" if is_windows else "auto",
         log_config=None,
         timeout_graceful_shutdown=5,
     )

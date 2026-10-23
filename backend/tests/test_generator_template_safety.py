@@ -27,6 +27,7 @@ from app.modules.generator.gencode.template_safety import (
     is_safe_identifier,
     reserved_word_reason,
     safe_ident,
+    safe_python_type,
     unescape_template_text,
     vue_label,
 )
@@ -165,6 +166,44 @@ def test_is_safe_identifier() -> None:
     assert not is_safe_identifier(EVIL_COLUMN_NAME)
     assert not is_safe_identifier("")
     assert not is_safe_identifier("a" * 65)
+
+
+@pytest.mark.parametrize("python_type", ["int", "float", "bool", "str", "bytes", "dict", "list", "datetime", "Decimal"])
+def test_python_types_preserve_runtime_names(python_type: str) -> None:
+    assert safe_python_type(python_type) == python_type
+
+
+async def test_generated_numeric_annotations_resolve_at_runtime() -> None:
+    table = _table(
+        [
+            _column(column_name="id", python_type="int", column_type="integer", is_pk=True),
+            _column(column_name="item_count", python_type="int", column_type="integer", is_query=True),
+            _column(column_name="unit_price", python_type="float", column_type="real", is_query=True),
+        ]
+    )
+    rendered = _python_outputs(await _render_all(table))
+    # 编译通过不能发现未定义的类型名；实际执行 Schema 并校验字段。
+    source = next(content for name, content in rendered.items() if name.endswith("schema.py"))
+    namespace: dict[str, Any] = {}
+    exec(compile(source, "<generated-schema>", "exec"), namespace)
+    schema = namespace["DemoCreateSchema"]
+    value = schema(item_count="2", unit_price="3.5")
+    assert value.item_count == 2
+    assert value.unit_price == 3.5
+
+
+def test_generated_jsonb_import_resolves_at_runtime(monkeypatch: pytest.MonkeyPatch) -> None:
+    from app.common.constant import GenConstant
+
+    # conftest 使用 SQLite；这里模拟 PostgreSQL 的 JSONB 映射。
+    monkeypatch.setitem(GenConstant.DB_TO_SQLALCHEMY, "jsonb", "JSONB")
+    table = _table([_column(column_name="pricing_context", python_type="dict", column_type="jsonb")])
+    imports = Jinja2TemplateUtil.get_model_import_list(table)
+    namespace: dict[str, Any] = {}
+    exec("\n".join(imports), namespace)
+    from sqlalchemy.dialects.postgresql import JSONB
+
+    assert namespace["JSONB"] is JSONB
 
 
 def test_vue_label_strips_markup() -> None:

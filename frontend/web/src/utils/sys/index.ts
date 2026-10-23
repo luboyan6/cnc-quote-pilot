@@ -6,7 +6,6 @@ import VersionAPI from "@/api/module_system/version";
 import { ElNotification } from "element-plus";
 import { useUserStore } from "@stores";
 import { Auth, StorageConfig } from "@utils";
-import { BANNER } from "../../../build/banner";
 
 // -----------------------------
 // Console banner：ANSI 转义码生成网站  https://patorjk.com/software/taag/#p=testall&f=Fire+Font-k&t=fastapiadmin%0A&x=none&v=4&h=4&w=80&we=false
@@ -16,7 +15,6 @@ export function printConsoleBanner(): void {
   const asciiArt = `
 \x1b[32m欢迎使用 ${StorageConfig.appName}-v${StorageConfig.CURRENT_VERSION}！
 \x1b[0m
-\x1b[32m${BANNER}
 \x1b[0m
 \x1b[36m哇！你居然在用我的项目～ 好用的话别忘了去 GitHub 点个 ★Star 呀，你的支持就是我更新的超强动力！祝使用体验满分💯
 \x1b[0m

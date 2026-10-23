@@ -82,3 +82,5 @@ AGENTS.md
 backend/*.sql
 backend/sql/**/*.sql
 *.dump
+.playwright-mcp/
+backend/tests/.tmp/

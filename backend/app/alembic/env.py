@@ -13,6 +13,7 @@ from app.config.setting import settings
 from app.core.base_model import MappedBase
 from app.core.logger import logger
 from app.utils.import_util import ImportUtil
+from app.utils.migration_util import preserve_postgresql_identity
 
 ALEMBIC_VERSION_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -21,7 +22,9 @@ ImportUtil.find_models(MappedBase)
 alembic_config = context.config
 
 target_metadata = MappedBase.metadata
-alembic_config.set_main_option("sqlalchemy.url", settings.ASYNC_DB_URI)
+# ConfigParser 默认启用 `%` 插值；数据库密码经 quote_plus 编码后可能包含 `%40` 等转义序列，
+# 写入 Alembic 配置前必须将 `%` 加倍，读取时 ConfigParser 会还原为原始 URL。
+alembic_config.set_main_option("sqlalchemy.url", settings.ASYNC_DB_URI.replace("%", "%%"))
 
 
 def run_migrations_offline() -> None:
@@ -67,6 +70,7 @@ def run_migrations_online() -> None:
             directives: list[MigrationScript],
         ) -> None:
             script = directives[0]
+            preserve_postgresql_identity(context, script, target_metadata)
 
             # 检查所有操作集是否为空
             # 注意：清空 directives 与 `alembic check` 命令（1.9+）互斥——check 会取

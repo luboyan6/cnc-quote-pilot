@@ -44,6 +44,10 @@ class CRUDBase[ModelType: ModelMixin, CreateSchemaType, UpdateSchemaType]:
         self.auth = auth
         self.db = db
 
+    def _log_error(self, message: str) -> None:
+        """Allow secret-bearing repositories to omit traceback locals safely."""
+        logger.exception(message)
+
     # ── 辅助方法 ──────────────────────────────────────────────────────
 
     def _get_pk_col(self) -> ColumnElement:
@@ -80,7 +84,7 @@ class CRUDBase[ModelType: ModelMixin, CreateSchemaType, UpdateSchemaType]:
             result: Result = await self.db.execute(sql)
             return result.scalars().first()
         except Exception:
-            logger.exception('获取查询失败')
+            self._log_error('获取查询失败')
             raise
 
     async def get_or_404(
@@ -115,7 +119,7 @@ class CRUDBase[ModelType: ModelMixin, CreateSchemaType, UpdateSchemaType]:
             result: Result = await self.db.execute(count_sql)
             return result.scalar() or 0
         except Exception:
-            logger.exception('统计失败')
+            self._log_error('统计失败')
             raise
 
     async def get_list(
@@ -138,7 +142,7 @@ class CRUDBase[ModelType: ModelMixin, CreateSchemaType, UpdateSchemaType]:
             result: Result = await self.db.execute(sql)
             return result.scalars().all()
         except Exception:
-            logger.exception('列表查询失败')
+            self._log_error('列表查询失败')
             raise
 
     async def page(
@@ -187,7 +191,7 @@ class CRUDBase[ModelType: ModelMixin, CreateSchemaType, UpdateSchemaType]:
                 items=items,
             )
         except Exception:
-            logger.exception('分页查询失败')
+            self._log_error('分页查询失败')
             raise
 
     # ── 写入 ──────────────────────────────────────────────────────────
@@ -224,7 +228,7 @@ class CRUDBase[ModelType: ModelMixin, CreateSchemaType, UpdateSchemaType]:
 
             return obj
         except Exception:
-            logger.exception('创建失败')
+            self._log_error('创建失败')
             raise
 
     async def update(self, id: int, data: UpdateSchemaType | dict[str, Any]) -> ModelType:
@@ -263,7 +267,7 @@ class CRUDBase[ModelType: ModelMixin, CreateSchemaType, UpdateSchemaType]:
         except CustomException:
             raise
         except Exception:
-            logger.exception('更新失败')
+            self._log_error('更新失败')
             raise
 
     async def delete(self, ids: list[int]) -> None:
@@ -280,7 +284,7 @@ class CRUDBase[ModelType: ModelMixin, CreateSchemaType, UpdateSchemaType]:
             await self.db.execute(sql)
             await self.db.flush()
         except Exception:
-            logger.exception('删除失败')
+            self._log_error('删除失败')
             raise
 
     async def clear(self) -> None:
@@ -295,7 +299,7 @@ class CRUDBase[ModelType: ModelMixin, CreateSchemaType, UpdateSchemaType]:
             await self.db.execute(sql)
             await self.db.flush()
         except Exception:
-            logger.exception('清空失败')
+            self._log_error('清空失败')
             raise
 
     async def set(self, ids: list[int], include_deleted: bool = False, **kwargs) -> None:
@@ -309,7 +313,7 @@ class CRUDBase[ModelType: ModelMixin, CreateSchemaType, UpdateSchemaType]:
             await self.db.execute(sql)
             await self.db.flush()
         except Exception:
-            logger.exception('批量更新失败')
+            self._log_error('批量更新失败')
             raise
 
     # ── 条件与排序 ────────────────────────────────────────────────────

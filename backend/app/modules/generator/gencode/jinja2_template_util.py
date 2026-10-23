@@ -698,7 +698,11 @@ class Jinja2TemplateUtil:
                 data_type = cls.get_db_type(column.column_type)
                 if data_type in GenConstant.COLUMNTYPE_GEOMETRY:
                     import_list.add("from geoalchemy2 import Geometry")
-                import_list.add(f"from sqlalchemy import {StringUtil.get_mapping_value_by_key_ignore_case(GenConstant.DB_TO_SQLALCHEMY, data_type)}")
+                sqlalchemy_type = StringUtil.get_mapping_value_by_key_ignore_case(GenConstant.DB_TO_SQLALCHEMY, data_type)
+                if sqlalchemy_type == "JSONB":
+                    import_list.add("from sqlalchemy.dialects.postgresql import JSONB")
+                else:
+                    import_list.add(f"from sqlalchemy import {sqlalchemy_type}")
             # 处理datetime类型的导入
             if column.python_type and column.python_type in GenConstant.TYPE_DATE:
                 if column.python_type == "datetime":

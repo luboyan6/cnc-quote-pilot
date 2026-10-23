@@ -22,7 +22,8 @@ def create_sync_engine(db_url: str = settings.DB_URI) -> Engine:
     try:
         engine: Engine = create_engine(
             url=db_url,
-            echo=settings.DATABASE_ECHO,
+            hide_parameters=True,
+            echo=bool(settings.DATABASE_ECHO),  # 禁用 debug 级结果行回显；绑定值由 hide_parameters 隐藏。
             pool_pre_ping=settings.POOL_PRE_PING,
             pool_recycle=settings.POOL_RECYCLE,
         )
@@ -46,7 +47,8 @@ def create_async_engine_and_session(db_url: str = settings.ASYNC_DB_URI) -> tupl
         if settings.DATABASE_TYPE == "sqlite":
             async_engine = create_async_engine(
                 url=db_url,
-                echo=settings.DATABASE_ECHO,
+                hide_parameters=True,
+                echo=bool(settings.DATABASE_ECHO),
                 echo_pool=settings.ECHO_POOL,
                 pool_pre_ping=settings.POOL_PRE_PING,
                 pool_recycle=settings.POOL_RECYCLE,
@@ -63,7 +65,8 @@ def create_async_engine_and_session(db_url: str = settings.ASYNC_DB_URI) -> tupl
         else:
             async_engine = create_async_engine(
                 url=db_url,
-                echo=settings.DATABASE_ECHO,
+                hide_parameters=True,
+                echo=bool(settings.DATABASE_ECHO),
                 echo_pool=settings.ECHO_POOL,
                 pool_pre_ping=settings.POOL_PRE_PING,
                 pool_recycle=settings.POOL_RECYCLE,

@@ -21,6 +21,7 @@ from app.modules.system.versions.model import VersionModel
 from app.modules.task.cronjob.node.model import NodeModel
 from app.modules.task.storage.node.model import StorageNodeModel
 from app.utils.import_util import ImportUtil
+from app.utils.migration_util import has_destructive_upgrade
 
 # 导入全部模型：与 alembic env.py 保持一致，确保全局 MapperRegistry 的 FK 引用可完整解析
 ImportUtil.find_models(MappedBase)
@@ -131,7 +132,6 @@ class InitializeData:
         - False: 模型无变更（env.py 拦截空迁移，未产出文件）
         - None: 生成失败，或含破坏性 DROP 被拦截删除（warning/error 已说明原因）
         """
-        import re
         from datetime import datetime
 
         from alembic import command
@@ -147,16 +147,12 @@ class InitializeData:
         if not new_files:
             return False
 
-        # drop_* 覆盖 drop_table/drop_column/drop_index/drop_constraint 等；op.execute 拦手写 DROP 语句
-        dangerous = re.compile(r"""^\s*op\.drop_\w+\(|op\.execute\(["'].*\bDROP\b""", re.MULTILINE)
         for path in new_files:
             content = path.read_text(encoding="utf-8")
-            # 仅检查 upgrade 段（downgrade 中的 DROP 是正常回滚逻辑）
-            upgrade_part = content.split("def upgrade", 1)[-1].split("def downgrade", 1)[0]
-            if dangerous.search(upgrade_part):
+            if has_destructive_upgrade(content):
                 path.unlink()
-                logger.error(f"🚫 自动迁移 {path.name} 含破坏性 DROP 操作，已删除并中止自动应用")
-                logger.error("请手动执行 python main.py revision --env=dev 生成迁移，审查确认后 python main.py upgrade --env=dev")
+                logger.warning(f"⚠️ 自动迁移 {path.name} 含删除操作，已跳过；保留现有数据并继续启动")
+                logger.warning("如需删除字段，请手动生成并审查迁移，再执行 python main.py upgrade --env=dev")
                 return None
         return True
 
