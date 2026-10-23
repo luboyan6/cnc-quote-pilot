@@ -2,8 +2,8 @@
 # 不用于运行时 pip 安装依赖；依赖见仓库根目录 pyproject.toml / uv.lock。
 
 name = "cnc"
-title = "图纸文件"
+title = "图纸参数配置表"
 version = "1.0.0"
-description = "图纸文件模块（cnc_part），由代码生成器产出。"
+description = "图纸参数配置表模块（cnc_part_config），由代码生成器产出。"
 optional = true
 tags = ["generated"]
