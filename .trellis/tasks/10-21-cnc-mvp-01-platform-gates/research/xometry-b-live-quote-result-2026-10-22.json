@@ -1,0 +1,237 @@
+{
+  "record_date": "2026-10-22",
+  "platform": "Xometry US",
+  "sample": "B",
+  "filename": "292.1301C (M12-TO-CS-ADAPTER).STEP",
+  "local_size": 1929001,
+  "local_sha256": "d3884475c50c336e3f13e5ca1665605104dc1ccc4113e962c62bff46b21e25e6",
+  "local_identity_rechecked": true,
+  "remote_byte_identity_proved": false,
+  "quote_alias": "XU-trial-02",
+  "quote_id": "Q78-4652-8737",
+  "authority": "D-15 existing scope; D-16 user confirms No for STEP in E:/AIWorkspace/3d_models",
+  "observations": [
+    {
+      "at": "2026-10-22T03:33:43.405Z",
+      "action": "opened Get an Instant Quote once"
+    },
+    {
+      "action": "selected original B once via observed native file input",
+      "receipt": "exact B filename and 1 part ready"
+    },
+    {
+      "at": "2026-10-22T03:35:23.716Z",
+      "action": "Start Instant Quote clicked once after receipt check"
+    },
+    {
+      "at": "2026-10-22T03:35:37.143Z",
+      "action": "read classification dialog",
+      "No_checked": true,
+      "radio_value": "confirmed-not-itar"
+    },
+    {
+      "at": "2026-10-22T03:35:49.616Z",
+      "action": "Continue clicked once retaining No",
+      "basis": "D-16 user factual confirmation"
+    },
+    {
+      "at": "2026-10-22T04:33:05.206Z",
+      "action": "first direct settled read",
+      "quantity": 1,
+      "note": "Earlier analyzing state and long tool return gap do not measure parsing duration"
+    },
+    {
+      "at": "2026-10-22T04:33:16.888Z",
+      "action": "quantity change 1->2 once"
+    },
+    {
+      "at": "2026-10-22T04:34:18.024Z",
+      "action": "quantity2 settled read; input enabled"
+    },
+    {
+      "at": "2026-10-22T04:34:30.104Z",
+      "action": "quantity change 2->5 once"
+    },
+    {
+      "at": "2026-10-22T04:35:10.438Z",
+      "action": "quantity5 settled read; configuration unchanged"
+    },
+    {
+      "at": "2026-10-22T04:35:21.536Z",
+      "action": "opened Edit Configuration for DFM read only"
+    },
+    {
+      "at": "2026-10-22T04:35:32.809Z",
+      "action": "read all eight DFM checks Passed and actual configuration; 25% Save label visible"
+    },
+    {
+      "at": "2026-10-22T04:35:45.383Z",
+      "action": "Cancel clicked; no configuration change/save"
+    },
+    {
+      "at": "2026-10-22T04:36:00.731Z",
+      "action": "quantity5/tier readback after Cancel; controlled switches false"
+    },
+    {
+      "at": "2026-10-22T04:37:08.244Z",
+      "action": "direct read after one same-quote Page.reload(ignoreCache=false)",
+      "quantity": 5,
+      "geometry_configuration_prices_unchanged": true,
+      "controlled_switches": [
+        "false",
+        "false"
+      ]
+    },
+    {
+      "at": "2026-10-22T04:37:31.907Z",
+      "action": "official public CSA fetched with credentials omit; HTTP 200",
+      "source_url": "https://www.xometry.com/service-agreement/",
+      "phrase_found": "All prices are calculated in US Dollars"
+    }
+  ],
+  "status": "Controlled numeric quote evidence at quantities 1/2/5; full E2/product/dual-provider acceptance not passed",
+  "quotes": [
+    {
+      "quantity": 1,
+      "observed_at": "2026-10-22T04:33:05.206Z",
+      "tiers": {
+        "economy": {
+          "unit_price": "206.56",
+          "line_total": "206.56",
+          "arrival_label": "Nov 9",
+          "displayed_reference_line_total": "264.04",
+          "displayed_savings": "57.48"
+        },
+        "standard": {
+          "unit_price": "583.64",
+          "line_total": "583.64",
+          "arrival_label": "Nov 2",
+          "displayed_reference_line_total": "778.19",
+          "displayed_savings": "194.55"
+        },
+        "fastest": {
+          "unit_price": "833.71",
+          "line_total": "833.71",
+          "arrival_label": "Oct 29",
+          "displayed_reference_line_total": "1111.61",
+          "displayed_savings": "277.90"
+        }
+      }
+    },
+    {
+      "quantity": 2,
+      "observed_at": "2026-10-22T04:34:18.024Z",
+      "tiers": {
+        "economy": {
+          "unit_price": "119.88",
+          "line_total": "239.76",
+          "arrival_label": "Nov 9",
+          "displayed_reference_line_total": "319.67",
+          "displayed_savings": "79.91"
+        },
+        "standard": {
+          "unit_price": "412.08",
+          "line_total": "824.16",
+          "arrival_label": "Nov 2",
+          "displayed_reference_line_total": "1098.88",
+          "displayed_savings": "274.72"
+        },
+        "fastest": {
+          "unit_price": "594.57",
+          "line_total": "1189.14",
+          "arrival_label": "Oct 29",
+          "displayed_reference_line_total": "1585.52",
+          "displayed_savings": "396.38"
+        }
+      }
+    },
+    {
+      "quantity": 5,
+      "observed_at": "2026-10-22T04:35:10.438Z",
+      "tiers": {
+        "economy": {
+          "unit_price": "59.22",
+          "line_total": "296.10",
+          "arrival_label": "Nov 9",
+          "displayed_reference_line_total": "394.79",
+          "displayed_savings": "98.69"
+        },
+        "standard": {
+          "unit_price": "213.13",
+          "line_total": "1065.65",
+          "arrival_label": "Nov 2",
+          "displayed_reference_line_total": "1420.85",
+          "displayed_savings": "355.20"
+        },
+        "fastest": {
+          "unit_price": "314.87",
+          "line_total": "1574.35",
+          "arrival_label": "Oct 29",
+          "displayed_reference_line_total": "2099.12",
+          "displayed_savings": "524.77"
+        }
+      }
+    }
+  ],
+  "product_acceptance": false,
+  "order_checkout_or_payment_performed": false,
+  "currency": "USD",
+  "currency_basis": "Same Xometry US official Customer Service Agreement section 4.1 source XU-E12 as A; cards show $ without ISO field",
+  "price_scope": "Displayed unit price and part line total, not order/landed total",
+  "taxes": null,
+  "destination": null,
+  "landed_cost": null,
+  "effective": {
+    "process": "CNC Machining",
+    "material": "Aluminum 6061-T6x (Best Available)",
+    "preferred_subprocess": "No Preference",
+    "finish": "Standard",
+    "threads": 0,
+    "inserts": 0,
+    "tolerance": "±.005in (±0.13mm)",
+    "roughness": "Smallest 125uin/3.2um Ra",
+    "inspection": "Standard Inspection",
+    "dimensions_mm": [
+      "28",
+      "25",
+      "9.50"
+    ],
+    "volume_mm3": "1970.97",
+    "cross_platform_equivalence": null,
+    "dfm": {
+      "observed_at": "2026-10-22T04:35:32.809Z",
+      "label": "DFM Check Complete (8/8)",
+      "checks": {
+        "Void Check": "Passed",
+        "Large Part Dimension": "Passed",
+        "Wall Thickness Check": "Passed",
+        "Model Fidelity": "Passed",
+        "Floating Parts Check": "Passed",
+        "File Type": "Passed",
+        "Model Shell Count": "Passed",
+        "Part Exceeds Maximum Size for This Finish": "Passed"
+      },
+      "interpretation": "Platform checks show Passed, not a manufacturing guarantee"
+    }
+  },
+  "price_character": "Explicit current UI numeric offer with displayed savings/reference totals; promotion eligibility, duration and regular undiscounted price semantics unknown. Not a regular-price baseline.",
+  "production_lead_time_semantics_verified": false,
+  "parse_duration_measured": false,
+  "remaining": [
+    "Production lead-time definition and arrival-date year not verified for these cards",
+    "Remote byte checksum unavailable",
+    "Regular price, promotion eligibility/duration and tax/destination/landed scope unknown",
+    "Cross-platform parameter equivalence and RapidDirect real quote remain unproved",
+    "No product DB/session/Agent automation acceptance"
+  ],
+  "checks": {
+    "Decimal_unit_times_quantity_equals_line_total": "9/9 PASS",
+    "reference_minus_savings_equals_line_total": "9/9 PASS"
+  },
+  "reload_persistence": {
+    "verified": true,
+    "at": "2026-10-22T04:37:08.244Z",
+    "quantity": 5,
+    "scope": "Provider UI quantity/geometry/configuration/three tier readback only; not product DB/session lifecycle"
+  }
+}

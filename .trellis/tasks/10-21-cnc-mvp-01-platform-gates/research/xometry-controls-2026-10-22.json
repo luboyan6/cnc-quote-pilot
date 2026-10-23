@@ -1,0 +1,409 @@
+{
+  "record_date": "2026-10-22",
+  "platform_code": "xometry_us",
+  "quote_ref": "Q78-4652-8737",
+  "scope": "existing B configuration read only; no option selected or configuration saved",
+  "controls": {
+    "at": "2026-10-22T05:56:17.824Z",
+    "fields": [
+      {
+        "tag": "DIV",
+        "id": "sect-process",
+        "role": "group",
+        "testid": null,
+        "text": "Process\nCNC\nBased on your CAD file.",
+        "aria": null,
+        "expanded": null
+      },
+      {
+        "tag": "SPAN",
+        "id": "label-process",
+        "role": "heading",
+        "testid": null,
+        "text": "Process",
+        "aria": null,
+        "expanded": null
+      },
+      {
+        "tag": "DIV",
+        "id": "option-select-process",
+        "role": "button",
+        "testid": null,
+        "text": "CNC",
+        "aria": "Process: CNC",
+        "expanded": "false"
+      },
+      {
+        "tag": "DIV",
+        "id": "row-cnc-subprocess-select",
+        "role": "group",
+        "testid": null,
+        "text": "Preferred Subprocess\nNo Preference\nNo Preference",
+        "aria": null,
+        "expanded": null
+      },
+      {
+        "tag": "DIV",
+        "id": "sect-cnc-subprocess-select",
+        "role": null,
+        "testid": null,
+        "text": "Preferred Subprocess",
+        "aria": null,
+        "expanded": null
+      },
+      {
+        "tag": "DIV",
+        "id": "sect-cnc-subprocess-select-body",
+        "role": null,
+        "testid": null,
+        "text": "No Preference",
+        "aria": null,
+        "expanded": null
+      },
+      {
+        "tag": "DIV",
+        "id": "option-select-cnc-subprocess-select",
+        "role": "button",
+        "testid": null,
+        "text": "No Preference",
+        "aria": "Preferred Subprocess: No Preference",
+        "expanded": "false"
+      },
+      {
+        "tag": "DIV",
+        "id": "row-material-select",
+        "role": "group",
+        "testid": null,
+        "text": "Material\nAluminum 6061-T6x (Best Available)\nAluminum 6061-T6x (Best Available)\n$$$$$",
+        "aria": null,
+        "expanded": null
+      },
+      {
+        "tag": "DIV",
+        "id": "sect-material-select",
+        "role": null,
+        "testid": null,
+        "text": "Material",
+        "aria": null,
+        "expanded": null
+      },
+      {
+        "tag": "DIV",
+        "id": "sect-material-select-body",
+        "role": null,
+        "testid": null,
+        "text": "Aluminum 6061-T6x (Best Available)\n$$$$$",
+        "aria": null,
+        "expanded": null
+      },
+      {
+        "tag": "DIV",
+        "id": "material-select-material-select",
+        "role": "button",
+        "testid": null,
+        "text": "Aluminum 6061-T6x (Best Available)\n$$$$$",
+        "aria": "Material: Aluminum 6061-T6x (Best Available)",
+        "expanded": "false"
+      },
+      {
+        "tag": "DIV",
+        "id": "row-finish-multiselect",
+        "role": "group",
+        "testid": null,
+        "text": "Finish\nStandard\nSelect at least one finish for this part.\nStandard",
+        "aria": null,
+        "expanded": null
+      },
+      {
+        "tag": "DIV",
+        "id": "sect-finish-multiselect",
+        "role": null,
+        "testid": null,
+        "text": "Finish",
+        "aria": null,
+        "expanded": null
+      },
+      {
+        "tag": "DIV",
+        "id": "sect-finish-multiselect-body",
+        "role": null,
+        "testid": null,
+        "text": "Select at least one finish for this part.\nStandard",
+        "aria": null,
+        "expanded": null
+      },
+      {
+        "tag": "DIV",
+        "id": "finish-subcopy-finish-multiselect",
+        "role": null,
+        "testid": null,
+        "text": "Select at least one finish for this part.",
+        "aria": null,
+        "expanded": null
+      },
+      {
+        "tag": "DIV",
+        "id": "finish-select-finish-multiselect",
+        "role": "button",
+        "testid": null,
+        "text": "Standard",
+        "aria": "Finish: Standard",
+        "expanded": "false"
+      },
+      {
+        "tag": "DIV",
+        "id": "row-tolerances-radio-metal",
+        "role": "group",
+        "testid": null,
+        "text": "Precision Tolerance\n±.005″ (±0.13mm)\n±.005″ (±0.13mm)",
+        "aria": null,
+        "expanded": null
+      },
+      {
+        "tag": "DIV",
+        "id": "sect-tolerances-radio-metal",
+        "role": null,
+        "testid": null,
+        "text": "Precision Tolerance",
+        "aria": null,
+        "expanded": null
+      },
+      {
+        "tag": "DIV",
+        "id": "sect-tolerances-radio-metal-body",
+        "role": null,
+        "testid": null,
+        "text": "±.005″ (±0.13mm)",
+        "aria": null,
+        "expanded": null
+      },
+      {
+        "tag": "DIV",
+        "id": "option-select-tolerances-radio-metal",
+        "role": "button",
+        "testid": null,
+        "text": "±.005″ (±0.13mm)",
+        "aria": "Precision Tolerance: ±.005″ (±0.13mm)",
+        "expanded": "false"
+      },
+      {
+        "tag": "DIV",
+        "id": "row-surface-roughness-select",
+        "role": "group",
+        "testid": null,
+        "text": "Precision Surface Roughness\n125uin/3.2um Ra\nSurface roughness will be held to 125uin/3.2um Ra unless otherwise specified.\n125uin/3.2um Ra",
+        "aria": null,
+        "expanded": null
+      },
+      {
+        "tag": "DIV",
+        "id": "sect-surface-roughness-select",
+        "role": null,
+        "testid": null,
+        "text": "Precision Surface Roughness",
+        "aria": null,
+        "expanded": null
+      },
+      {
+        "tag": "DIV",
+        "id": "sect-surface-roughness-select-body",
+        "role": null,
+        "testid": null,
+        "text": "Surface roughness will be held to 125uin/3.2um Ra unless otherwise specified.\n125uin/3.2um Ra",
+        "aria": null,
+        "expanded": null
+      },
+      {
+        "tag": "DIV",
+        "id": "option-select-surface-roughness-select",
+        "role": "button",
+        "testid": null,
+        "text": "125uin/3.2um Ra",
+        "aria": "Precision Surface Roughness: 125uin/3.2um Ra",
+        "expanded": "false"
+      },
+      {
+        "tag": "DIV",
+        "id": "part-marking-select-silkscreen-checkbox",
+        "role": "button",
+        "testid": null,
+        "text": "Select markings",
+        "aria": "Part Marking: Select markings",
+        "expanded": "false"
+      },
+      {
+        "tag": "INPUT",
+        "id": "cert-material-traceability-binary-cert-material-traceability",
+        "role": null,
+        "testid": null,
+        "text": "",
+        "aria": null,
+        "expanded": null
+      },
+      {
+        "tag": "SPAN",
+        "id": "cert-material-traceability-binary-cert-material-traceability-label",
+        "role": null,
+        "testid": null,
+        "text": "Material Traceability",
+        "aria": null,
+        "expanded": null
+      },
+      {
+        "tag": "INPUT",
+        "id": "cert-material-cert-binary-cert-material-cert",
+        "role": null,
+        "testid": null,
+        "text": "",
+        "aria": null,
+        "expanded": null
+      },
+      {
+        "tag": "SPAN",
+        "id": "cert-material-cert-binary-cert-material-cert-label",
+        "role": null,
+        "testid": null,
+        "text": "Material Certification",
+        "aria": null,
+        "expanded": null
+      }
+    ],
+    "checked": [
+      {
+        "id": "binary-sw-threads-and-tapped-holes-checkbox",
+        "role": "switch",
+        "checked": "false"
+      },
+      {
+        "id": "binary-sw-inserts-checkbox",
+        "role": "switch",
+        "checked": "false"
+      },
+      {
+        "id": "stack-radio-inspection-radio-standard-inspection",
+        "role": null,
+        "checked": true
+      },
+      {
+        "id": "stack-radio-inspection-radio-formal-inspection",
+        "role": null,
+        "checked": false
+      },
+      {
+        "id": "stack-radio-inspection-radio-cmm-inspection",
+        "role": null,
+        "checked": false
+      },
+      {
+        "id": "stack-radio-inspection-radio-fair-inspection",
+        "role": null,
+        "checked": false
+      },
+      {
+        "id": "stack-radio-inspection-radio-source-inspection",
+        "role": null,
+        "checked": false
+      },
+      {
+        "id": "stack-radio-inspection-radio-build-hold-inspection",
+        "role": null,
+        "checked": false
+      },
+      {
+        "id": "stack-radio-inspection-radio-custom-inspection",
+        "role": null,
+        "checked": false
+      },
+      {
+        "id": "cert-itar-ear-binary-cert-itar-ear",
+        "role": null,
+        "checked": false
+      },
+      {
+        "id": "cert-cmmc-cert-binary-cert-cmmc-cert",
+        "role": null,
+        "checked": false
+      },
+      {
+        "id": "cert-as9100-binary-cert-as9100",
+        "role": null,
+        "checked": false
+      },
+      {
+        "id": "cert-iso9001-binary-cert-iso9001",
+        "role": null,
+        "checked": false
+      },
+      {
+        "id": "cert-hardware-cert-binary-cert-hardware-cert",
+        "role": null,
+        "checked": false
+      },
+      {
+        "id": "cert-c-of-c-cert-binary-cert-c-of-c-cert",
+        "role": null,
+        "checked": false
+      },
+      {
+        "id": "cert-material-traceability-binary-cert-material-traceability",
+        "role": null,
+        "checked": false
+      },
+      {
+        "id": "cert-jcp-certified-binary-cert-jcp-certified",
+        "role": null,
+        "checked": false
+      },
+      {
+        "id": "cert-material-cert-binary-cert-material-cert",
+        "role": null,
+        "checked": false
+      }
+    ]
+  },
+  "tolerance_dropdown": {
+    "at": "2026-10-22T05:57:13.955Z",
+    "field": "Precision Tolerance",
+    "expanded": "true",
+    "options": [
+      {
+        "role": "listbox",
+        "id": "_r_4b_",
+        "text": "±.005″ (±0.13mm)\nThis option overrides any tighter tolerances on your drawing, except for reamed holes less than ø1″, which will be held to drawing requirements.\n±.010″ (±0.25mm)\nThis cost-effective option overrides any tighter tolerances on your drawing, except for reamed holes less than ø1″, which will be held to drawing requirements. Inspection is limited to Standard.\nThis part requires tolerances tighter than ±.005″ (±0.13mm)\nYou must indicate these critical features and their required tolerance on a drawing, excluding reamed holes less than ø1″, which will be held to drawing requirements.",
+        "selected": null
+      },
+      {
+        "role": "option",
+        "id": "_r_4b_-opt-0",
+        "text": "±.005″ (±0.13mm)\nThis option overrides any tighter tolerances on your drawing, except for reamed holes less than ø1″, which will be held to drawing requirements.",
+        "selected": "true"
+      },
+      {
+        "role": "option",
+        "id": "_r_4b_-opt-1",
+        "text": "±.010″ (±0.25mm)\nThis cost-effective option overrides any tighter tolerances on your drawing, except for reamed holes less than ø1″, which will be held to drawing requirements. Inspection is limited to Standard.",
+        "selected": "false"
+      },
+      {
+        "role": "option",
+        "id": "_r_4b_-opt-2",
+        "text": "This part requires tolerances tighter than ±.005″ (±0.13mm)\nYou must indicate these critical features and their required tolerance on a drawing, excluding reamed holes less than ø1″, which will be held to drawing requirements.",
+        "selected": "false"
+      }
+    ]
+  },
+  "cancel": {
+    "at": "2026-10-22T05:57:16.145Z",
+    "action": "clicked observed Cancel once after closing dropdown; no Save Configuration",
+    "return_readback_confirmed": false
+  },
+  "bindings_runtime_verified": false,
+  "limits": [
+    "Observed DOM IDs are locator candidates scoped to this quote/UI version, not frozen runtime bindings",
+    "React-generated option IDs are transient and must not be hardcoded",
+    "150 MB text applies to Supporting Files uploader, not primary CAD limits",
+    "±0.13mm tolerance choice overrides tighter drawing tolerances except specified reamed-hole exception; preserve full description",
+    "No cross-provider canonical equivalence established"
+  ]
+}
+

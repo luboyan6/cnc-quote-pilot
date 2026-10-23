@@ -1,0 +1,36 @@
+{
+  "status": "PASS",
+  "scope": "isolated SDK feasibility; not backend integration or live acceptance",
+  "recorded_at_utc": "2026-10-21T11:56:44Z",
+  "python": "3.12.13",
+  "deepagents": "0.7.29",
+  "saver": "langgraph-checkpoint-sqlite==3.1.2",
+  "langgraph_checkpoint": "4.3.0",
+  "model": "scripted_fixture",
+  "live_provider": "NOT_TESTED",
+  "platform_quote": "NOT_TESTED",
+  "external_connections_during_sdk_execution": "blocked by fixture",
+  "turns_before_restart": 52,
+  "message_channel": "DeltaChannel",
+  "pickle_fallback": false,
+  "requirements_sha256": "f5adcea312994191392aba9446a2431b9d639db2ee986c4c74cbe70eb0e2b68f",
+  "reports": [
+    {
+      "phase": "write",
+      "checkpoint_step": 260,
+      "message_count_before": 158,
+      "digest_before": "08363dbea9395bd569a3356a68d7c1413931b51e795c580c9f51ebebcbe291c3",
+      "tools": ["ProbeDecision", "inspect_fixture"]
+    },
+    {
+      "phase": "read",
+      "checkpoint_step": 260,
+      "message_count_before": 158,
+      "digest_before": "08363dbea9395bd569a3356a68d7c1413931b51e795c580c9f51ebebcbe291c3",
+      "thread_isolation": "PASS",
+      "restart_append": "PASS",
+      "observation_not_repeated": "PASS",
+      "tools": ["ProbeDecision", "inspect_fixture"]
+    }
+  ]
+}

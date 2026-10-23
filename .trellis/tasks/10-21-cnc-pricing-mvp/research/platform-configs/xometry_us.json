@@ -1,0 +1,401 @@
+{
+  "$schema": "./platform.schema.json",
+  "schema_version": "1.0.0",
+  "config_version": "2026-10-22.3",
+  "platform_code": "xometry_us",
+  "provider_group": "xometry",
+  "display_name": "Xometry US",
+  "lifecycle": "draft",
+  "automation_enabled": false,
+  "site": {
+    "entry_url": "https://www.xometry.com/",
+    "allowed_hosts": [
+      "www.xometry.com",
+      "xometry.com",
+      "login.xometry.com"
+    ],
+    "observed_locale": null,
+    "currency": "USD",
+    "quote_path_observed": "/quoting/quote/{quote_id}/"
+  },
+  "evidence": [
+    {
+      "id": "USER-PERMISSION-D15-20261022",
+      "kind": "user_confirmation",
+      "observed_date": "2026-10-22",
+      "note": "Six existing requirements confirmed allowed; see parent decisions D-15. Not an independent agreement review or export classification."
+    },
+    {
+      "id": "XU-UPLOAD-DECLARATION-20261022",
+      "kind": "controlled_live_ui_observation",
+      "observed_at_utc": "2026-10-22T02:27:57.705Z",
+      "origin": "https://www.xometry.com",
+      "path": "/quoting/home/",
+      "note": "Historical checkpoint at the recorded time, superseded in part by D-16 and controlled quote/reload observations below: Account menu shows Log Out. A attached once: 1 part ready; Start Instant Quote once exposed export-control classification. Paused before Continue; no classification submitted, no geometry/price or quote ID established. See child 01 research/live-validation-2026-10-22.md."
+    },
+    {
+      "id": "XU-LIVE-ENTRY-20261021",
+      "kind": "controlled_live_entry_observation",
+      "observed_at_utc": "2026-10-21T09:24:22.507Z",
+      "origin": "https://www.xometry.com",
+      "path": "/quoting/home/",
+      "note": "Historical checkpoint at the recorded time, superseded in part by D-16 and controlled quote/reload observations below: Official Get an Instant Quote reached a Dashboard with No Quotes Yet and upload/Start Instant Quote controls. Account identity/session reuse not verified; no CAD uploaded or quote requested. G-01 stopped further automated collection pending applicable project permission."
+    },
+    {
+      "id": "XU-OFFICIAL-GUIDE-20261021",
+      "kind": "official_public_document",
+      "url": "https://www.xometry.com/how-xometry-works/",
+      "observed_date": "2026-10-21",
+      "note": "Historical checkpoint at the recorded time, superseded in part by D-16 and controlled quote/reload observations below: Official guide describes upload/configure/DFM/price and lead time; no authenticated account, dropdown catalog or quote has been inspected."
+    },
+    {
+      "id": "USER-XOMETRY-US-20261021",
+      "kind": "user_decision",
+      "observed_date": "2026-10-21",
+      "note": "Historical checkpoint at the recorded time, superseded in part by D-16 and controlled quote/reload observations below: User selected Xometry US; China entry inaccessible in user's environment. US account registration is not yet confirmed."
+    },
+    {
+      "id": "USER-CLASSIFICATION-D16-20261022",
+      "kind": "user_confirmation",
+      "observed_date": "2026-10-22",
+      "note": "D-16 user answer confirms No for all authorized STEP in the supplied directory, including A/B/C. Not an independent export classification; no extension to other files or declarations. Earlier before-Continue pause is historical."
+    },
+    {
+      "id": "XU-CONTROLLED-QUOTE-20261022",
+      "kind": "coordinator_supplied_controlled_live_ui_observation",
+      "observed_date": "2026-10-22",
+      "quote_ref": "Q59-6980-1120",
+      "research_alias": "XU-trial-01",
+      "sample": "A",
+      "evidence_ref": ".trellis/tasks/10-21-cnc-mvp-01-platform-gates/research/xometry-live-quote-2026-10-22.md",
+      "observation_ids": [
+        "XU-E01",
+        "XU-E02",
+        "XU-E03",
+        "XU-E04",
+        "XU-E06",
+        "XU-E08",
+        "XU-E09",
+        "XU-E11"
+      ],
+      "dimensions_mm": [
+        "28",
+        "25",
+        "5.47"
+      ],
+      "volume_mm3": "1860.85",
+      "quantities_observed": [
+        1,
+        2,
+        5
+      ],
+      "effective": {
+        "process": "CNC Machining",
+        "material": "Aluminum 6061-T6x (Best Available)",
+        "preferred_subprocess": "No Preference",
+        "finish": "Standard",
+        "threads": 0,
+        "inserts": 0,
+        "tolerance": "±.005in (±0.13mm)",
+        "roughness": "Smallest 125uin/3.2um Ra",
+        "inspection": "Standard Inspection"
+      },
+      "note": "Nonzero geometry and numeric tier unit/part-line quotes at 1/2/5 with changed-quantity freshness; DFM Check Complete 8/8 has a wall-thickness warning. Remote byte identity and cross-platform equivalence not proved. Quote already open at initial read; preceding Continue actor unknown. No reupload or quote recreation in this continuation."
+    },
+    {
+      "id": "XU-E12",
+      "kind": "coordinator_supplied_official_document_verification",
+      "observed_date": "2026-10-22",
+      "source": "Xometry Customer Service Agreement section 4.1",
+      "note": "Currency normalized to USD from official agreement; cards show $ only, no live-card ISO extraction. Full source reference retained in child-01 structured observations. Taxes, destination and landed cost remain unknown."
+    },
+    {
+      "id": "XU-RELOAD-20261022",
+      "kind": "coordinator_supplied_controlled_live_ui_observation",
+      "observed_at_utc": "2026-10-22T03:23:37.878Z",
+      "quote_ref": "Q59-6980-1120",
+      "observation_ids": [
+        "XU-E13",
+        "XU-E14"
+      ],
+      "quantity": 5,
+      "currency": "USD",
+      "currency_evidence_ref": "XU-E12",
+      "tiers": {
+        "economy": {
+          "unit_price": "48.74",
+          "line_total": "243.70",
+          "arrival_label": "Nov6"
+        },
+        "standard": {
+          "unit_price": "150.43",
+          "line_total": "752.15",
+          "arrival_label": "Oct30"
+        },
+        "fastest": {
+          "unit_price": "220.81",
+          "line_total": "1104.05",
+          "arrival_label": "Oct29"
+        }
+      },
+      "note": "Single Page.reload(ignoreCache:false) succeeded; quantity 5, nonzero geometry, effective configuration, prices/arrival labels and false visible switches retained. Provider UI reload persistence only, not product DB persistence or managed session lifecycle. Arrival labels are not verified production lead times; no year inferred."
+    },
+    {
+      "id": "XU-B-CONTROLLED-20261022",
+      "kind": "coordinator_direct_controlled_live_observation",
+      "observed_at_utc": "2026-10-22T04:37:08.244Z",
+      "quote_ref": "Q78-4652-8737",
+      "sample": "B",
+      "evidence_ref": ".trellis/tasks/10-21-cnc-mvp-01-platform-gates/research/xometry-b-live-quote-2026-10-22.md",
+      "note": "Original B uploaded once, No Continue per D-16 once; nonzero geometry, 8/8 DFM labels Passed, 1/2/5 numeric offers and quantity5 readback after one reload. A/B offers show savings/reference totals; not regular-price baseline. Production lead-time, tax/destination/landed cost, parameter equivalence and product acceptance remain unverified."
+    }
+  ],
+  "readiness": {
+    "catalog": "partial_material_labels_observed_not_frozen",
+    "ui_bindings": "manual_observations_only_no_verified_runtime_bindings",
+    "conditional_options": "not_verified",
+    "quote_extraction": "manual_numeric_tiers_observed_runtime_extractor_not_verified",
+    "live_quote": "manual_AB_nonzero_quantities_1_2_5_UI_reload_quantity_5_observed_not_full_E2",
+    "blockers": [
+      "D-15 requirement scope and D-16 No declaration scope confirmed by user; provider agreement not independently reviewed; full technical gates still apply",
+      "Account Log Out affordance observed; legal identity and managed session lifecycle remain unverified; provider quote UI reload is not product DB persistence",
+      "Some material/effective labels observed, but complete catalog, platform IDs, conditional options and production bindings/mappings are not frozen or verified",
+      "No exact material/finish/tolerance equivalence to RapidDirect or two-sample/two-provider baseline established; RapidDirect remains zero geometry/no price",
+      "USD has official agreement basis, not direct ISO card extraction; arrival labels and secondary leadTimeDays=7 do not establish production duration semantics",
+      "Remote byte identity, full E2/product acceptance, taxes, destination and landed cost remain unproved",
+      "A/B current offers show savings/reference totals; promotion eligibility/duration and regular-price baseline not established"
+    ]
+  },
+  "input_files": {
+    "extensions": [
+      ".step",
+      ".stp"
+    ],
+    "public_doc_max_bytes": null,
+    "public_doc_limit_text": null,
+    "conservative_upload_limit_bytes": null,
+    "limit_evidence": null,
+    "live_limit_verified": false
+  },
+  "supported_processes": [
+    "CNC_MACHINING"
+  ],
+  "parameters": {
+    "process": {
+      "label": "process",
+      "value_type": "enum",
+      "required": null,
+      "options_status": "effective_label_observed_runtime_options_not_frozen",
+      "options": [],
+      "binding": null,
+      "canonical_mapping": {},
+      "dependencies": []
+    },
+    "material": {
+      "label": "material",
+      "value_type": "enum",
+      "required": null,
+      "options_status": "effective_label_observed_runtime_options_not_frozen",
+      "options": [],
+      "binding": null,
+      "canonical_mapping": {},
+      "dependencies": [
+        "process"
+      ]
+    },
+    "surface_finish": {
+      "label": "surface_finish",
+      "value_type": "multi_enum",
+      "required": null,
+      "options_status": "effective_label_observed_runtime_options_not_frozen",
+      "options": [],
+      "binding": null,
+      "canonical_mapping": {},
+      "dependencies": [
+        "process",
+        "material"
+      ]
+    },
+    "finish_color": {
+      "label": "finish_color",
+      "value_type": "enum",
+      "required": null,
+      "options_status": "not_observed",
+      "options": [],
+      "binding": null,
+      "canonical_mapping": {},
+      "dependencies": [
+        "surface_finish"
+      ]
+    },
+    "roughness": {
+      "label": "roughness",
+      "value_type": "enum",
+      "required": null,
+      "options_status": "effective_label_observed_runtime_options_not_frozen",
+      "options": [],
+      "binding": null,
+      "canonical_mapping": {},
+      "dependencies": [
+        "material",
+        "surface_finish"
+      ]
+    },
+    "quantity": {
+      "label": "quantity",
+      "value_type": "integer",
+      "required": null,
+      "options_status": "manual_values_1_2_5_observed_bounds_and_runtime_binding_unverified",
+      "options": [],
+      "binding": null,
+      "canonical_mapping": {},
+      "dependencies": []
+    },
+    "cosmetic_part": {
+      "label": "cosmetic_part",
+      "value_type": "boolean",
+      "required": null,
+      "options_status": "not_observed",
+      "options": [],
+      "binding": null,
+      "canonical_mapping": {},
+      "dependencies": []
+    },
+    "inserts": {
+      "label": "inserts",
+      "value_type": "boolean",
+      "required": null,
+      "options_status": "not_observed",
+      "options": [],
+      "binding": null,
+      "canonical_mapping": {},
+      "dependencies": []
+    },
+    "part_marking": {
+      "label": "part_marking",
+      "value_type": "enum",
+      "required": null,
+      "options_status": "not_observed",
+      "options": [],
+      "binding": null,
+      "canonical_mapping": {},
+      "dependencies": []
+    },
+    "inspection_report": {
+      "label": "inspection_report",
+      "value_type": "enum",
+      "required": null,
+      "options_status": "effective_label_observed_runtime_options_not_frozen",
+      "options": [],
+      "binding": null,
+      "canonical_mapping": {},
+      "dependencies": []
+    },
+    "tolerance": {
+      "label": "tolerance",
+      "value_type": "enum",
+      "required": null,
+      "options_status": "effective_label_observed_runtime_options_not_frozen",
+      "options": [],
+      "binding": null,
+      "canonical_mapping": {},
+      "dependencies": []
+    },
+    "lead_time_option": {
+      "label": "lead_time_option",
+      "value_type": "enum",
+      "required": null,
+      "options_status": "not_observed",
+      "options": [],
+      "binding": null,
+      "canonical_mapping": {},
+      "dependencies": []
+    }
+  },
+  "ui_variants": {
+    "authenticated_quote": {
+      "verification": "manual_quote_and_configuration_read_quantity_changes_and_single_reload_observed_no_runtime_bindings",
+      "configure_action": null,
+      "apply_action": null,
+      "field_keys": [],
+      "readiness_warnings": [
+        "Do not reuse RapidDirect selectors, option IDs, quantity bounds or inferred currency",
+        "Effective labels and manual prices are recorded in evidence; no field binding, option ID or canonical equivalence is implied"
+      ]
+    }
+  },
+  "observed_unsaved_selection": null,
+  "catalog": {
+    "scope": {
+      "sample": "A",
+      "quote_ref": "Q59-6980-1120",
+      "note": "Partial material dropdown read and effective labels in evidence; not a frozen runtime catalog"
+    },
+    "completeness": "partial_observation_not_frozen",
+    "process_options": [],
+    "material_groups": [],
+    "current_material_finish_options": [],
+    "current_roughness_options": []
+  },
+  "quote_extraction": {
+    "status": "manual_tier_amounts_observed_USD_document_basis_production_lead_time_and_runtime_locators_unverified",
+    "required_fields": [
+      "amount",
+      "currency",
+      "price_scope",
+      "lead_time_text",
+      "effective_parameters",
+      "quoted_at",
+      "evidence_ref"
+    ],
+    "locators": {
+      "amount": null,
+      "currency": null,
+      "price_scope": null,
+      "lead_time_text": null,
+      "quote_status": null,
+      "remote_quote_ref": null
+    },
+    "unknown_tax_shipping": null,
+    "amount_serialization": "decimal_string",
+    "raw_material_price_is_quote": false,
+    "lead_time_rule": "preserve raw text; distinguish production duration, ship date, transit and delivery date; do not invent dates"
+  },
+  "policy": {
+    "unknown_option": "reject",
+    "missing_required": "stop_and_report",
+    "silent_substitution": false,
+    "empty_string_is_none": false,
+    "cross_platform_material_equivalence": "explicit_mapping_and_full_snapshot_only",
+    "forbidden_config_keys": [
+      "password",
+      "cookie",
+      "token",
+      "storage_state",
+      "javascript",
+      "eval",
+      "exec",
+      "system_prompt"
+    ],
+    "forbidden_actions": [
+      "purchase",
+      "checkout",
+      "place_order",
+      "payment",
+      "change_account_security"
+    ]
+  },
+  "test_intent": {
+    "status": "suggested_not_frozen",
+    "process": "CNC_MACHINING",
+    "material": "ALUMINUM_6061_T6",
+    "quantity_cases": [
+      1,
+      2,
+      5
+    ],
+    "surface_finish": "NO_ADDED_FINISH",
+    "roughness": "AS_MACHINED_RA3_2",
+    "note": "Desired comparison intent only. No mapping is usable until Xometry US choices, temper/standard/finish and price scope are independently verified."
+  }
+}

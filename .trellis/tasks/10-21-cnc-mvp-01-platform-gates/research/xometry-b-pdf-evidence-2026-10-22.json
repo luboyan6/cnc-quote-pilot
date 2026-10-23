@@ -1,0 +1,222 @@
+{
+  "record_date": "2026-10-22",
+  "platform_code": "xometry_us",
+  "provider_group": "xometry",
+  "quote_alias": "XU-trial-02",
+  "quote_id": "Q78-4652-8737",
+  "record_scope": "Sanitized transcription of coordinator-observed PDF viewer visual and accessibility evidence; author performed local artifact checks only",
+  "authority": "Existing D-15 controlled quotation scope and D-16 directory-specific No confirmation; D-17 first-provider order",
+  "source": {
+    "ui_control": "Download PDF",
+    "observed_host": "api.xometry.com",
+    "observed_path": "/v2/quotes/Q78-4652-8737/generate_pdf",
+    "navigation_method": "Normal UI control opened the PDF viewer; not a fabricated or replayed API fetch",
+    "runtime_allowlist_modified": false,
+    "page_count": 2,
+    "raw_pdf_download_succeeded": false,
+    "raw_pdf_archived": false,
+    "raw_pdf_sha256": null
+  },
+  "evidence": [
+    {
+      "id": "XU-BPDF-E01",
+      "kind": "coordinator_visual_inspection_of_pdf_viewer_page_1",
+      "captured_at_utc": "2026-10-22T07:05:33.819Z",
+      "note": "Quote-details region was omitted by accessibility extraction; visual inspection is decisive for duration, ship condition and quote-generation fields",
+      "artifact_ref": "evidence.local/xometry-b-economy-pdf-page1-20261022.png.dpapi"
+    },
+    {
+      "id": "XU-BPDF-E02",
+      "kind": "coordinator_pdf_viewer_accessibility_transcription",
+      "pages": [1, 2],
+      "observed_at_utc": null,
+      "note": "Effective parameters and page-2 restrictions transcribed by coordinator; exact separate observation timestamp unavailable"
+    },
+    {
+      "id": "XU-BPDF-E03",
+      "kind": "coordinator_ui_navigation_observation",
+      "source_ref": "source",
+      "observed_at_utc": null
+    },
+    {
+      "id": "XU-BPDF-E04",
+      "kind": "local_encrypted_screenshot_integrity",
+      "artifact_ref": "evidence.local/xometry-b-economy-pdf-page1-20261022.png.dpapi",
+      "original_format": "PNG screenshot of viewer page 1, not PDF bytes",
+      "original_png_sha256": "23ce1aea119136962137ee47d2be7a49cd4d43945bbb50006dc47c652cd2a835",
+      "encrypted_sha256": "0307025453ae9321147e783cddf0c0be1d9230703524ec21eb2003a2fb2b8cec",
+      "encryption": "Windows DPAPI CurrentUser",
+      "dpapi_roundtrip_byte_equality": "PASS_COORDINATOR_REPORTED",
+      "original_png_hash_basis": "Coordinator-reported hash before encryption; author did not decrypt or inspect original image",
+      "encrypted_file_hash_check": "PASS_AUTHOR_EXECUTED",
+      "git_check_ignore": "PASS_AUTHOR_EXECUTED",
+      "plaintext_image_committed": false
+    }
+  ],
+  "part": {
+    "sample": "B",
+    "filename": "292.1301C (M12-TO-CS-ADAPTER).STEP",
+    "part_id": "4B3F930",
+    "version": "0",
+    "origin_raw": "Made Internationally",
+    "dimensions_mm": ["28", "25", "9.50"],
+    "volume_mm3": "1970.97",
+    "quantity": 5,
+    "evidence_ref": "XU-BPDF-E01",
+    "local_identity_prior_evidence": "xometry-b-live-quote-result-2026-10-22.json",
+    "local_sha256_from_prior_evidence": "d3884475c50c336e3f13e5ca1665605104dc1ccc4113e962c62bff46b21e25e6",
+    "remote_byte_checksum_available": false,
+    "remote_byte_identity_proved": false
+  },
+  "effective_parameters": {
+    "process": "CNC Machining",
+    "preferred_subprocess": "No Preference",
+    "material": "Aluminum 6061-T6x (Best Available)",
+    "finish": "Standard",
+    "threads": 0,
+    "inserts": 0,
+    "tolerance_raw": "±.005in (±0.13mm)",
+    "roughness_raw": "Smallest 125uin/3.2um Ra",
+    "inspection": "Standard Inspection",
+    "tier": "Economy",
+    "evidence_ref": "XU-BPDF-E02",
+    "label_transcription_basis": "Coordinator reports same effective labels as prior B; formatting normalized for sanitized record, not claimed verbatim full PDF text",
+    "cross_platform_equivalence_verified": false
+  },
+  "money": {
+    "current_unit_price": "59.22",
+    "part_line_total": "296.10",
+    "struck_original_unit_price": "78.96",
+    "currency": "USD",
+    "currency_basis": "Prior XU-E12 official US Customer Service Agreement section 4.1; no claim of direct PDF ISO extraction",
+    "scope": "Observed part unit price and quantity-5 line total; not an order or landed total",
+    "shipping_raw": "Calculated at checkout",
+    "shipping_amount": null,
+    "tax_amount": null,
+    "landed_total": null,
+    "destination": null,
+    "price_character": "Current discounted offer with struck comparison amount; regular-price baseline and promotion eligibility/duration unverified",
+    "evidence_ref": "XU-BPDF-E01"
+  },
+  "lead_time": {
+    "raw": "8 business days",
+    "minimum_days": 8,
+    "maximum_days": 8,
+    "basis": "business_days",
+    "explicit_production_label_verified": false,
+    "start_event": null,
+    "ship_date_raw": "Tuesday, Nov. 03",
+    "ship_date_iso": null,
+    "ship_date_year_explicitly_observed": false,
+    "online_order_condition_raw": "when ordering online by 11:59 PM EDT on Thursday, October 22",
+    "order_cutoff_clock_raw": "11:59 PM EDT",
+    "order_cutoff_date_raw": "Thursday, October 22",
+    "email_order_condition": "Order requests emailed to support after 8 PM EDT will be processed the following business day",
+    "arrival_date": null,
+    "production_duration_derived_from_arrival": false,
+    "transit_duration": null,
+    "holiday_calendar": null,
+    "evidence_ref": "XU-BPDF-E01"
+  },
+  "quote_timing_and_restrictions": {
+    "quoted_on_raw": "10/22/2026 3:04 AM EDT",
+    "quoted_on_label": "QUOTED ON",
+    "quote_generation_evidence_ref": "XU-BPDF-E01",
+    "validity_statement": "Price valid for 30 days since generation",
+    "validity_days_as_stated": 30,
+    "valid_until": null,
+    "validity_end_timestamp_derived": false,
+    "delivery_window_condition": "Estimated delivery window recalculated at actual order",
+    "model_interpretation_limit": "Model does not automatically extract threads or nongeometric specifications",
+    "duties_and_fees": "Customer responsibility",
+    "restriction_evidence_ref": "XU-BPDF-E02"
+  },
+  "freshness": {
+    "amounts_match_prior_quantity_5_economy": true,
+    "prior_evidence": "xometry-b-live-quote-result-2026-10-22.json",
+    "pdf_generation_time_proves_repricing": false,
+    "new_same_parameter_recalculation_proved": false,
+    "note": "PDF generation timestamp and unchanged amounts do not prove a new price calculation; prior changed-quantity and reload evidence retains its own scope"
+  },
+  "supplemental_account_identity": {
+    "source": "Coordinator direct CDP browser reads, separate from PDF capture",
+    "evidence": [
+      {
+        "id": "XU-ACCOUNT-E01",
+        "observed_at_utc": "2026-10-22T07:37:43.336Z",
+        "path": "/user-settings",
+        "kind": "direct_settings_read_and_in_browser_account_fingerprint"
+      },
+      {
+        "id": "XU-ACCOUNT-E02",
+        "observed_at_utc": "2026-10-22T07:38:06.499Z",
+        "kind": "in_browser_comparison_of_settings_email_and_pdf_prepared_for_email",
+        "comparison_result": true,
+        "raw_identity_saved": false
+      }
+    ],
+    "anonymous_account_fingerprint": "e2c0d68bdb99a33f28381a7b97598e5b2d0692ef13d7d722feb6fe3dc308affa",
+    "fingerprint_algorithm": "SHA-256 of cnc-task01-xometry-account-v1: followed by normalized lowercase account email; computed in browser",
+    "fingerprint_algorithm_version": "cnc-task01-xometry-account-v1",
+    "settings_email_matches_pdf_prepared_for_email": true,
+    "observed_account_to_pdf_linkage_established": true,
+    "raw_account_email": null,
+    "settings_labels": [
+      "Your email is not verified",
+      "Verify your email to activate Multi-Factor Authentication"
+    ],
+    "email_verified": false,
+    "email_mfa_switch": false,
+    "account_fully_activated_verified": false,
+    "legal_account_ownership_independently_verified": false,
+    "ability_to_quote_denied_inferred": false,
+    "existing_quote_reachability": "Observed separately in the existing controlled B evidence; email-verification label does not negate that observation",
+    "verification_sent": false,
+    "security_setting_changed": false,
+    "takeover_capability": "user_confirmed_browser_takeover_available",
+    "takeover_user_statement": "可以在浏览器中完成",
+    "takeover_confirmation_scope": "User confirms ability to complete email verification/challenge in browser; no OTP is requested in chat and no successful verification is claimed",
+    "password_or_otp_stage_observed": false,
+    "managed_session_restoration_tested": false,
+    "G01_completed": false,
+    "G02_completed": false
+  },
+  "supplemental_login_entry": {
+    "evidence_id": "XU-LOGIN-ENTRY-20261022-0711",
+    "source": "Coordinator clean Playwright observation, separate from PDF",
+    "observed_at_utc_as_reported": "2026-10-22T07:11Z",
+    "timestamp_precision": "minute",
+    "host": "login.xometry.com",
+    "path": "/u/login/identifier",
+    "controls_observed": ["Business Email textbox", "Continue", "Google button"],
+    "email_submitted": false,
+    "password_stage_observed": false,
+    "otp_stage_observed": false,
+    "identity_verified": false,
+    "session_restore_tested": false,
+    "G02_completed": false
+  },
+  "acceptance": {
+    "full_E2_passed": false,
+    "E3_passed": false,
+    "product_acceptance_passed": false,
+    "raw_pdf_preservation_complete": false,
+    "encrypted_page1_screenshot_preserved": true,
+    "order_checkout_payment_or_manual_rfq_performed_for_this_evidence": false,
+    "remaining": [
+      "Account email/PDF association is established and browser takeover capability is user-confirmed; email remains unverified and successful verification/challenge recovery is untested",
+      "Ordinary login/recovery feasibility beyond identifier entry; password/OTP and managed-session restoration untested",
+      "First-provider full requested/effective parameter mapping/version and supported second-material/finish evidence",
+      "Consolidated sample/receipt/part/quote/evidence chain and separate parameter evidence",
+      "Price-nature and review-state classification with observed restrictions",
+      "Runtime adapter, secure sessions, intent stores, DB/evidence persistence and Agent implementation belong to 02"
+    ]
+  },
+  "checks": {
+    "decimal_current_unit_times_quantity_equals_line_total": "PASS_AUTHOR_EXECUTED",
+    "amounts_match_prior_B_quantity5_economy": "PASS_AUTHOR_EXECUTED",
+    "encrypted_artifact_sha256": "PASS_AUTHOR_EXECUTED",
+    "local_links_and_references": "PASS_AUTHOR_EXECUTED",
+    "scope": "Local record integrity only; no browser, decryption, model, application DB or product test performed by author"
+  }
+}

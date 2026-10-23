@@ -1,0 +1,287 @@
+{
+  "record_date": "2026-10-22",
+  "platform": "Xometry US",
+  "evidence_origin": "Initial coordinator observations transcribed by research writer; XU-E13/E14 directly verified by continuation coordinator",
+  "context": {
+    "quote_alias": "XU-trial-01",
+    "route_template": "/quoting/quote/{quote_id}/",
+    "initial_read_at": "2026-10-22T02:58:39.143Z",
+    "quote_already_open_at_initial_read": true,
+    "preceding_transition_actor": null,
+    "continue_reupload_or_quote_creation_by_this_continuation": false,
+    "sample": "A",
+    "filename": "D14-TO-CS-ADAPTER_LP0335_P2002B.STEP",
+    "displayed_revision": "v0",
+    "prior_upload_count_as_reported": 1,
+    "local_identity_reference": "geometry-probe-result-2026-10-22.json",
+    "remote_byte_checksum": null,
+    "remote_byte_identity_proved": false,
+    "export_declaration_basis": "Parent decisions.md D-16 user answer: all STEP in E:/AIWorkspace/3d_models correspond to No",
+    "independent_export_classification_performed": false,
+    "last_quantity_as_reported": 5,
+    "subsequent_verification_owner": "coordinator; XU-E13/E14 completed"
+  },
+  "requested": {
+    "sample": "A",
+    "process": "CNC Machining",
+    "quantity_sequence": [
+      1,
+      2,
+      5
+    ],
+    "comparison_intent": "Prior trial intent Aluminum 6061-T6 / As machined; retain actual Xometry labels and do not assert equivalence to RapidDirect 6061-T6 / ISO2768M",
+    "configuration_changes_in_this_continuation": "Quantity 1->2 once and 2->5 once; no other parameter changes"
+  },
+  "effective": {
+    "process": "CNC Machining",
+    "material": "Aluminum 6061-T6x (Best Available)",
+    "preferred_subprocess": "No Preference",
+    "finish": "Standard",
+    "threads": 0,
+    "inserts": 0,
+    "tolerance_label": "±.005in (±0.13mm)",
+    "roughness_label": "Smallest 125uin/3.2um Ra",
+    "inspection": "Standard Inspection",
+    "dimensions_mm_as_displayed": [
+      "28",
+      "25",
+      "5.47"
+    ],
+    "volume_mm3_as_displayed": "1860.85",
+    "geometry_interpretation": "Nonzero platform geometry; sorted extents broadly agree with local A at displayed precision; remote byte identity is not proved",
+    "controlled_handling_aria_checked": false,
+    "dfm_status_label": "DFM Check Complete",
+    "dfm_checks_label": "8/8",
+    "wall_thickness_warning": "Thin areas are cost-driving; not a clean DFM pass or manufacturability guarantee",
+    "cross_platform_material_finish_tolerance_equivalence": null
+  },
+  "currency": "USD",
+  "currency_unknown": false,
+  "currency_evidence_id": "XU-E12",
+  "currency_extracted_from_live_card": false,
+  "displayed_currency_symbol": "$",
+  "price_scope": "Displayed unit price and part line total by quantity and tier; not a verified order or landed total",
+  "taxes": null,
+  "destination": null,
+  "landed_cost": null,
+  "observations": {
+    "XU-E01": {
+      "at": "2026-10-22T02:58:39.143Z",
+      "kind": "existing_quote_read",
+      "detail": "Quote already open under XU-trial-01 with prior A filename and v0; preceding Continue/creation transition cannot be attributed"
+    },
+    "XU-E02": {
+      "at": "2026-10-22T03:01:58.705Z",
+      "kind": "role_switch_read",
+      "label": "Controlled Handling",
+      "aria_checked": false
+    },
+    "XU-E03": {
+      "at": "2026-10-22T03:02:11Z",
+      "timestamp_precision": "second as reported",
+      "kind": "edit_configuration_read",
+      "quantity": 1,
+      "effective_fields_reference": "effective",
+      "dfm": "DFM Check Complete 8/8 with wall thickness warning"
+    },
+    "XU-E04": {
+      "at": "2026-10-22T03:05:06Z",
+      "timestamp_precision": "second as reported",
+      "kind": "material_dropdown_read_only",
+      "selected": "Aluminum 6061-T6x (Best Available)",
+      "description_as_reported": "Allows any 6061-T6-tempered variant",
+      "other_options_as_reported": [
+        "Aluminum 6061-T651 Plate",
+        "Aluminum 6061-T6/T6511 Bar/Rod"
+      ],
+      "selection_changed": false
+    },
+    "XU-E05": {
+      "at": "2026-10-22T03:05:42.060Z",
+      "kind": "cancel_configuration",
+      "parameter_changes": false
+    },
+    "XU-E06": {
+      "at": "2026-10-22T03:06:45.298Z",
+      "kind": "visible_price_cards",
+      "quantity": 1,
+      "tiers": {
+        "economy": {
+          "unit_price": "170.17",
+          "line_total": "170.17",
+          "arrival_label_as_reported": "Nov5"
+        },
+        "standard": {
+          "unit_price": "401.05",
+          "line_total": "401.05",
+          "arrival_label_as_reported": "Oct29"
+        },
+        "fastest": {
+          "unit_price": "570.79",
+          "line_total": "570.79",
+          "arrival_label_as_reported": "Oct28"
+        }
+      }
+    },
+    "XU-E07": {
+      "at": "2026-10-22T03:06:59.174Z",
+      "kind": "quantity_change",
+      "from": 1,
+      "to": 2,
+      "count": 1,
+      "interaction_as_reported": "native input + change + blur"
+    },
+    "XU-E08": {
+      "at": "2026-10-22T03:07:12.179Z",
+      "kind": "settled_enabled_price_cards",
+      "quantity": 2,
+      "tiers": {
+        "economy": {
+          "unit_price": "98.88",
+          "line_total": "197.76",
+          "arrival_label_as_reported": "Nov5"
+        },
+        "standard": {
+          "unit_price": "287.59",
+          "line_total": "575.18",
+          "arrival_label_as_reported": "Oct29"
+        },
+        "fastest": {
+          "unit_price": "414.07",
+          "line_total": "828.14",
+          "arrival_label_as_reported": "Oct28"
+        }
+      }
+    },
+    "XU-E09": {
+      "at_utc_minute_as_reported": "2026-10-22T03:08Z",
+      "kind": "safe_read_only_react_component_projection",
+      "evidence_level": "secondary; not a trusted public API contract",
+      "projection": {
+        "quantityOrdered": 2,
+        "selectedTier": "economy",
+        "unit": "98.88",
+        "extended": "197.76",
+        "arrivalDate": "2026-11-05",
+        "leadTimeDays": 7,
+        "productionLocation": "Made Internationally",
+        "freeShipping": true,
+        "requiresPreCheckoutReview": false
+      },
+      "leadTimeDays_semantics": null,
+      "cookies_or_tokens_accessed": false
+    },
+    "XU-E10": {
+      "at": "2026-10-22T03:09:00.830Z",
+      "kind": "quantity_change",
+      "from": 2,
+      "to": 5,
+      "count": 1
+    },
+    "XU-E11": {
+      "at": "2026-10-22T03:09:13.763Z",
+      "kind": "settled_enabled_price_cards",
+      "quantity": 5,
+      "tiers": {
+        "economy": {
+          "unit_price": "48.74",
+          "line_total": "243.70",
+          "arrival_label_as_reported": "Nov6"
+        },
+        "standard": {
+          "unit_price": "150.43",
+          "line_total": "752.15",
+          "arrival_label_as_reported": "Oct30"
+        },
+        "fastest": {
+          "unit_price": "220.81",
+          "line_total": "1104.05",
+          "arrival_label_as_reported": "Oct29"
+        }
+      }
+    },
+    "XU-E12": {
+      "fetched_on_as_reported": "2026-10-22",
+      "kind": "coordinator_verified_official_currency_source",
+      "source_url": "https://www.xometry.com/service-agreement/",
+      "section": "4.1",
+      "quote": "All prices are calculated in US Dollars",
+      "quote_page_footer_link_label": "Customer Service Agreement",
+      "normalization_basis": "Official CSA section 4.1 plus dollar symbol on US quote UI; ISO code not displayed on price cards",
+      "writer_fetched_source": false,
+      "section_4_2_used_to_infer_tax_destination_or_landed_cost": false
+    },
+    "XU-E13": {
+      "at": "2026-10-22T03:21:18.159Z",
+      "kind": "coordinator_direct_dom_read",
+      "quantity": 5,
+      "quantity_input_disabled": false,
+      "scope": "Existing quote UI; no mutation"
+    },
+    "XU-E14": {
+      "at": "2026-10-22T03:23:37.878Z",
+      "kind": "coordinator_direct_read_after_single_Page_reload",
+      "quantity": 5,
+      "configuration_labels_unchanged": true,
+      "geometry_unchanged": true,
+      "tier_amounts_and_arrival_labels_match": "XU-E11",
+      "visible_switch_aria_checked": [
+        "false",
+        "false"
+      ],
+      "quote_alias": "XU-trial-01",
+      "scope": "Provider quote UI reload persistence; not product DB/session lifecycle",
+      "displayed_reference_line_totals": {
+        "economy": "324.93",
+        "standard": "1002.86",
+        "fastest": "1472.07"
+      },
+      "displayed_savings": {
+        "economy": "81.23",
+        "standard": "250.71",
+        "fastest": "368.02"
+      }
+    }
+  },
+  "freshness_evidence": {
+    "quantity_1_baseline": "XU-E06",
+    "quantity_1_to_2": [
+      "XU-E07",
+      "XU-E08",
+      "XU-E09"
+    ],
+    "quantity_2_to_5": [
+      "XU-E10",
+      "XU-E11"
+    ],
+    "interpretation": "Settled enabled cards and changed unit/line amounts after each single quantity change; quantity 2 additionally corroborated by secondary component state",
+    "reload_or_reopen_persistence_verified": true,
+    "persistence_status": "Quantity 5, geometry, configuration labels and three tier prices/arrival labels retained after one same-quote reload (XU-E14); product persistence untested",
+    "quote_valid_until": null,
+    "arrival_year_policy": "Keep labels as reported without an inferred year; only XU-E09 explicitly supplies 2026-11-05",
+    "production_lead_time_semantics_verified": false,
+    "persistence_evidence_id": "XU-E14"
+  },
+  "acceptance": {
+    "manual_controlled_quote_evidence": "Observed numeric tier quotes with nonzero geometry and quantity freshness; currency normalized from official agreement",
+    "full_E2_passed": false,
+    "remaining": [
+      "Production lead-time semantics and broader evidence documentation",
+      "Remote uploaded-byte identity not proved by a checksum",
+      "Cross-platform parameter equivalence and two-sample/two-provider baseline not frozen",
+      "Product database, Agent and automatic integration not exercised",
+      "Provider UI reload observed only; no product persistence or managed-session lifecycle acceptance",
+      "Promotion eligibility/duration and regular-price semantics not verified; current discounted UI offer only"
+    ],
+    "order_checkout_or_payment_performed": false
+  },
+  "checks": {
+    "decimal_unit_times_quantity_equals_line_total": {
+      "status": "PASS",
+      "price_rows": 9
+    },
+    "secondary_quantity_2_economy_matches_visible_cards": "PASS",
+    "scope": "Local record consistency; XU-E13/E14 independently read in browser by continuation coordinator, not a full runtime/product acceptance"
+  },
+  "price_character": "Current visible offers show savings/reference totals; not verified regular/undiscounted baseline. Historical quantity1/2 savings not transcribed; unknown rather than inferred."
+}

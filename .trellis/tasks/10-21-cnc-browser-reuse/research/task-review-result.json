@@ -1,0 +1,73 @@
+{
+  "revision": "10-21-cnc-browser-reuse",
+  "baseline_task_count": 7,
+  "current_task_count": 8,
+  "original_metadata_preserved": true,
+  "completed_original_tasks": [],
+  "changed_original_files": [
+    ".trellis/tasks/10-21-cnc-mvp-01-platform-gates/check.jsonl",
+    ".trellis/tasks/10-21-cnc-mvp-01-platform-gates/design.md",
+    ".trellis/tasks/10-21-cnc-mvp-01-platform-gates/implement.jsonl",
+    ".trellis/tasks/10-21-cnc-mvp-01-platform-gates/implement.md",
+    ".trellis/tasks/10-21-cnc-mvp-01-platform-gates/prd.md",
+    ".trellis/tasks/10-21-cnc-mvp-02-first-quote/check.jsonl",
+    ".trellis/tasks/10-21-cnc-mvp-02-first-quote/design.md",
+    ".trellis/tasks/10-21-cnc-mvp-02-first-quote/implement.jsonl",
+    ".trellis/tasks/10-21-cnc-mvp-02-first-quote/implement.md",
+    ".trellis/tasks/10-21-cnc-mvp-02-first-quote/prd.md",
+    ".trellis/tasks/10-21-cnc-mvp-03-second-platform/check.jsonl",
+    ".trellis/tasks/10-21-cnc-mvp-03-second-platform/design.md",
+    ".trellis/tasks/10-21-cnc-mvp-03-second-platform/implement.jsonl",
+    ".trellis/tasks/10-21-cnc-mvp-03-second-platform/implement.md",
+    ".trellis/tasks/10-21-cnc-mvp-03-second-platform/prd.md",
+    ".trellis/tasks/10-21-cnc-mvp-04-monitoring/check.jsonl",
+    ".trellis/tasks/10-21-cnc-mvp-04-monitoring/design.md",
+    ".trellis/tasks/10-21-cnc-mvp-04-monitoring/implement.jsonl",
+    ".trellis/tasks/10-21-cnc-mvp-04-monitoring/implement.md",
+    ".trellis/tasks/10-21-cnc-mvp-04-monitoring/prd.md",
+    ".trellis/tasks/10-21-cnc-mvp-05-demo-acceptance/check.jsonl",
+    ".trellis/tasks/10-21-cnc-mvp-05-demo-acceptance/design.md",
+    ".trellis/tasks/10-21-cnc-mvp-05-demo-acceptance/implement.jsonl",
+    ".trellis/tasks/10-21-cnc-mvp-05-demo-acceptance/implement.md",
+    ".trellis/tasks/10-21-cnc-mvp-05-demo-acceptance/prd.md",
+    ".trellis/tasks/10-21-cnc-pricing-mvp/agent-design.md",
+    ".trellis/tasks/10-21-cnc-pricing-mvp/check.jsonl",
+    ".trellis/tasks/10-21-cnc-pricing-mvp/decisions.md",
+    ".trellis/tasks/10-21-cnc-pricing-mvp/design.md",
+    ".trellis/tasks/10-21-cnc-pricing-mvp/execution-status.md",
+    ".trellis/tasks/10-21-cnc-pricing-mvp/implement.jsonl",
+    ".trellis/tasks/10-21-cnc-pricing-mvp/implement.md",
+    ".trellis/tasks/10-21-cnc-pricing-mvp/prd.md",
+    ".trellis/tasks/10-21-cnc-pricing-mvp/requirements-review-handoff.md",
+    ".trellis/tasks/10-21-cnc-pricing-mvp/task-map.md",
+    ".trellis/tasks/10-21-cnc-pricing-mvp/task.json",
+    ".trellis/tasks/10-21-cnc-pricing-mvp/workflow-design.md",
+    ".trellis/tasks/10-21-cnc-pricing-mvp/research/mvp-contract.md"
+  ],
+  "unchanged_original_file_count": 29,
+  "dependencies": {
+    "10-21-cnc-browser-reuse": [],
+    "10-21-cnc-mvp-01-platform-gates": [],
+    "10-21-cnc-mvp-02-first-quote": [
+      "10-21-cnc-mvp-01-platform-gates",
+      "10-21-cnc-browser-reuse"
+    ],
+    "10-21-cnc-mvp-03-second-platform": [
+      "10-21-cnc-mvp-01-platform-gates",
+      "10-21-cnc-mvp-02-first-quote",
+      "10-21-cnc-browser-reuse"
+    ],
+    "10-21-cnc-mvp-04-monitoring": [
+      "10-21-cnc-mvp-02-first-quote",
+      "10-21-cnc-mvp-03-second-platform",
+      "10-21-cnc-browser-reuse"
+    ],
+    "10-21-cnc-mvp-05-demo-acceptance": [
+      "10-21-cnc-mvp-02-first-quote",
+      "10-21-cnc-mvp-03-second-platform",
+      "10-21-cnc-mvp-04-monitoring"
+    ]
+  },
+  "failures": [],
+  "status": "PASS"
+}

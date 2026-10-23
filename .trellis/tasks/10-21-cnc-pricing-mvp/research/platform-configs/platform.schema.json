@@ -1,0 +1,913 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CNC platform configuration (planning contract v1.0)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schema_version",
+    "config_version",
+    "platform_code",
+    "provider_group",
+    "display_name",
+    "lifecycle",
+    "automation_enabled",
+    "site",
+    "evidence",
+    "readiness",
+    "input_files",
+    "supported_processes",
+    "parameters",
+    "ui_variants",
+    "observed_unsaved_selection",
+    "catalog",
+    "quote_extraction",
+    "policy",
+    "test_intent"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "./platform.schema.json"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "config_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "platform_code": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$"
+    },
+    "provider_group": {
+      "type": "string",
+      "minLength": 1
+    },
+    "display_name": {
+      "type": "string"
+    },
+    "lifecycle": {
+      "enum": [
+        "draft",
+        "verified"
+      ]
+    },
+    "automation_enabled": {
+      "type": "boolean"
+    },
+    "site": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "entry_url",
+        "allowed_hosts",
+        "observed_locale",
+        "currency",
+        "quote_path_observed"
+      ],
+      "properties": {
+        "entry_url": {
+          "type": "string",
+          "pattern": "^https://"
+        },
+        "allowed_hosts": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9.-]+$"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "observed_locale": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "currency": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "quote_path_observed": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "kind"
+        ]
+      }
+    },
+    "readiness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "catalog",
+        "ui_bindings",
+        "conditional_options",
+        "quote_extraction",
+        "live_quote",
+        "blockers"
+      ],
+      "properties": {
+        "catalog": {
+          "type": "string"
+        },
+        "ui_bindings": {
+          "type": "string"
+        },
+        "conditional_options": {
+          "type": "string"
+        },
+        "quote_extraction": {
+          "type": "string"
+        },
+        "live_quote": {
+          "type": "string"
+        },
+        "blockers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "input_files": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "extensions",
+        "public_doc_max_bytes",
+        "limit_evidence",
+        "live_limit_verified"
+      ],
+      "properties": {
+        "extensions": {
+          "type": "array",
+          "items": {
+            "enum": [
+              ".step",
+              ".stp"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "public_doc_max_bytes": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "public_doc_limit_text": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "conservative_upload_limit_bytes": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "limit_evidence": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "live_limit_verified": {
+          "type": "boolean"
+        }
+      }
+    },
+    "supported_processes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "parameters": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "pattern": "^[a-z][a-z0-9_]*$"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/parameter"
+      }
+    },
+    "ui_variants": {
+      "type": "object"
+    },
+    "observed_unsaved_selection": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "catalog": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scope",
+        "completeness",
+        "process_options",
+        "material_groups",
+        "current_material_finish_options",
+        "current_roughness_options"
+      ],
+      "properties": {
+        "scope": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "completeness": {
+          "type": "string"
+        },
+        "cross_material_compatibility": {
+          "type": "string"
+        },
+        "process_options": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "value",
+              "label",
+              "disabled"
+            ],
+            "properties": {
+              "value": {
+                "type": [
+                  "string",
+                  "integer"
+                ]
+              },
+              "label": {
+                "type": "string"
+              },
+              "disabled": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "material_groups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/rawOption"
+          }
+        },
+        "current_material_finish_options": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/rawOption"
+          }
+        },
+        "current_roughness_options": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/rawOption"
+          }
+        },
+        "excluded_source_keys": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "warning": {
+          "type": "string"
+        }
+      }
+    },
+    "quote_extraction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "required_fields",
+        "locators",
+        "unknown_tax_shipping",
+        "amount_serialization",
+        "raw_material_price_is_quote",
+        "lead_time_rule"
+      ],
+      "properties": {
+        "status": {
+          "type": "string"
+        },
+        "required_fields": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "locators": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/binding"
+          }
+        },
+        "unknown_tax_shipping": {
+          "type": "null"
+        },
+        "amount_serialization": {
+          "const": "decimal_string"
+        },
+        "raw_material_price_is_quote": {
+          "const": false
+        },
+        "lead_time_rule": {
+          "type": "string"
+        }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "unknown_option",
+        "missing_required",
+        "silent_substitution",
+        "empty_string_is_none",
+        "cross_platform_material_equivalence",
+        "forbidden_config_keys",
+        "forbidden_actions"
+      ],
+      "properties": {
+        "unknown_option": {
+          "const": "reject"
+        },
+        "missing_required": {
+          "const": "stop_and_report"
+        },
+        "silent_substitution": {
+          "const": false
+        },
+        "empty_string_is_none": {
+          "const": false
+        },
+        "cross_platform_material_equivalence": {
+          "const": "explicit_mapping_and_full_snapshot_only"
+        },
+        "forbidden_config_keys": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "forbidden_actions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "test_intent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "process",
+        "material",
+        "quantity_cases",
+        "surface_finish",
+        "roughness",
+        "note"
+      ],
+      "properties": {
+        "status": {
+          "const": "suggested_not_frozen"
+        },
+        "process": {
+          "type": "string"
+        },
+        "material": {
+          "type": "string"
+        },
+        "quantity_cases": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "surface_finish": {
+          "type": "string"
+        },
+        "roughness": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "automation_enabled": {
+            "const": true
+          }
+        },
+        "required": [
+          "automation_enabled"
+        ]
+      },
+      "then": {
+        "properties": {
+          "lifecycle": {
+            "const": "verified"
+          },
+          "readiness": {
+            "properties": {
+              "blockers": {
+                "maxItems": 0
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "binding": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "strategy",
+            "selector",
+            "verification",
+            "scope"
+          ],
+          "properties": {
+            "strategy": {
+              "enum": [
+                "css",
+                "role",
+                "label"
+              ]
+            },
+            "selector": {
+              "type": "string",
+              "minLength": 1
+            },
+            "verification": {
+              "enum": [
+                "live_dom",
+                "to_verify"
+              ]
+            },
+            "scope": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    },
+    "mappedOption": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "platform_value",
+        "label",
+        "evidence_ref",
+        "verification",
+        "equivalence_to_other_platforms"
+      ],
+      "properties": {
+        "platform_value": {
+          "type": [
+            "string",
+            "number",
+            "boolean",
+            "null"
+          ]
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_ref": {
+          "type": "string"
+        },
+        "verification": {
+          "enum": [
+            "observed",
+            "to_verify"
+          ]
+        },
+        "equivalence_to_other_platforms": {
+          "type": "string"
+        }
+      }
+    },
+    "parameter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "label",
+        "value_type",
+        "required",
+        "options_status",
+        "options",
+        "binding"
+      ],
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "value_type": {
+          "enum": [
+            "enum",
+            "multi_enum",
+            "boolean",
+            "integer"
+          ]
+        },
+        "required": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "options_status": {
+          "type": "string"
+        },
+        "options": {
+          "type": "array"
+        },
+        "binding": {
+          "$ref": "#/$defs/binding"
+        },
+        "catalog_path": {
+          "type": "string"
+        },
+        "canonical_mapping": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/mappedOption"
+          }
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "required_when": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "field",
+              "contains_platform_value",
+              "evidence_ref",
+              "verification"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "field": {
+                "type": "string"
+              },
+              "contains_platform_value": {
+                "type": [
+                  "string",
+                  "number",
+                  "boolean"
+                ]
+              },
+              "evidence_ref": {
+                "type": "string"
+              },
+              "verification": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "empty_selection": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "platform_value",
+            "observed",
+            "meaning"
+          ],
+          "properties": {
+            "platform_value": {
+              "type": "array",
+              "maxItems": 0
+            },
+            "observed": {
+              "type": "boolean"
+            },
+            "meaning": {
+              "type": "string"
+            }
+          }
+        },
+        "request_constraints": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "integer": {
+              "const": true
+            },
+            "minimum": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        },
+        "platform_constraints": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "min": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "max": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "step": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "precision": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            }
+          }
+        },
+        "unit": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "unit_status": {
+          "type": "string"
+        },
+        "availability": {
+          "type": "string"
+        },
+        "mapping_context": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "process": {
+              "type": [
+                "integer",
+                "string"
+              ]
+            },
+            "material": {
+              "type": [
+                "integer",
+                "string"
+              ]
+            },
+            "surface_finish_contains": {
+              "type": [
+                "integer",
+                "string"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "rawOption": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": [
+            "integer",
+            "string",
+            "null"
+          ]
+        },
+        "stt_id": {
+          "type": [
+            "integer",
+            "string",
+            "null"
+          ]
+        },
+        "stt_sort": {
+          "type": [
+            "integer",
+            "string",
+            "null"
+          ]
+        },
+        "sort": {
+          "type": [
+            "integer",
+            "string",
+            "null"
+          ]
+        },
+        "is_auto_price": {
+          "type": [
+            "integer",
+            "string",
+            "null"
+          ]
+        },
+        "is_custom_color": {
+          "type": [
+            "integer",
+            "string",
+            "null"
+          ]
+        },
+        "is_customer_color": {
+          "type": [
+            "integer",
+            "string",
+            "null"
+          ]
+        },
+        "is_custom_hardness": {
+          "type": [
+            "integer",
+            "string",
+            "null"
+          ]
+        },
+        "name": {
+          "type": [
+            "string",
+            "integer",
+            "null"
+          ]
+        },
+        "cn_name": {
+          "type": [
+            "string",
+            "integer",
+            "null"
+          ]
+        },
+        "en_name": {
+          "type": [
+            "string",
+            "integer",
+            "null"
+          ]
+        },
+        "alias_en_name": {
+          "type": [
+            "string",
+            "integer",
+            "null"
+          ]
+        },
+        "category_id": {
+          "type": [
+            "string",
+            "integer",
+            "null"
+          ]
+        },
+        "material_code": {
+          "type": [
+            "string",
+            "integer",
+            "null"
+          ]
+        },
+        "material_id": {
+          "type": [
+            "string",
+            "integer",
+            "null"
+          ]
+        },
+        "material_type_code": {
+          "type": [
+            "string",
+            "integer",
+            "null"
+          ]
+        },
+        "texture_type": {
+          "type": [
+            "string",
+            "integer",
+            "null"
+          ]
+        },
+        "status": {
+          "type": [
+            "string",
+            "integer",
+            "null"
+          ]
+        },
+        "rear_status": {
+          "type": [
+            "string",
+            "integer",
+            "null"
+          ]
+        },
+        "front_status": {
+          "type": [
+            "string",
+            "integer",
+            "null"
+          ]
+        },
+        "stt_en_name": {
+          "type": [
+            "string",
+            "integer",
+            "null"
+          ]
+        },
+        "color_id": {
+          "type": [
+            "string",
+            "integer",
+            "null"
+          ]
+        },
+        "materials": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/rawOption"
+          }
+        },
+        "finish_list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/rawOption"
+          }
+        },
+        "smooth_list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/rawOption"
+          }
+        },
+        "color_data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/rawOption"
+          }
+        },
+        "processes2": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/rawOption"
+          }
+        }
+      }
+    }
+  }
+}

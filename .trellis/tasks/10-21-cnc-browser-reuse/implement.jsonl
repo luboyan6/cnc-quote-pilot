@@ -1,0 +1,6 @@
+{"file": ".trellis/spec/backend/index.md", "reason": "Backend conventions index"}
+{"file": ".trellis/spec/backend/cnc-validation.md", "reason": "Real vs local validation boundaries"}
+{"file": ".trellis/spec/guides/code-reuse-thinking-guide.md", "reason": "Reuse before helpers"}
+{"file": "docs/browser-reference-analysis.md", "reason": "Verified read-only source and license evidence"}
+{"file": "docs/browser-implementation-design.md", "reason": "Authoritative minimal interfaces, safety, scope and acceptance"}
+{"file": ".trellis/spec/backend/browser-executor.md", "reason": "Concrete component contracts, mutations/freshness and separated integration/live gates"}

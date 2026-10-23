@@ -1,0 +1,26 @@
+{
+  "scope": "private controlled feasibility evidence",
+  "images": [
+    {
+      "file": "rapiddirect-a-geometry-zero.png",
+      "bytes": 134789,
+      "width": 2334,
+      "height": 1364,
+      "sha256": "809de45e6eb5fddbed194084708f7fdd31e4afbfdc332f103855a867add1b491"
+    },
+    {
+      "file": "rapiddirect-a-no-instant-quote.png",
+      "bytes": 331711,
+      "width": 2336,
+      "height": 2048,
+      "sha256": "3ea6e6a1e1b2ce5b783c9f5255cc61607714916b0e56870e49dddf5782eca5b0"
+    },
+    {
+      "file": "rapiddirect-b-no-instant-quote-qty5.png",
+      "bytes": 415495,
+      "width": 2336,
+      "height": 2812,
+      "sha256": "4038aa6affc629eb60b838dbcce7cf210bc1866ac93347f7150fe2d57252c39b"
+    }
+  ]
+}

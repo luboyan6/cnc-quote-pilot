@@ -1,0 +1,161 @@
+{
+  "started_at_utc": "2026-10-22T02:32:20.680536+00:00",
+  "python": "3.12.13 (main, Mar 10 2026, 18:15:39) [MSC v.1944 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26100-SP0",
+  "packages": {
+    "cadquery-ocp": "7.8.1.1",
+    "contourpy": "1.4.0",
+    "cycler": "0.12.1",
+    "fonttools": "4.67.0",
+    "kiwisolver": "1.5.1",
+    "matplotlib": "3.11.2",
+    "numpy": "2.5.4",
+    "packaging": "26.3",
+    "pillow": "13.0.0",
+    "pyparsing": "3.3.3",
+    "python-dateutil": "3.0.0",
+    "six": "1.17.0",
+    "tzdata": "2026.5",
+    "vtk": "9.3.1"
+  },
+  "per_sample_timeout_seconds": 60,
+  "samples": [
+    {
+      "sample": "A",
+      "status": "MEASURED",
+      "local_only": true,
+      "before": {
+        "bytes": 300561,
+        "sha256": "364dcf18796a0613f7453984faf66c510be980905b4f0991aa9fda06a58c8d6c",
+        "mtime_ns": 1792549270892732000
+      },
+      "input_checks": {
+        "size": "PASS",
+        "sha256": "PASS",
+        "unit": "PASS"
+      },
+      "metrics": {
+        "transferred_roots": 1,
+        "transferred_shapes": 1,
+        "system_length_unit_mm": 1.0,
+        "solid_count": 1,
+        "brep_valid": true,
+        "bounds_mm": [
+          -14.0000001,
+          3.5259999,
+          -12.500000100000001,
+          14.0000001,
+          9.0000001,
+          12.500000100000001
+        ],
+        "dimensions_mm": [
+          28.0000002,
+          5.474000199999999,
+          25.000000200000002
+        ],
+        "solid_volumes_mm3": [
+          1860.8421594393083
+        ],
+        "volume_mm3": 1860.8421594393083
+      },
+      "after": {
+        "bytes": 300561,
+        "sha256": "364dcf18796a0613f7453984faf66c510be980905b4f0991aa9fda06a58c8d6c",
+        "mtime_ns": 1792549270892732000
+      },
+      "identity_unchanged": true
+    },
+    {
+      "sample": "B",
+      "status": "MEASURED",
+      "local_only": true,
+      "before": {
+        "bytes": 1929001,
+        "sha256": "d3884475c50c336e3f13e5ca1665605104dc1ccc4113e962c62bff46b21e25e6",
+        "mtime_ns": 1792549264691886500
+      },
+      "input_checks": {
+        "size": "PASS",
+        "sha256": "PASS",
+        "unit": "PASS"
+      },
+      "metrics": {
+        "transferred_roots": 1,
+        "transferred_shapes": 1,
+        "system_length_unit_mm": 1.0,
+        "solid_count": 1,
+        "brep_valid": true,
+        "bounds_mm": [
+          -13.500000100000003,
+          -14.000000100000001,
+          -12.500000100000188,
+          -3.9999998999999953,
+          14.000000099999998,
+          12.500000100000188
+        ],
+        "dimensions_mm": [
+          9.500000200000008,
+          28.0000002,
+          25.000000200000375
+        ],
+        "solid_volumes_mm3": [
+          1970.9198309309384
+        ],
+        "volume_mm3": 1970.9198309309384
+      },
+      "after": {
+        "bytes": 1929001,
+        "sha256": "d3884475c50c336e3f13e5ca1665605104dc1ccc4113e962c62bff46b21e25e6",
+        "mtime_ns": 1792549264691886500
+      },
+      "identity_unchanged": true
+    },
+    {
+      "sample": "C",
+      "status": "MEASURED",
+      "local_only": true,
+      "before": {
+        "bytes": 3609635,
+        "sha256": "038fe7d3d464c57bfc0cb0856954f1f6bbf78b152f6db9a67ede92dbd8ea7cc7",
+        "mtime_ns": 1792549264675231800
+      },
+      "input_checks": {
+        "size": "PASS",
+        "sha256": "PASS",
+        "unit": "PASS"
+      },
+      "metrics": {
+        "transferred_roots": 1,
+        "transferred_shapes": 1,
+        "system_length_unit_mm": 1.0,
+        "solid_count": 1,
+        "brep_valid": true,
+        "bounds_mm": [
+          -9.000000100000001,
+          -15.508410508037656,
+          -15.50843200254,
+          1.0000000163757896e-07,
+          15.508410508039177,
+          15.508410507996283
+        ],
+        "dimensions_mm": [
+          9.000000200000002,
+          31.016821016076833,
+          31.016842510536282
+        ],
+        "solid_volumes_mm3": [
+          1402.3855209980263
+        ],
+        "volume_mm3": 1402.3855209980263
+      },
+      "after": {
+        "bytes": 3609635,
+        "sha256": "038fe7d3d464c57bfc0cb0856954f1f6bbf78b152f6db9a67ede92dbd8ea7cc7",
+        "mtime_ns": 1792549264675231800
+      },
+      "identity_unchanged": true
+    }
+  ],
+  "platform_geometry_dfm_quote": "NOT_ASSESSED",
+  "finished_at_utc": "2026-10-22T02:32:26.718121+00:00"
+}

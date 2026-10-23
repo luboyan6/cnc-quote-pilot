@@ -1,0 +1,117 @@
+{
+  "record_date": "2026-10-22",
+  "platform_code": "jlc_cnc_cn",
+  "provider_group": "jlc",
+  "entry_url": "https://www.jlc-cnc.com/cncOrder/#/placeOrder",
+  "authority": "D-17 user selected JLC-CNC China as second; Xometry US first; RapidDirect third deferred until first two complete",
+  "observed_at_utc": "2026-10-22T05:59:55.850Z",
+  "operator": "coordinator controlled browser read",
+  "sample_display_name": "292.1301C",
+  "sample_identity": "existing item with B-like name/dimensions; upload actor, remote byte hash and full filename not independently verified",
+  "upload_performed_this_session": false,
+  "geometry": {
+    "dimensions_mm": [
+      "28",
+      "25",
+      "9.5"
+    ],
+    "volume_mm3": "1967.6",
+    "surface_area_mm2": "2135.64"
+  },
+  "quantity": 1,
+  "effective": {
+    "process": "CNC加工",
+    "material": "铝合金-6061",
+    "temper": null,
+    "finish": "喷砂+普通阳极氧化 - 本色 - 哑光",
+    "tolerance": "GB/T 1804-2000 m级",
+    "appearance": "常规外观",
+    "threads": "无螺纹",
+    "roughness": null
+  },
+  "quote": {
+    "status": "REFERENCE_ESTIMATE",
+    "nature_label": "系统预估价",
+    "disclaimer": "系统自动报价仅做参考, 最终以人工审核报价为准",
+    "currency_symbol": "¥",
+    "currency": null,
+    "currency_note": "ISO CNY not independently established in this read; do not copy USD from Xometry",
+    "unit_price": "212.51",
+    "part_line_total": "212.51",
+    "selected_tier": "标准交期",
+    "tax": "27.63",
+    "displayed_tax_inclusive_total": "240.14",
+    "shipping": null,
+    "coupon_after_approximate": "190.14",
+    "coupon_applied_by_coordinator": false,
+    "landed_total": null,
+    "tiers": [
+      {
+        "label": "加急交期",
+        "days": 3,
+        "basis": "BUSINESS",
+        "amount": "366.36"
+      },
+      {
+        "label": "标准交期",
+        "days": 6,
+        "basis": "BUSINESS",
+        "amount": "212.51"
+      },
+      {
+        "label": "经济交期",
+        "days": 11,
+        "basis": "BUSINESS",
+        "amount": "191.99"
+      }
+    ],
+    "ship_by_text": "今日19点前支付,预计10-29 23:00前发货",
+    "ship_by_year": null,
+    "cutoff_timezone": null
+  },
+  "upload_ui": {
+    "required_3d_extensions": [
+      "step",
+      "stp"
+    ],
+    "supplementary_2d_extensions": [
+      "dwg",
+      "dxf",
+      "pdf"
+    ],
+    "max_files_text": "单次上传文件 ≤20 个",
+    "file_size_text": "单个文件大小 <100M",
+    "byte_limit": null
+  },
+  "freshness": "CACHE_UNVERIFIED",
+  "workflow": {
+    "quote_reference": null,
+    "manual_inquiry_submitted": false,
+    "cart_submitted": false,
+    "order_submitted": false,
+    "quantity_change_attempt": "one 1->2 click request returned tool Errno22; delivery/effect unknown; no repeat mutation",
+    "last_confirmed_quantity": 1,
+    "post_attempt_quantity": null,
+    "quantity_2_and_5_verified": false
+  },
+  "transport_limits": [
+    "browser_observe unsupported: Unknown cmd semantic",
+    "subsequent execute_js returned Errno22 even for read-only calls",
+    "read-only Runtime.evaluate batch returned no ACK after15s; not browser evidence"
+  ],
+  "success": false,
+  "limits": [
+    "Existing row is not an independently verified original-B upload receipt",
+    "Nonzero provider geometry differs from local B volume and does not prove source byte identity",
+    "No platform price classification promoted from REFERENCE_ESTIMATE to QUOTED",
+    "No exact material/temper/finish/tolerance equivalence to Xometry",
+    "Account identity and managed session lifecycle not verified",
+    "No new CAD upload or inquiry/cart/order/payment"
+  ],
+  "official_process_reference": {
+    "url": "https://www.jlc.com/portal/server_guide_37967.html",
+    "updated": "2024-12-12",
+    "retrieved": "2026-10-22",
+    "finding": "Guide couples review quotation with order submission after shipping/invoice/contact details. Current UI button differs; no definitive order-free inquiry path established."
+  }
+}

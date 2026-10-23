@@ -1,0 +1,378 @@
+{
+  "$schema": "./platform.schema.json",
+  "schema_version": "1.0.0",
+  "config_version": "2026-10-22.2",
+  "platform_code": "jlc_cnc_cn",
+  "provider_group": "jlc",
+  "display_name": "JLC-CNC China",
+  "lifecycle": "draft",
+  "automation_enabled": false,
+  "site": {
+    "entry_url": "https://www.jlc-cnc.com/cncOrder/#/placeOrder",
+    "allowed_hosts": [
+      "www.jlc-cnc.com"
+    ],
+    "observed_locale": null,
+    "currency": null,
+    "quote_path_observed": "/cncOrder/#/placeOrder"
+  },
+  "evidence": [
+    {
+      "id": "USER-PROVIDER-ORDER-D17-20261022",
+      "kind": "user_decision",
+      "observed_date": "2026-10-22",
+      "note": "User selected Xometry US first, the supplied JLC-CNC China entry second, and RapidDirect third. RapidDirect development is deferred until both first providers and all existing planned functionality are complete. This changes provider order, not live acceptance requirements. Tracking query parameters from the supplied URL are excluded."
+    },
+    {
+      "id": "JLC-INITIAL-UI-20261022",
+      "kind": "coordinator_supplied_controlled_live_ui_observation",
+      "observed_at_utc": "2026-10-22T05:57:18.282Z",
+      "origin": "https://www.jlc-cnc.com",
+      "path": "/cncOrder/#/placeOrder",
+      "evidence_ref": ".trellis/tasks/10-21-cnc-mvp-01-platform-gates/research/jlc-live-validation-2026-10-22.md",
+      "structured_evidence_ref": ".trellis/tasks/10-21-cnc-mvp-01-platform-gates/research/jlc-live-validation-2026-10-22.json",
+      "archive_status": "coordinator_evidence_files_pending_at_configuration_draft_creation",
+      "remote_item_label": "292.1301C",
+      "source_identity": "pre_existing_remote_item_not_uploaded_in_this_observation_remote_bytes_and_local_sample_match_unproved",
+      "dimensions_mm": [
+        "28",
+        "25",
+        "9.5"
+      ],
+      "volume_mm3": "1967.6",
+      "area_mm2": "2135.64",
+      "effective_labels": {
+        "material": "Al6061",
+        "material_temper": null,
+        "surface_finish": "喷砂+普通阳极氧化 - 本色 - 哑光",
+        "tolerance": "GB/T1804-2000 m级",
+        "cosmetic": "常规外观",
+        "threads": "无螺纹",
+        "quantity": 1
+      },
+      "estimate_snapshot": {
+        "status": "REFERENCE_ESTIMATE",
+        "raw_status_label": "系统预估价",
+        "raw_disclaimer": "系统自动报价仅做参考,最终以人工审核报价为准",
+        "currency_symbol": "¥",
+        "currency": null,
+        "unit_price": "212.51",
+        "line_total": "212.51",
+        "tax": "27.63",
+        "total_including_tax": "240.14",
+        "shipping": null,
+        "tiers": {
+          "standard": {
+            "amount": "212.51",
+            "workdays_observed": 6
+          },
+          "rush": {
+            "amount": "366.36",
+            "workdays_observed": 3
+          },
+          "economy": {
+            "amount": "191.99",
+            "workdays_observed": 11
+          }
+        },
+        "coupon_price_displayed_approximately": "190.14",
+        "coupon_applied": false,
+        "note": "All amounts are same-page reference estimates, not QUOTED. The approximate coupon price is not applied, and is not a discount amount. Currency ISO code, final tax treatment, tier commercial scope, workday start/production/delivery semantics and raw lead-time labels require further evidence."
+      },
+      "note": "Read-only existing-item observation supplied by coordinator; no new upload, parameter change, manual inquiry, cart, final order or payment. Nonzero displayed geometry does not prove local A/B remote byte identity or pass DFM. Al6061 does not establish T6 temper or cross-platform material/finish/tolerance equivalence."
+    },
+    {
+      "id": "JLC-UPLOAD-UI-20261022",
+      "kind": "coordinator_supplied_controlled_live_ui_observation",
+      "observed_at_utc": "2026-10-22T05:57:18.282Z",
+      "required_3d_extensions": [
+        ".step",
+        ".stp"
+      ],
+      "supplementary_2d_extensions": [
+        ".dwg",
+        ".dxf",
+        ".pdf"
+      ],
+      "displayed_file_count_limit": 20,
+      "displayed_size_limit_text": "<100M",
+      "note": "UI declaration only, no boundary upload test. Supplementary 2D files do not replace required 3D input. No decimal/binary byte conversion, actual upload success or supplementary-file product support is inferred."
+    },
+    {
+      "id": "JLC-ARCHIVE-RECONCILIATION-20261022",
+      "kind": "local_archived_evidence_reconciliation",
+      "record_date": "2026-10-22",
+      "evidence_ref": ".trellis/tasks/10-21-cnc-mvp-01-platform-gates/research/jlc-live-validation-2026-10-22.md",
+      "structured_evidence_ref": ".trellis/tasks/10-21-cnc-mvp-01-platform-gates/research/jlc-live-validation-2026-10-22.json",
+      "archive_status": "both_coordinator_archives_exist_and_reviewed_locally",
+      "last_confirmed_read_at_utc": "2026-10-22T05:59:55.850Z",
+      "last_confirmed_quantity": 1,
+      "quantity_change_attempt": "One quantity 1-to-2 click tool request returned Errno22 without a delivery/effect receipt; subsequent read-only requests failed or returned no ACK. No mutation replay was performed.",
+      "post_attempt_quantity": null,
+      "quantity_2_and_5_verified": false,
+      "next_action_boundary": "Read back the same current item and reconcile quantity before another mutation. These timestamped transport failures do not establish a permanent connection failure.",
+      "official_process_reference": {
+        "url": "https://www.jlc.com/portal/server_guide_37967.html",
+        "updated_date": "2024-12-12",
+        "retrieved_date": "2026-10-22",
+        "finding": "The older China CNC guide couples reviewed pricing with order submission after logistics/invoice/contact information. Current UI says 提交询价 rather than the guide's 提交订单; no order-free definitive quote path is established, and the guide does not prove all current inquiry paths require an order."
+      },
+      "note": "Reconciles archives completed after the initial draft snapshot; does not replace that observation's timestamp or claim a new provider read. No new upload, inquiry, cart, order or payment. Prices remain REFERENCE_ESTIMATE, currency ISO unknown, draft automation disabled."
+    }
+  ],
+  "readiness": {
+    "catalog": "effective_labels_only_full_catalog_and_platform_IDs_unknown",
+    "ui_bindings": "visible_controls_only_no_verified_runtime_bindings",
+    "conditional_options": "not_verified",
+    "quote_extraction": "manual_reference_estimate_snapshot_only_runtime_extractor_not_verified",
+    "live_quote": "REFERENCE_ESTIMATE_not_QUOTED_or_E2",
+    "blockers": [
+      "No authenticated account identity, applicable JLC agreement review or managed session lifecycle verified",
+      "Observed 292.1301C item predates this observation; remote bytes/local A/B identity and upload receipt unproved",
+      "System estimate explicitly subject to final manual review; no valid real quote or changed-parameter re-quote established",
+      "Only currency glyph ¥ observed; CNY ISO normalization remains unverified",
+      "Al6061 temper/standard, full effective snapshot, cross-platform equivalence, conditional catalog and parameter mappings remain unknown",
+      "Lead-time semantics, final tax/shipping/destination context, coupon eligibility and estimate freshness remain unverified",
+      "提交询价 side-effect boundary is unresolved; do not click until quote versus manual RFQ/order semantics are verified",
+      "At the archived continuation checkpoint, quantity-change delivery/effect is unknown; last confirmed quantity is 1 and post-attempt quantity is null until same-item readback",
+      "Only www.jlc-cnc.com navigation host observed; no auth/CDN hosts admitted without evidence",
+      "No runtime adapter, permitted submission binding, extractor, persistence, monitoring or full two-provider product acceptance"
+    ]
+  },
+  "input_files": {
+    "extensions": [
+      ".step",
+      ".stp"
+    ],
+    "public_doc_max_bytes": null,
+    "public_doc_limit_text": "UI: required STEP/STP 3D; DWG/DXF/PDF supplementary; up to 20 files, <100M (unit basis unspecified)",
+    "conservative_upload_limit_bytes": null,
+    "limit_evidence": "JLC-UPLOAD-UI-20261022; UI-only declaration, not an executed upload-limit test",
+    "live_limit_verified": false
+  },
+  "supported_processes": [
+    "CNC_MACHINING"
+  ],
+  "parameters": {
+    "process": {
+      "label": "process",
+      "value_type": "enum",
+      "required": null,
+      "options_status": "not_frozen",
+      "options": [],
+      "binding": null,
+      "canonical_mapping": {},
+      "dependencies": []
+    },
+    "material": {
+      "label": "material",
+      "value_type": "enum",
+      "required": null,
+      "options_status": "Al6061_label_only_temper_standard_and_options_unverified",
+      "options": [],
+      "binding": null,
+      "canonical_mapping": {},
+      "dependencies": [
+        "process"
+      ]
+    },
+    "surface_finish": {
+      "label": "surface_finish",
+      "value_type": "multi_enum",
+      "required": null,
+      "options_status": "effective_label_observed_runtime_options_not_frozen",
+      "options": [],
+      "binding": null,
+      "canonical_mapping": {},
+      "dependencies": [
+        "process",
+        "material"
+      ]
+    },
+    "finish_color": {
+      "label": "finish_color",
+      "value_type": "enum",
+      "required": null,
+      "options_status": "effective_label_observed_runtime_options_not_frozen",
+      "options": [],
+      "binding": null,
+      "canonical_mapping": {},
+      "dependencies": [
+        "surface_finish"
+      ]
+    },
+    "roughness": {
+      "label": "roughness",
+      "value_type": "enum",
+      "required": null,
+      "options_status": "not_observed",
+      "options": [],
+      "binding": null,
+      "canonical_mapping": {},
+      "dependencies": [
+        "material",
+        "surface_finish"
+      ]
+    },
+    "quantity": {
+      "label": "quantity",
+      "value_type": "integer",
+      "required": null,
+      "options_status": "value_1_and_text_input_observed_bounds_and_recalculation_unverified",
+      "options": [],
+      "binding": null,
+      "canonical_mapping": {},
+      "dependencies": [],
+      "request_constraints": {
+        "integer": true,
+        "minimum": 1
+      },
+      "platform_constraints": {
+        "min": null,
+        "max": null,
+        "step": null,
+        "precision": null
+      }
+    },
+    "cosmetic_part": {
+      "label": "cosmetic_part",
+      "value_type": "boolean",
+      "required": null,
+      "options_status": "常规外观_label_only_no_boolean_equivalence_verified",
+      "options": [],
+      "binding": null,
+      "canonical_mapping": {},
+      "dependencies": []
+    },
+    "threads": {
+      "label": "threads",
+      "value_type": "enum",
+      "required": null,
+      "options_status": "无螺纹_label_observed_runtime_options_not_frozen",
+      "options": [],
+      "binding": null,
+      "canonical_mapping": {},
+      "dependencies": []
+    },
+    "tolerance": {
+      "label": "tolerance",
+      "value_type": "enum",
+      "required": null,
+      "options_status": "GB_T1804_2000_m_label_only_no_cross_platform_equivalence",
+      "options": [],
+      "binding": null,
+      "canonical_mapping": {},
+      "dependencies": []
+    },
+    "lead_time_option": {
+      "label": "lead_time_option",
+      "value_type": "enum",
+      "required": null,
+      "options_status": "reference_estimate_tiers_only_no_verified_runtime_options",
+      "options": [],
+      "binding": null,
+      "canonical_mapping": {},
+      "dependencies": []
+    }
+  },
+  "ui_variants": {
+    "existing_item_estimate_page": {
+      "verification": "coordinator_readonly_observation_not_runtime_verified",
+      "configure_action": null,
+      "apply_action": null,
+      "submit_quote_action": null,
+      "visible_control_evidence_only": [
+        "修改参数",
+        "quantity text input",
+        "uploadFileBut",
+        "addCarCNC",
+        "提交询价"
+      ],
+      "submission_boundary": "提交询价_unresolved_stop_before_click",
+      "field_keys": [],
+      "readiness_warnings": [
+        "Observed labels/control tokens are evidence only; they do not authorize navigation, parameter changes, upload, cart, RFQ or order actions",
+        "addCarCNC is a cart action and is forbidden; no selectors or parameter IDs may be borrowed from other providers"
+      ]
+    }
+  },
+  "observed_unsaved_selection": null,
+  "catalog": {
+    "scope": {
+      "remote_item_label": "292.1301C",
+      "evidence_ref": "JLC-INITIAL-UI-20261022",
+      "note": "Current existing-item labels only; no full dropdown catalog or platform option IDs verified"
+    },
+    "completeness": "effective_labels_only_not_frozen",
+    "cross_material_compatibility": "unknown",
+    "process_options": [],
+    "material_groups": [],
+    "current_material_finish_options": [],
+    "current_roughness_options": [],
+    "warning": "No runtime mapping or cross-platform equivalence is implied by the evidence snapshot."
+  },
+  "quote_extraction": {
+    "status": "REFERENCE_ESTIMATE_only_manual_snapshot_not_valid_quote_runtime_extractor_unverified",
+    "required_fields": [
+      "amount",
+      "currency",
+      "price_scope",
+      "lead_time_text",
+      "quote_status",
+      "effective_parameters",
+      "quoted_at",
+      "evidence_ref"
+    ],
+    "locators": {
+      "amount": null,
+      "currency": null,
+      "price_scope": null,
+      "lead_time_text": null,
+      "quote_status": null,
+      "remote_quote_ref": null
+    },
+    "unknown_tax_shipping": null,
+    "amount_serialization": "decimal_string",
+    "raw_material_price_is_quote": false,
+    "lead_time_rule": "Preserve exact raw text when archived; observed workday counts alone do not establish production/delivery semantics, start point or final reviewed commitment. System reference estimates cannot be QUOTED or satisfy E2."
+  },
+  "policy": {
+    "unknown_option": "reject",
+    "missing_required": "stop_and_report",
+    "silent_substitution": false,
+    "empty_string_is_none": false,
+    "cross_platform_material_equivalence": "explicit_mapping_and_full_snapshot_only",
+    "forbidden_config_keys": [
+      "password",
+      "cookie",
+      "token",
+      "storage_state",
+      "javascript",
+      "eval",
+      "exec",
+      "system_prompt"
+    ],
+    "forbidden_actions": [
+      "purchase",
+      "checkout",
+      "place_order",
+      "payment",
+      "change_account_security",
+      "add_to_cart",
+      "submit_manual_inquiry"
+    ]
+  },
+  "test_intent": {
+    "status": "suggested_not_frozen",
+    "process": "CNC_MACHINING",
+    "material": "ALUMINUM_6061_T6",
+    "quantity_cases": [
+      1,
+      2,
+      5
+    ],
+    "surface_finish": "NO_ADDED_FINISH",
+    "roughness": "AS_MACHINED_RA3_2",
+    "note": "Existing comparison intent only, not a selected JLC configuration or frozen default. Observed Al6061 and blasting/anodizing labels do not match this intent. Verify grade/temper/standard/finish/roughness and commercial scope independently; no automatic substitution or reference-estimate success."
+  }
+}
