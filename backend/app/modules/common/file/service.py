@@ -31,7 +31,7 @@ class FileService:
         )
 
         return UploadResponseSchema(
-            file_path=f"{filepath}",
+            file_path=Path(filepath).as_posix(),
             file_name=filename,
             origin_name=file.filename,
             file_url=f"{file_url}",

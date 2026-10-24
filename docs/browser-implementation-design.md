@@ -43,7 +43,7 @@ Playwright 对象只在创建它们的 asyncio loop 内使用，由单一消费�
 - `BrowserPolicy(allowed_hosts, ...)`：可信精确主机名（无通配符），只允许 HTTPS/443，无 userinfo。Context 路由拦截支持的请求，逐请求观察为非法重定向等设置停止标记；公网解析验证与 SOCKS 实际连接 IP 固定负责最终连接拒绝。SDK route 不保证每个重定向跳重复拦截，不能单独作为出站防线。允许的 CDN/登录域须先核验再版本化。
 - `BrowserExecutor.session(scope, policy, ...)`：async context manager，惰性调用 async_playwright/chromium.launch/new_context；Service Worker、下载和未经核验的 WebSocket 默认禁用。总容量/账号忙即有界拒绝；启动中失败、取消及关闭失败仍尝试释放其他资源。关闭/释放错误显式报告。
 - 加密会话 codec：使用既有 `CryptoUtil.encrypt/decrypt` 注入，不另写加密算法；把 scope 与 storage_state 一并加密，恢复时比对 scope。解密数据只在内存交给 new_context；不得写 state.json、日志、模型或 checkpoint。storage_state 请求包含 IndexedDB；sessionStorage/设备绑定等机制仍须平台验证。身份复验前不能导出“已登录”会话。
-- 文件描述：受信根目录内的 STEP/STP、预期 SHA-256、最大字节数；解析真实路径，拒绝越界/符号链接逃逸、扩展名/大小/哈希异常；读取已校验字节交给官方 set_input_files，避免校验和上传间文件变更。动态文件框使用官方 expect_file_chooser，不自建 OS 文件对话框自动化。
+- 文件描述：受信根目录内的 STEP/STP（含兼容后缀 SETP）、预期 SHA-256、最大字节数；解析真实路径，拒绝越界/符号链接逃逸、扩展名/大小/哈希异常；读取已校验字节交给官方 set_input_files，避免校验和上传间文件变更。动态文件框使用官方 expect_file_chooser，不自建 OS 文件对话框自动化。
 - 平台 Adapter：认证状态/挑战、上传前后状态与远端引用、配置和全量 effective 参数、提交回执、真实报价与交期读取均为确定性方法。允许复用原生 Locator，选择器来自工程核验的适配器；Agent 无 Page、Context、JS、任意路径、通用 click 权限。
 - 工作流辅助契约：认证 → 上传 → 配置并完整回读 → 提交 → 提取/验证，步骤主导权在代码；业务 02 扩展到完整 S01–S11。文件/参数冻结在同一 item；不同参数须新 item，禁止原 item 重试静默修改。
 - `IntentStore`（注入的业务仓储端口）：唯一键是 scope + item + execution_generation + operation，fingerprint 是冻结输入的比对值，不纳入唯一键；改参不能通过新 fingerprint 获得第二次执行。领域 runner 在同一逻辑 item 的重试/恢复中保持 generation 不变，改参须新 item。动作前原子持久占位；成功回执和不明结果分别保存。已有 intent 不重执行，先返回已确认回执或只读协调/人工。上传、配置 Apply/save 和提交各自占位；取消/超时/网络错误后保持不明。02 必须提供应用 DB 的真实持久实现后才可接生产；测试替身不能替代它。

@@ -22,6 +22,7 @@ This directory contains guidelines for backend development. Fill in each file wi
 | [CNC Validation](./cnc-validation.md) | Fixed input/local-CAD research probes, identity/timeout guards and live/declaration boundaries | Source-backed; product integration pending |
 | [Browser Executor](./browser-executor.md) | Shared Playwright scope, encrypted state, egress, intent and quote-validation contracts | Component scope; provider integration pending |
 | [CNC Account Login](./cnc-account-login.md) | Controlled login APIs, account privacy, fenced leases, provider identity, optional-resource denial and browser UI | D-18 implemented; live deployment/auth validation separate |
+| [CNC Auto Quote](./cnc-auto-quote.md) | Configuration quote APIs, durable runs/intents, current RBAC, same-owner lifecycle and result truthfulness | Integration in progress; provider live acceptance tracked separately |
 
 ---
 

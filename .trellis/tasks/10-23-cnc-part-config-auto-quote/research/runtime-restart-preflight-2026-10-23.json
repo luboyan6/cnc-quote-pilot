@@ -1,0 +1,13 @@
+{
+  "read_only": true,
+  "migration_heads": [
+    "4e51456ea4db"
+  ],
+  "database_revisions": [
+    "4e51456ea4db"
+  ],
+  "pending_model_operations": 0,
+  "nonterminal_quote_runs": 0,
+  "live_account_leases": 0,
+  "ready_for_restart": true
+}

@@ -20,7 +20,7 @@ $env:PLAYWRIGHT_BROWSERS_PATH = Join-Path (Resolve-Path ..).Path '.trellis/.runt
 
 ## 会话与存储
 
-配置由服务端提供精确允许域；默认只允许 HTTPS/443 和全公网 IP。托管浏览器进程经独立出站代理，浏览器 Context 禁止 Service Worker/下载及未经核验的 WebSocket。不得添加生产“允许私网”开关来方便测试。
+配置由服务端提供精确允许域；只允许 HTTPS/443。按 2026-10-23 用户确认的契约，混合 DNS 回答只保留通过全部地址检查的候选 IP，实际连接只使用这些固定 IP；无合格候选或解析异常仍拒绝。地址分类不证明本机代理的合成地址是真实平台地址，部署时仍须验证实际 DNS/出站路径。托管浏览器进程经独立出站代理，浏览器 Context 禁止 Service Worker/下载及未经核验的 WebSocket。不得添加生产“允许私网”开关来方便测试。
 
 将既有 `CryptoUtil.encrypt/decrypt` 作为 codec 注入；加密包内绑定 owner/platform/account，恢复时比对，明文 state 只在内存中交给 SDK。适配器验证实际身份成功后才导出/保存；平台使用 sessionStorage、设备绑定或挑战时仍须单独验证，不能把 storage_state 当万能登录。
 

@@ -1,0 +1,37 @@
+{
+  "id": "cnc-part-config-auto-quote",
+  "name": "cnc-part-config-auto-quote",
+  "title": "产品配置自动报价",
+  "description": "在图纸参数配置列表按绑定平台复用登录、上传关联图纸并设置参数，弹窗展示返回报价",
+  "status": "in_progress",
+  "dev_type": null,
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "WEIYC",
+  "assignee": "WEIYC",
+  "createdAt": "2026-10-23",
+  "completedAt": null,
+  "branch": "dev",
+  "base_branch": "master",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [],
+  "notes": "2026-10-23：用户同意创建任务与规划，并确认一个可用账号自动选择、多个账号弹窗选择。PRD/design/implement/research 与两份上下文清单已完成。最终规划摘要后用户明确回复‘开始实施’，授权按本方案进入执行。",
+  "meta": {
+    "planning_state": "approved",
+    "account_selection": "auto_if_one_prompt_if_multiple",
+    "provider_order": [
+      "xometry_us",
+      "jlc_cnc_cn"
+    ],
+    "implementation_approval": "2026-10-23_user_explicit_start_after_latest_summary",
+    "latest_session_handoff": "research/site-skills-completion-2026-10-24.md",
+    "latest_verification": "independent_xometry_then_jlc_skills_installed; installed_skill_validators_links_and_reviewed_copy_identity_pass; independent_three_scenario_docs_review_pass; provider_adapters_disabled_live_quote_not_accepted",
+    "task_command_authorization": "User explicitly allowed all commands necessary for this task without repeated confirmation and requested self-verification; scoped to current task, not file classification or uncertain-intent reconciliation"
+  }
+}

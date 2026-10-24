@@ -1,0 +1,7 @@
+{"file":".trellis/spec/backend/cnc-account-login.md","reason":"Review permissions, secret handling, same-session auth reuse and login regressions"}
+{"file":".trellis/spec/backend/browser-executor.md","reason":"Review durable mutation handling, task/lease ownership, file and exact quote contracts"}
+{"file":".trellis/spec/backend/cnc-auto-quote.md","reason":"Review actual quote API/RBAC/persistence and provider truthfulness boundaries"}
+{"file":".trellis/spec/frontend/cnc-auto-quote.md","reason":"Review final shared-browser, pending-create/cancel barrier and dialog contracts"}
+{"file":".trellis/spec/frontend/quality-guidelines.md","reason":"Check frontend quality conventions and necessary regressions"}
+{"file":".trellis/spec/frontend/type-safety.md","reason":"Check quote API and UI state typing across layers"}
+{"file":".trellis/tasks/10-23-cnc-part-config-auto-quote/research/existing-flow.md","reason":"Verify implementation matches account selection, true platform IDs and evidence limits"}

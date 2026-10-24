@@ -6,6 +6,7 @@ import time
 from contextlib import asynccontextmanager
 from dataclasses import dataclass, field, replace
 from datetime import UTC, datetime, timedelta
+from typing import Any
 
 from app.modules.cnc.browser.contracts import Authentication, AuthStatus, SessionScope
 from app.modules.cnc.browser.errors import BrowserStop
@@ -55,6 +56,7 @@ class OwnedSession:
     queue: asyncio.Queue = field(default_factory=lambda: asyncio.Queue(maxsize=16))
     task: asyncio.Task | None = None
     last_input: float = 0
+    quote_activity: Any = None
 
     def view(self):
         return LoginView(
@@ -81,31 +83,43 @@ class LoginManager:
         self.accounts: dict[int, OwnedSession] = {}
         self._lock = asyncio.Lock()
 
-    async def start(self, account: AccountSnapshot):
+    async def start(self, account: AccountSnapshot, *, quote_activity=None):
         provider = self.provider_resolver(account.login_url, account.quote_url)
         async with self._lock:
             owned = self.accounts.get(account.id)
-            if owned and owned.task and not owned.task.done() and owned.status in {"CLOSED", "FAILED"}:
+            if owned and owned.task and not owned.task.done() and (owned.status in {"CLOSED", "FAILED"} or (owned.quote_activity is not None and owned.quote_activity.terminal)):
                 # Terminal status can precede the final lease release. Never reuse
                 # a context that is closing or race a new claim against it.
                 await finish_cleanup(owned.task)
                 owned = None
             if owned and owned.task and not owned.task.done():
                 self._check(owned, account)
+                if owned.quote_activity is not None:
+                    raise LoginError("ACCOUNT_BUSY")
+                if quote_activity is not None:
+                    owned.quote_activity = quote_activity
+                    # Wake the owner rather than using Page from this task.
+                    future = asyncio.get_running_loop().create_future()
+                    future.add_done_callback(lambda done: done.exception() if not done.cancelled() else None)
+                    try:
+                        owned.queue.put_nowait(("status", None, future))
+                    except asyncio.QueueFull:
+                        owned.quote_activity = None
+                        raise LoginError("SESSION_QUEUE_FULL") from None
                 owned.reused = True
             else:
                 # Bound retained terminal views as well as active contexts.
                 for sid, old in list(self.sessions.items()):
                     if old.task and old.task.done():
                         self.sessions.pop(sid, None)
-                owned = OwnedSession(account)
+                owned = OwnedSession(account, quote_activity=quote_activity)
                 owned.expires_at = datetime.now(UTC) + timedelta(seconds=self.lifetime_seconds)
                 owned.token = await self.repository.claim(account, owned.owner)
                 self.sessions[owned.session_id] = owned
                 self.accounts[account.id] = owned
                 owned.task = asyncio.create_task(self._run(owned, provider), name="cnc-login-owner")
                 return owned.view()
-        if owned.status == "READY":
+        if owned.status == "READY" and quote_activity is None:
             return await self.command(account, owned.session_id, "verify")
         return owned.view()
 
@@ -117,11 +131,15 @@ class LoginManager:
                 owned.task.cancel()
             raise LoginError("ACCOUNT_CHANGED")
 
-    async def command(self, account: AccountSnapshot, session_id: str, kind: str, payload: LoginInput | None = None):
+    async def command(self, account: AccountSnapshot, session_id: str, kind: str, payload: LoginInput | None = None, *, activity_id: str | None = None):
         owned = self.sessions.get(session_id)
         if owned is None:
             raise LoginError("SESSION_UNAVAILABLE_ON_THIS_WORKER")
         self._check(owned, account)
+        if owned.quote_activity is not None and owned.quote_activity.activity_id != activity_id:
+            raise LoginError("ACCOUNT_BUSY")
+        if owned.quote_activity is None and activity_id is not None:
+            raise LoginError("SESSION_UNAVAILABLE")
         if kind == "close":
             await self._close(owned)
             return owned.view()
@@ -179,6 +197,8 @@ class LoginManager:
                 # Unreviewed popups cannot become a second uncontrolled page.
                 session.page.on("popup", lambda page: asyncio.create_task(page.close()))
                 owned.status, owned.reason = "AUTHENTICATING", "CHECKING_LOGIN"
+                if owned.quote_activity is not None:
+                    await owned.quote_activity.check_inputs()
                 await self.repository.renew(owned.account, owned.owner, owned.token)
                 await session.goto(owned.account.quote_url)
                 await self._verify(owned, session, provider)
@@ -188,6 +208,8 @@ class LoginManager:
                     await session.goto(owned.account.login_url)
                     # Provider controls are reviewed code, never dynamically supplied.
                     if owned.account.login_method == "PASSWORD" and owned.account.password:
+                        if owned.quote_activity is not None:
+                            await owned.quote_activity.check_inputs()
                         await self.repository.renew(owned.account, owned.owner, owned.token)
                         try:
                             async with asyncio.timeout(25):
@@ -201,13 +223,31 @@ class LoginManager:
                     else:
                         owned.status, owned.reason = "WAITING_HUMAN", "MANUAL_LOGIN_REQUIRED"
                 while True:
+                    quote = owned.quote_activity
+                    if quote is not None:
+                        await quote.login_state(owned.status, owned.reason)
+                        if quote.terminal:
+                            break
+                        if owned.status == "READY" and not quote.can_input and quote.ready_for_step:
+                            owned.activity = time.monotonic()
+                            await self.repository.renew(owned.account, owned.owner, owned.token)
+                            # The same owner task retains the Page. Every remote
+                            # phase is bounded, with lease renewal between phases.
+                            try:
+                                async with asyncio.timeout(15):
+                                    await quote.advance(session, provider)
+                            except TimeoutError:
+                                raise LoginError("QUOTE_STAGE_TIMEOUT_NO_RETRY") from None
+                            if quote.terminal:
+                                break
                     remaining = self.idle_seconds - (time.monotonic() - owned.activity)
                     if remaining <= 0:
                         owned.reason = "SESSION_IDLE_EXPIRED"
                         break
                     await self.repository.renew(owned.account, owned.owner, owned.token)
                     try:
-                        pending = await asyncio.wait_for(owned.queue.get(), timeout=min(15, remaining))
+                        interval = quote.poll_interval if quote is not None and owned.status == "READY" and not quote.can_input else 15
+                        pending = await asyncio.wait_for(owned.queue.get(), timeout=min(interval, remaining))
                     except TimeoutError:
                         continue
                     kind, payload, future = pending
@@ -220,12 +260,22 @@ class LoginManager:
                             if kind == "frame":
                                 result = await session.page.screenshot(type="jpeg", quality=65, timeout=8000)
                             elif kind == "input":
+                                if quote is not None and not quote.can_input:
+                                    raise LoginError("QUOTE_MANUAL_INPUT_NOT_ALLOWED")
                                 owned.activity = time.monotonic()
                                 await self._input(session, payload)
                                 result = owned.view()
                             elif kind == "verify":
                                 owned.activity = time.monotonic()
-                                await self._verify(owned, session, provider)
+                                if quote is not None and quote.begun:
+                                    await quote.resume(session, provider)
+                                else:
+                                    await self._verify(owned, session, provider)
+                                    if quote is not None:
+                                        if owned.status == "READY":
+                                            await quote.change("RUNNING", "upload", "QUOTE_CONTINUING")
+                                        else:
+                                            await quote.login_state(owned.status, owned.reason)
                                 result = owned.view()
                             else:
                                 result = owned.view()
@@ -267,6 +317,11 @@ class LoginManager:
                 owned.status, owned.reason = "FAILED", "LEASE_RELEASE_FAILED"
             if self.accounts.get(owned.account.id) is owned:
                 self.accounts.pop(owned.account.id, None)
+            if owned.quote_activity is not None:
+                try:
+                    await finish_cleanup(owned.quote_activity.finish(owned.reason))
+                except Exception:
+                    owned.status, owned.reason = "FAILED", "QUOTE_STORAGE_UNAVAILABLE"
             owned.account = replace(owned.account, password="", encrypted_state=None)
 
     @staticmethod
@@ -293,6 +348,8 @@ class LoginManager:
                 if self.accounts.get(owned.account.id) is owned:
                     self.accounts.pop(owned.account.id, None)
                 owned.status, owned.reason = "CLOSED", "SESSION_CLOSED"
+                if owned.quote_activity is not None:
+                    await finish_cleanup(owned.quote_activity.finish(owned.reason))
                 owned.account = replace(owned.account, password="", encrypted_state=None)
 
     async def revoke(self, account_id: int):

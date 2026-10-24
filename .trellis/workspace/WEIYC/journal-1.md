@@ -253,3 +253,65 @@ Implemented approved controlled account login slice; live provider auth pending 
 
 - Validate real Xometry and JLC login/reuse/challenges/quote identity in a deployment with real public DNS; do not weaken egress rules.
 - Continue original quotation tasks only after existing predecessor acceptance; preserve unrelated uncommitted workspace work.
+
+
+## Session 8: 自动报价 Chrome DevTools 验证与会话交接
+<!-- trellis-session: v=2 fp=4507fb641fccfb14 -->
+
+**Date**: 2026-10-23
+**Task**: 自动报价 Chrome DevTools 验证与会话交接
+**Branch**: `dev`
+
+### Summary
+
+用户要求记录并新开会话继续；复用 cnc-part-config-auto-quote，任务保持 in_progress。真实配置页已登录，尚未点击自动报价，未取得平台价格。完整接续入口：.trellis/tasks/10-23-cnc-part-config-auto-quote/research/session-handoff-2026-10-23-chrome-devtools.md。
+
+### Main Changes
+
+- 修复前端启动前已知错误的白名单中文提示，后端 BrowserStop 固定原因转换，补回归；最终前端66项/quote40项/login50项/upload12项通过，前端构建与范围lint/typecheck通过。
+- browser94项中12 failures、1 error、13 skipped；混合DNS契约、.setp兼容和未启用真实适配器保持未解决。未把局部检查视为真实报价验收。
+- Chrome截图确认4个行操作图标存在，a11y空快照来自无role/aria-label的图标DIV，已纠正错误判断。业务数据仅只读核验，保留历史uncertain上传intent。
+
+### Git Commits
+
+(No commits - implementation/check session; handed off before acceptance.)
+
+### Status
+
+**Handed off; task remains in_progress. Real quote acceptance is incomplete.**
+
+### Next Steps
+
+- 新会话先读取 handoff 与两份 chrome-devtools 检查报告，绑定已有任务，接管独立 Chrome DevTools sessionId 1023c0de-0000-4000-8000-000000000001，完成单次自动报价点击与网络/弹窗证据。
+
+
+## Session 9: 独立 Xometry 与嘉立创报价 skills 完成并验证
+<!-- trellis-session: v=2 fp=795582c704e8a7b6 -->
+
+**Date**: 2026-10-24
+**Task**: 独立 Xometry 与嘉立创报价 skills 完成并验证
+**Branch**: `dev`
+
+### Summary
+
+恢复指定会话；按用户要求先补齐 Xometry 再创建嘉立创独立技能，安装后格式、引用、审查稿一致性及三组独立情景审查通过。真实平台报价仍未验收，保留 uncertain 上传与生产适配器禁用状态。
+
+### Main Changes
+
+- 安装 cnc-xometry-quote 与 cnc-jlc-quote 两站独立技能，各自维护材料、上传、参数保存及报价边界
+
+### Git Commits
+
+(No commits - planning session)
+
+### Testing
+
+- [OK] 两站安装后 quick_validate 通过；4份文档零安装差异、2个相对链接有效、独立3场景审查PASS
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 依据已安装站点 skill 核清旧上传回执；验证正常受控报价路由及嘉立创账号/材料编辑，再推进生产适配器

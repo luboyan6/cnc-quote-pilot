@@ -63,9 +63,10 @@ class BrowserPolicy:
             raise BrowserStop(Reason.POLICY_BLOCKED) from None
 
     def resolve(self, host: str) -> list[str]:
-        """SOCKS resolver hook, all answers vetted and returned as fixed IPs.
+        """SOCKS resolver hook, vetted answers returned as fixed IPs.
 
-        Any private/mixed/special answer rejects the whole connection. Convert
+        Non-global, private, or special-purpose addresses are filtered out.
+        The connection is refused only when no safe address remains. Convert
         faults to ValueError so the vendored proxy logs only fixed reason codes.
         No injectable private-allow resolver exists in the production API.
         """
@@ -73,13 +74,16 @@ class BrowserPolicy:
             raise ValueError(Reason.POLICY_BLOCKED.value)
         try:
             records = socket.getaddrinfo(host, 443, type=socket.SOCK_STREAM, proto=socket.IPPROTO_TCP)
-            addresses = list(dict.fromkeys(str(record[4][0]) for record in records))
+            candidates = list(dict.fromkeys(str(record[4][0]) for record in records))
+            if not candidates:
+                raise ValueError
+            addresses = []
+            for address in candidates:
+                ip = ipaddress.ip_address(address)
+                if ip.is_global and not ip.is_multicast and not ip.is_reserved and not ip.is_unspecified and not ip.is_loopback and not ip.is_link_local and not (isinstance(ip, ipaddress.IPv6Address) and ip.is_site_local):
+                    addresses.append(address)
             if not addresses:
                 raise ValueError
-            for address in addresses:
-                ip = ipaddress.ip_address(address)
-                if not ip.is_global or ip.is_multicast or ip.is_reserved or ip.is_unspecified or ip.is_loopback or ip.is_link_local or (isinstance(ip, ipaddress.IPv6Address) and ip.is_site_local):
-                    raise ValueError
             return addresses
-        except (OSError, ValueError, TypeError):
+        except (IndexError, OSError, ValueError, TypeError):
             raise ValueError(Reason.POLICY_BLOCKED.value) from None

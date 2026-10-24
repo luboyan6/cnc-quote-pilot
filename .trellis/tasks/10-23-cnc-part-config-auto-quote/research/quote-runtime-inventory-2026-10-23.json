@@ -1,0 +1,97 @@
+{
+  "read_only": true,
+  "database_revisions": [
+    "4e51456ea4db"
+  ],
+  "configurations": [
+    {
+      "config_id": 1,
+      "part_id": 2,
+      "platform_id": 1,
+      "enabled": true,
+      "material": "Aluminum 6061-T6x (Best Available)",
+      "quantity": 1,
+      "surface_finish": "Standard",
+      "extension": "step",
+      "upload_authorized": true,
+      "validation_status": "PENDING",
+      "enabled_accounts": 1
+    }
+  ],
+  "runs": [
+    {
+      "run_id": "74a8b51b-fb3b-4f97-9c6b-c7e8fdfa1c74",
+      "config_id": 1,
+      "part_id": 2,
+      "platform_id": 1,
+      "account_id": 1,
+      "status": "CANCELLED",
+      "stage": "prepare",
+      "reason": "QUOTE_CANCELLED",
+      "active_config_id": null
+    },
+    {
+      "run_id": "9dee1b76-8674-4208-bc9e-7b07eca2f289",
+      "config_id": 1,
+      "part_id": 2,
+      "platform_id": 1,
+      "account_id": 1,
+      "status": "FAILED",
+      "stage": "prepare",
+      "reason": "PROVIDER_AUTOMATION_UNVERIFIED",
+      "active_config_id": null
+    },
+    {
+      "run_id": "b6c955ec-c10a-4d61-8ebe-cd736e846611",
+      "config_id": 1,
+      "part_id": 2,
+      "platform_id": 1,
+      "account_id": 1,
+      "status": "FAILED",
+      "stage": "prepare",
+      "reason": "PROVIDER_AUTOMATION_UNVERIFIED",
+      "active_config_id": null
+    },
+    {
+      "run_id": "e8dea2c1-3430-4279-832e-1e655ced79b8",
+      "config_id": 1,
+      "part_id": 2,
+      "platform_id": 1,
+      "account_id": 1,
+      "status": "CANCELLED",
+      "stage": "parse",
+      "reason": "RESEARCH_UPLOAD_UNCONFIRMED_NO_RETRY",
+      "active_config_id": null
+    },
+    {
+      "run_id": "e7b08106-cb2f-452e-a3ff-511d314b9630",
+      "config_id": 1,
+      "part_id": 2,
+      "platform_id": 1,
+      "account_id": 1,
+      "status": "CANCELLED",
+      "stage": "login",
+      "reason": "LOGIN_VERIFIED",
+      "active_config_id": null
+    }
+  ],
+  "intent_counts": [
+    {
+      "run_id": "e8dea2c1-3430-4279-832e-1e655ced79b8",
+      "operation": "upload",
+      "state": "uncertain",
+      "count": 1
+    }
+  ],
+  "platform_account_counts": [
+    {
+      "platform_id": 1,
+      "platform_name": "xometry",
+      "enabled_accounts": 1
+    }
+  ],
+  "runtime_activity": {
+    "nonterminal_quote_runs": 0,
+    "live_account_leases": 0
+  }
+}

@@ -1,0 +1,1699 @@
+{
+  "run_id": "e8dea2c1-3430-4279-832e-1e655ced79b8",
+  "observations": [
+    {
+      "step": 0,
+      "dom": {
+        "headings": [
+          "Dashboard",
+          "No Tools Yet",
+          "No Parts Yet",
+          "Pay Your Way",
+          "Reorder in One Click"
+        ],
+        "fileInputs": [
+          {
+            "id": "",
+            "accept": "",
+            "multiple": true
+          }
+        ],
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "id": "header-login-register-button",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "Log In / Register",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "dashboard-get-instant-quote-block",
+            "type": "button",
+            "role": null,
+            "label": "Start a quote",
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "dashboard-get-instant-quote-primary",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "Get an Instant Quote",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "rc-tabs-0-more",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "id": "",
+            "type": "search",
+            "role": null,
+            "label": "Search quotes",
+            "text": "",
+            "value": null,
+            "checked": false,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "id": "quote-table-date-filter",
+            "type": "search",
+            "role": "combobox",
+            "label": "Filter by date",
+            "text": "",
+            "value": null,
+            "checked": false,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "dashboard-table-columns-toggle",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "Customize Columns",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "quote-table-export",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "Export CSV",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "id": "",
+            "type": "checkbox",
+            "role": null,
+            "label": "Select all",
+            "text": "",
+            "value": "on",
+            "checked": false,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "id": "",
+            "type": "checkbox",
+            "role": null,
+            "label": "Select all",
+            "text": "",
+            "value": "on",
+            "checked": false,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "id": "",
+            "type": "checkbox",
+            "role": null,
+            "label": null,
+            "text": "",
+            "value": "on",
+            "checked": false,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "dashboard-table-expand-Q78-4652-8737",
+            "type": "button",
+            "role": null,
+            "label": "Expand quote Q78-4652-8737",
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "label": "More actions for quote Q78-4652-8737",
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "id": "",
+            "type": "checkbox",
+            "role": null,
+            "label": null,
+            "text": "",
+            "value": "on",
+            "checked": false,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "dashboard-table-expand-Q59-6980-1120",
+            "type": "button",
+            "role": null,
+            "label": "Expand quote Q59-6980-1120",
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "label": "More actions for quote Q59-6980-1120",
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": true
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": true
+          },
+          {
+            "tag": "INPUT",
+            "id": "_r_32_",
+            "type": "search",
+            "role": "combobox",
+            "label": "Page Size",
+            "text": "",
+            "value": null,
+            "checked": false,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "orders-table-log-in",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "Log In",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "tools-table-empty-start-quote",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "Get an Instant Quote",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "privacy-banner-accept-button",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "Accept",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "label": "Close",
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "id": "",
+            "type": "file",
+            "role": null,
+            "label": "Choose files to upload",
+            "text": "",
+            "value": null,
+            "checked": false,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "label": "Drag and drop, or choose a file",
+            "text": "Drag and drop, or choose a file\nUpload at least 1 CAD file to get started.\nCAD, drawings, and more — up to 150 MB per file",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "instant-quote-recent",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "Add from Recent CAD Files",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "id": "",
+            "type": "checkbox",
+            "role": null,
+            "label": null,
+            "text": "",
+            "value": "on",
+            "checked": false,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "label": "What is a large or assembly order?",
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "instant-quote-continue",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "Start Instant Quote",
+            "value": null,
+            "checked": null,
+            "disabled": true
+          }
+        ],
+        "dialogs": [
+          "Start a New Quote\nUpload a 3D model to see instant pricing, lead time, and DFM feedback.\nDrag and drop, or choose a file\nUpload at least 1 CAD file to get started.\nCAD, drawings, and more — up to 150 MB per file \nAdd from Recent CAD Files\nSign in to start a new quote.\nThis is a large or assembly order\nStart Instant Quote"
+        ],
+        "labels": [
+          {
+            "for": "",
+            "text": ""
+          },
+          {
+            "for": "",
+            "text": ""
+          },
+          {
+            "for": "",
+            "text": ""
+          },
+          {
+            "for": "",
+            "text": ""
+          },
+          {
+            "for": "",
+            "text": "This is a large or assembly order"
+          }
+        ],
+        "summaries": [
+          {
+            "testid": "Button-quote-table-export",
+            "text": "Export CSV"
+          },
+          {
+            "testid": "part-thumbnail-stack",
+            "text": ""
+          },
+          {
+            "testid": "part-thumbnail-stack",
+            "text": ""
+          },
+          {
+            "testid": "slot-dashboard-partsTable",
+            "text": "No Parts YetParts you upload or quote will show up here.Get an Instant Quote"
+          },
+          {
+            "testid": "PartsTable-parts-table-empty-cta",
+            "text": "Get an Instant Quote"
+          }
+        ]
+      }
+    },
+    {
+      "step": 1,
+      "dom": {
+        "headings": [
+          "Dashboard",
+          "No Tools Yet",
+          "No Parts Yet",
+          "Pay Your Way",
+          "Reorder in One Click"
+        ],
+        "fileInputs": [
+          {
+            "id": "",
+            "accept": "",
+            "multiple": true
+          }
+        ],
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "id": "header-login-register-button",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "Log In / Register",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "dashboard-get-instant-quote-block",
+            "type": "button",
+            "role": null,
+            "label": "Start a quote",
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "dashboard-get-instant-quote-primary",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "Get an Instant Quote",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "rc-tabs-0-more",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "id": "",
+            "type": "search",
+            "role": null,
+            "label": "Search quotes",
+            "text": "",
+            "value": null,
+            "checked": false,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "id": "quote-table-date-filter",
+            "type": "search",
+            "role": "combobox",
+            "label": "Filter by date",
+            "text": "",
+            "value": null,
+            "checked": false,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "dashboard-table-columns-toggle",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "Customize Columns",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "quote-table-export",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "Export CSV",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "id": "",
+            "type": "checkbox",
+            "role": null,
+            "label": "Select all",
+            "text": "",
+            "value": "on",
+            "checked": false,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "id": "",
+            "type": "checkbox",
+            "role": null,
+            "label": "Select all",
+            "text": "",
+            "value": "on",
+            "checked": false,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "id": "",
+            "type": "checkbox",
+            "role": null,
+            "label": null,
+            "text": "",
+            "value": "on",
+            "checked": false,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "dashboard-table-expand-Q78-4652-8737",
+            "type": "button",
+            "role": null,
+            "label": "Expand quote Q78-4652-8737",
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "label": "More actions for quote Q78-4652-8737",
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "id": "",
+            "type": "checkbox",
+            "role": null,
+            "label": null,
+            "text": "",
+            "value": "on",
+            "checked": false,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "dashboard-table-expand-Q59-6980-1120",
+            "type": "button",
+            "role": null,
+            "label": "Expand quote Q59-6980-1120",
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "label": "More actions for quote Q59-6980-1120",
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": true
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": true
+          },
+          {
+            "tag": "INPUT",
+            "id": "_r_32_",
+            "type": "search",
+            "role": "combobox",
+            "label": "Page Size",
+            "text": "",
+            "value": null,
+            "checked": false,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "orders-table-log-in",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "Log In",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "tools-table-empty-start-quote",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "Get an Instant Quote",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "privacy-banner-accept-button",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "Accept",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "label": "Close",
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "id": "",
+            "type": "file",
+            "role": null,
+            "label": "Choose files to upload",
+            "text": "",
+            "value": null,
+            "checked": false,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "label": "Drag and drop, or choose a file",
+            "text": "Drag and drop, or choose a file\nUpload at least 1 CAD file to get started.\nCAD, drawings, and more — up to 150 MB per file",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "instant-quote-recent",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "Add from Recent CAD Files",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "instant-quote-remove-file-part.step::300561::1792739311926",
+            "type": "button",
+            "role": null,
+            "label": "Remove part.step",
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "id": "",
+            "type": "checkbox",
+            "role": null,
+            "label": null,
+            "text": "",
+            "value": "on",
+            "checked": false,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "label": "What is a large or assembly order?",
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "instant-quote-continue",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "Start Instant Quote",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          }
+        ],
+        "dialogs": [
+          "Start a New Quote\nUpload a 3D model to see instant pricing, lead time, and DFM feedback.\nDrag and drop, or choose a file\nUpload at least 1 CAD file to get started.\nCAD, drawings, and more — up to 150 MB per file \nAdd from Recent CAD Files\nSign in to start a new quote.\npart.step\nClassifying…\n0 parts ready · 1 uploading\nThis is a large or assembly order\nStart Instant Quote"
+        ],
+        "labels": [
+          {
+            "for": "",
+            "text": ""
+          },
+          {
+            "for": "",
+            "text": ""
+          },
+          {
+            "for": "",
+            "text": ""
+          },
+          {
+            "for": "",
+            "text": ""
+          },
+          {
+            "for": "",
+            "text": "This is a large or assembly order"
+          }
+        ],
+        "summaries": [
+          {
+            "testid": "Button-quote-table-export",
+            "text": "Export CSV"
+          },
+          {
+            "testid": "part-thumbnail-stack",
+            "text": ""
+          },
+          {
+            "testid": "part-thumbnail-stack",
+            "text": ""
+          },
+          {
+            "testid": "slot-dashboard-partsTable",
+            "text": "No Parts YetParts you upload or quote will show up here.Get an Instant Quote"
+          },
+          {
+            "testid": "PartsTable-parts-table-empty-cta",
+            "text": "Get an Instant Quote"
+          },
+          {
+            "testid": "staged-file-part.step::300561::1792739311926",
+            "text": "part.step\nClassifying…"
+          },
+          {
+            "testid": "staged-file-progress-part.step::300561::1792739311926",
+            "text": "Classifying…"
+          },
+          {
+            "testid": "StagedFileList-instant-quote-remove-file-part.step::300561::1792739311926",
+            "text": ""
+          }
+        ]
+      }
+    },
+    {
+      "step": 2,
+      "dom": {
+        "headings": [
+          "Dashboard",
+          "No Tools Yet",
+          "No Parts Yet",
+          "Pay Your Way",
+          "Reorder in One Click"
+        ],
+        "fileInputs": [
+          {
+            "id": "",
+            "accept": "",
+            "multiple": true
+          }
+        ],
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "id": "header-login-register-button",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "Log In / Register",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "dashboard-get-instant-quote-block",
+            "type": "button",
+            "role": null,
+            "label": "Start a quote",
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "dashboard-get-instant-quote-primary",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "Get an Instant Quote",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "rc-tabs-0-more",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "id": "",
+            "type": "search",
+            "role": null,
+            "label": "Search quotes",
+            "text": "",
+            "value": null,
+            "checked": false,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "id": "quote-table-date-filter",
+            "type": "search",
+            "role": "combobox",
+            "label": "Filter by date",
+            "text": "",
+            "value": null,
+            "checked": false,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "dashboard-table-columns-toggle",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "Customize Columns",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "quote-table-export",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "Export CSV",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "id": "",
+            "type": "checkbox",
+            "role": null,
+            "label": "Select all",
+            "text": "",
+            "value": "on",
+            "checked": false,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "id": "",
+            "type": "checkbox",
+            "role": null,
+            "label": "Select all",
+            "text": "",
+            "value": "on",
+            "checked": false,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "id": "",
+            "type": "checkbox",
+            "role": null,
+            "label": null,
+            "text": "",
+            "value": "on",
+            "checked": false,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "dashboard-table-expand-Q78-4652-8737",
+            "type": "button",
+            "role": null,
+            "label": "Expand quote Q78-4652-8737",
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "label": "More actions for quote Q78-4652-8737",
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "id": "",
+            "type": "checkbox",
+            "role": null,
+            "label": null,
+            "text": "",
+            "value": "on",
+            "checked": false,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "dashboard-table-expand-Q59-6980-1120",
+            "type": "button",
+            "role": null,
+            "label": "Expand quote Q59-6980-1120",
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "label": "More actions for quote Q59-6980-1120",
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": true
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": true
+          },
+          {
+            "tag": "INPUT",
+            "id": "_r_32_",
+            "type": "search",
+            "role": "combobox",
+            "label": "Page Size",
+            "text": "",
+            "value": null,
+            "checked": false,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "orders-table-log-in",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "Log In",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "tools-table-empty-start-quote",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "Get an Instant Quote",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "privacy-banner-accept-button",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "Accept",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "label": "Close",
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "id": "",
+            "type": "file",
+            "role": null,
+            "label": "Choose files to upload",
+            "text": "",
+            "value": null,
+            "checked": false,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "label": "Drag and drop, or choose a file",
+            "text": "Drag and drop, or choose a file\nUpload at least 1 CAD file to get started.\nCAD, drawings, and more — up to 150 MB per file",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "instant-quote-recent",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "Add from Recent CAD Files",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "instant-quote-remove-file-part.step::300561::1792739311926",
+            "type": "button",
+            "role": null,
+            "label": "Remove part.step",
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "id": "",
+            "type": "checkbox",
+            "role": null,
+            "label": null,
+            "text": "",
+            "value": "on",
+            "checked": false,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "label": "What is a large or assembly order?",
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "instant-quote-continue",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "Start Instant Quote",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          }
+        ],
+        "dialogs": [
+          "Start a New Quote\nUpload a 3D model to see instant pricing, lead time, and DFM feedback.\nDrag and drop, or choose a file\nUpload at least 1 CAD file to get started.\nCAD, drawings, and more — up to 150 MB per file \nAdd from Recent CAD Files\nSign in to start a new quote.\npart.step\n1 part ready\nThis is a large or assembly order\nStart Instant Quote"
+        ],
+        "labels": [
+          {
+            "for": "",
+            "text": ""
+          },
+          {
+            "for": "",
+            "text": ""
+          },
+          {
+            "for": "",
+            "text": ""
+          },
+          {
+            "for": "",
+            "text": ""
+          },
+          {
+            "for": "",
+            "text": "This is a large or assembly order"
+          }
+        ],
+        "summaries": [
+          {
+            "testid": "Button-quote-table-export",
+            "text": "Export CSV"
+          },
+          {
+            "testid": "part-thumbnail-stack",
+            "text": ""
+          },
+          {
+            "testid": "part-thumbnail-stack",
+            "text": ""
+          },
+          {
+            "testid": "slot-dashboard-partsTable",
+            "text": "No Parts YetParts you upload or quote will show up here.Get an Instant Quote"
+          },
+          {
+            "testid": "PartsTable-parts-table-empty-cta",
+            "text": "Get an Instant Quote"
+          },
+          {
+            "testid": "staged-file-part.step::300561::1792739311926",
+            "text": "part.step"
+          },
+          {
+            "testid": "StagedFileList-instant-quote-remove-file-part.step::300561::1792739311926",
+            "text": ""
+          }
+        ]
+      }
+    },
+    {
+      "step": 3,
+      "dom": {
+        "headings": [
+          "Dashboard",
+          "No Tools Yet",
+          "No Parts Yet",
+          "Pay Your Way",
+          "Reorder in One Click"
+        ],
+        "fileInputs": [],
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "id": "header-login-register-button",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "Log In / Register",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "dashboard-get-instant-quote-block",
+            "type": "button",
+            "role": null,
+            "label": "Start a quote",
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "dashboard-get-instant-quote-primary",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "Get an Instant Quote",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "rc-tabs-0-more",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "id": "",
+            "type": "search",
+            "role": null,
+            "label": "Search quotes",
+            "text": "",
+            "value": null,
+            "checked": false,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "id": "quote-table-date-filter",
+            "type": "search",
+            "role": "combobox",
+            "label": "Filter by date",
+            "text": "",
+            "value": null,
+            "checked": false,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "dashboard-table-columns-toggle",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "Customize Columns",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "quote-table-export",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "Export CSV",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "id": "",
+            "type": "checkbox",
+            "role": null,
+            "label": "Select all",
+            "text": "",
+            "value": "on",
+            "checked": false,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "id": "",
+            "type": "checkbox",
+            "role": null,
+            "label": "Select all",
+            "text": "",
+            "value": "on",
+            "checked": false,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "id": "",
+            "type": "checkbox",
+            "role": null,
+            "label": null,
+            "text": "",
+            "value": "on",
+            "checked": false,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "dashboard-table-expand-Q78-4652-8737",
+            "type": "button",
+            "role": null,
+            "label": "Expand quote Q78-4652-8737",
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "label": "More actions for quote Q78-4652-8737",
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "id": "",
+            "type": "checkbox",
+            "role": null,
+            "label": null,
+            "text": "",
+            "value": "on",
+            "checked": false,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "dashboard-table-expand-Q59-6980-1120",
+            "type": "button",
+            "role": null,
+            "label": "Expand quote Q59-6980-1120",
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "label": "More actions for quote Q59-6980-1120",
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": true
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": true
+          },
+          {
+            "tag": "INPUT",
+            "id": "_r_32_",
+            "type": "search",
+            "role": "combobox",
+            "label": "Page Size",
+            "text": "",
+            "value": null,
+            "checked": false,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "orders-table-log-in",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "Log In",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "tools-table-empty-start-quote",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "Get an Instant Quote",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "privacy-banner-accept-button",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "Accept",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "",
+            "type": "button",
+            "role": null,
+            "label": "Close",
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "id": "",
+            "type": "radio",
+            "role": null,
+            "label": null,
+            "text": "",
+            "value": "confirmed-not-itar",
+            "checked": true,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "id": "",
+            "type": "radio",
+            "role": null,
+            "label": null,
+            "text": "",
+            "value": "confirmed-itar",
+            "checked": false,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "instant-quote-remove-file-part.step::300561::1792739311926",
+            "type": "button",
+            "role": null,
+            "label": "Remove part.step",
+            "text": "",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "instant-quote-back",
+            "type": "button",
+            "role": null,
+            "label": "Back to upload",
+            "text": "‹ Back",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          },
+          {
+            "tag": "BUTTON",
+            "id": "itar-continue",
+            "type": "button",
+            "role": null,
+            "label": null,
+            "text": "Continue",
+            "value": null,
+            "checked": null,
+            "disabled": false
+          }
+        ],
+        "dialogs": [
+          "Start a New Quote\nAre any parts in this quote subject to export control regulations?\nCertain parts may be subject to various US regulations. Learn more about export controls.\nNo, this quote does not include parts subject to ITAR, EAR, Dual-Use, Military/Defense, or Firearms regulations, or otherwise considered Controlled Unclassified Information (CUI). Choose this option if the classification for your parts is EAR99.\nYes, parts in this quote are subject to ITAR, EAR, Dual-Use, Military/Defense, or Firearms regulations, or are otherwise considered Controlled Unclassified Information (CUI).\npart.step\n‹ Back\nContinue"
+        ],
+        "labels": [
+          {
+            "for": "",
+            "text": ""
+          },
+          {
+            "for": "",
+            "text": ""
+          },
+          {
+            "for": "",
+            "text": ""
+          },
+          {
+            "for": "",
+            "text": ""
+          },
+          {
+            "for": "",
+            "text": "No, this quote does not include parts subject to ITAR, EAR, Dual-Use, Military/Defense, or Firearms regulations, or otherwise considered Controlled Unclassified Information (CUI). Choose this option if the classification for your parts is EAR99."
+          },
+          {
+            "for": "",
+            "text": "Yes, parts in this quote are subject to ITAR, EAR, Dual-Use, Military/Defense, or Firearms regulations, or are otherwise considered Controlled Unclassified Information (CUI)."
+          }
+        ],
+        "summaries": [
+          {
+            "testid": "Button-quote-table-export",
+            "text": "Export CSV"
+          },
+          {
+            "testid": "part-thumbnail-stack",
+            "text": ""
+          },
+          {
+            "testid": "part-thumbnail-stack",
+            "text": ""
+          },
+          {
+            "testid": "slot-dashboard-partsTable",
+            "text": "No Parts YetParts you upload or quote will show up here.Get an Instant Quote"
+          },
+          {
+            "testid": "PartsTable-parts-table-empty-cta",
+            "text": "Get an Instant Quote"
+          },
+          {
+            "testid": "ItarView-itar-learn-more",
+            "text": "Learn more about export controls."
+          },
+          {
+            "testid": "ItarView-itar-option-confirmed-not-itar",
+            "text": ""
+          },
+          {
+            "testid": "ItarView-itar-option-confirmed-itar",
+            "text": ""
+          },
+          {
+            "testid": "staged-file-part.step::300561::1792739311926",
+            "text": "part.step"
+          },
+          {
+            "testid": "StagedFileList-instant-quote-remove-file-part.step::300561::1792739311926",
+            "text": ""
+          },
+          {
+            "testid": "ItarView-instant-quote-back",
+            "text": "‹ Back"
+          },
+          {
+            "testid": "ItarView-itar-continue",
+            "text": "Continue"
+          }
+        ]
+      }
+    }
+  ],
+  "upload_attempted": true
+}

@@ -87,7 +87,7 @@ class CncPlatformService:
     async def batch_export(obj_list: list[dict[str, Any]]) -> bytes:
         mapping_dict = {
             'id': '主键ID',
-            'name': '平台显示名称',
+            'name': '平台名称',
             'created_time': '创建时间',
             'updated_time': '更新时间',
             'created_id': '创建人ID',
@@ -108,7 +108,7 @@ class CncPlatformService:
 
     async def batch_import(self, file: UploadFile, update_support: bool = False) -> str:
         header_dict = {
-            '平台显示名称': 'name',
+            '平台名称': 'name',
             '登录地址': 'login_url',
             '询价地址': 'quote_entry_url',
         }
@@ -131,6 +131,9 @@ class CncPlatformService:
                 mapped_rows.append({en: row.get(ch) for ch, en in header_dict.items()})
 
             required_fields = [
+                'name',
+                'login_url',
+                'quote_entry_url',
             ]
             errors = []
             for field in required_fields:
@@ -168,7 +171,7 @@ class CncPlatformService:
     @staticmethod
     def import_template_download() -> bytes:
         header_list = [
-            '平台显示名称',
+            '平台名称',
             '登录地址',
             '询价地址',
         ]

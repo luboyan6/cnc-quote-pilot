@@ -59,7 +59,7 @@
     <FaDialog
       v-model="dialogVisible.visible"
       :title="dialogVisible.title"
-      width="920px"
+      width="640px"
       dialog-class="crud-embed-dialog"
       modal-class="crud-embed-dialog"
       :form-mode="dialogVisible.type"
@@ -70,7 +70,7 @@
     >
       <template v-if="dialogVisible.type === 'detail'">
         <FaDescriptions
-          :column="4"
+          :column="2"
           :data="detailFormData"
           :items="detailItems"
           max-height="70vh"
@@ -89,7 +89,7 @@
           label-suffix=":"
           :label-width="100"
           label-position="right"
-          :span="12"
+          :span="24"
           :gutter="16"
           :show-reset="false"
           :show-submit="false"
@@ -179,10 +179,10 @@ const searchBarRules: Record<string, unknown> = {};
 /** 业务搜索项（审计四字段由 FaSearchBar 的 includeAudit 属性追加） */
 const businessSearchItems = computed(() => [
   {
-    label: "平台显示名称",
+    label: "平台名称",
     key: "name",
     type: "input",
-    placeholder: "请输入平台显示名称",
+    placeholder: "请输入平台名称",
     clearable: true,
     span: 6,
   },
@@ -223,7 +223,7 @@ const {
     columnsFactory: resolveStatusColumns<CncPlatformTable>(() => [
       { type: "selection", width: 48, fixed: "left" },
       { type: "globalIndex", width: 56, label: "序号" },
-      { prop: "name", label: "平台显示名称", minWidth: 120, showOverflowTooltip: true },
+      { prop: "name", label: "平台名称", minWidth: 120, showOverflowTooltip: true },
       { prop: "created_time", label: "创建时间", width: 168, sortable: true, showOverflowTooltip: true },
       { prop: "updated_time", label: "更新时间", width: 168, sortable: true, showOverflowTooltip: true },
       {
@@ -283,7 +283,7 @@ const { dialogVisible } = useCrudDialog();
 const detailFormData = ref<CncPlatformTable>({});
 
 const detailItems: import("@/components/display/fa-descriptions/index.vue").DescriptionsItem[] = [
-  { label: "平台显示名称", prop: "name" },
+  { label: "平台名称", prop: "name" },
   { label: "创建时间", prop: "created_time" },
   { label: "更新时间", prop: "updated_time" },
   { label: "创建人", prop: "created_by.name" },
@@ -295,13 +295,13 @@ const detailItems: import("@/components/display/fa-descriptions/index.vue").Desc
 const formData = ref<CncPlatformForm>(createInitialFormData());
 
 const rules = reactive({
-  name: [{ required: false, message: "请填写平台显示名称", trigger: "blur" }],
-  login_url: [{ required: false, message: "请填写登录地址", trigger: "blur" }],
-  quote_entry_url: [{ required: false, message: "请填写询价地址", trigger: "blur" }],
+  name: [{ required: true, message: "请填写平台名称", trigger: "blur" }],
+  login_url: [{ required: true, message: "请填写登录地址", trigger: "blur" }],
+  quote_entry_url: [{ required: true, message: "请填写询价地址", trigger: "blur" }],
 });
 
 const dialogFormItems: FormItem[] = [
-  { key: "name", label: "平台显示名称", type: "input", props: { placeholder: "请输入平台显示名称" } },
+  { key: "name", label: "平台名称", type: "input", props: { placeholder: "请输入平台名称" } },
   { key: "login_url", label: "登录地址", type: "input", props: { type: "textarea", rows: 4, placeholder: "请输入登录地址" } },
   { key: "quote_entry_url", label: "询价地址", type: "input", props: { type: "textarea", rows: 4, placeholder: "请输入询价地址" } },
 ];

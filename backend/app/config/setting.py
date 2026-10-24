@@ -226,8 +226,11 @@ class Settings(BaseSettings):
         ".svg",
         ".xls",
         ".xlsx",
+        ".step",
+        ".stp",
+        ".setp",
     ]
-    MAX_FILE_SIZE: int = 10 * 1024 * 1024  # 最大文件大小(10MB)
+    MAX_FILE_SIZE: int = 50 * 1024 * 1024  # 最大文件大小(50MB)
 
     # ================================================= #
     # ***************** Swagger配置 ***************** #

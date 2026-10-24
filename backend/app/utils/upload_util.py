@@ -226,6 +226,13 @@ class UploadUtil:
         异常:
         - CustomException: 类型不匹配时抛出。
         """
+        # Basic Part 21 framing only: this does not parse geometry or units.
+        # .setp is retained as the upload form's historical spelling alias.
+        if claimed_extension.lower() in {".step", ".stp", ".setp"}:
+            if not content.lstrip().startswith(b"ISO-10303-21;") or not content.rstrip().endswith(b"END-ISO-10303-21;"):
+                raise CustomException(msg="图纸不是有效的 STEP 文件（缺少文件头或结束标记）")
+            return True
+
         detected_type = cls.detect_file_type(content)
         if detected_type:
             expected_ext = MIME_TYPE_MAPPING.get(detected_type, "")
@@ -418,8 +425,11 @@ class UploadUtil:
 
         cls.check_file_size(file)
 
-        content = await file.read()
+        # UploadFile.size can be absent or inaccurate; bound the actual bytes too.
+        content = await file.read(settings.MAX_FILE_SIZE + 1)
         await file.seek(0)
+        if len(content) > settings.MAX_FILE_SIZE:
+            raise CustomException(msg=f"文件大小超过限制，最大允许 {settings.MAX_FILE_SIZE // (1024 * 1024)}MB")
 
         cls.validate_file_content_type(content, extension)
 
@@ -455,12 +465,13 @@ class UploadUtil:
                 logger.error(f"检测到路径穿越攻击，目标路径: {filepath}")
                 raise CustomException(msg="非法的文件路径")
 
-            file_url = urljoin(base_url, str(filepath))
+            file_url = urljoin(base_url, filepath.as_posix())
 
             chunk_size = 8 * 1024 * 1024
             async with aiofiles.open(filepath, "wb") as f:
-                while chunk := await file.read(chunk_size):
-                    await f.write(chunk)
+                # Persist the exact bytes checked above, not a second stream read.
+                for offset in range(0, len(content), chunk_size):
+                    await f.write(content[offset : offset + chunk_size])
 
             return safe_filename, filepath, file_url
 

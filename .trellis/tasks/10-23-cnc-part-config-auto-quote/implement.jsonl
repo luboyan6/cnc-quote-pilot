@@ -1,0 +1,7 @@
+{"file":".trellis/spec/backend/cnc-account-login.md","reason":"Reuse actor-scoped controlled login, fenced leases, private input/frame APIs and lifecycle without credential disclosure"}
+{"file":".trellis/spec/backend/browser-executor.md","reason":"Respect task ownership, trusted uploads, durable mutation intents and same-request verified quote validation"}
+{"file":".trellis/spec/backend/cnc-auto-quote.md","reason":"Implemented quote-local API, current RBAC, persistence, owner and result contracts"}
+{"file":".trellis/spec/frontend/cnc-auto-quote.md","reason":"Implemented quote UI lifecycle, cross-config cleanup barriers and exact result rendering"}
+{"file":".trellis/spec/frontend/index.md","reason":"Discover applicable frontend conventions before implementation"}
+{"file":".trellis/spec/guides/cross-layer-thinking-guide.md","reason":"Keep API, persisted run state and dialog contracts consistent"}
+{"file":".trellis/tasks/10-23-cnc-part-config-auto-quote/research/existing-flow.md","reason":"Current code evidence, platform-ID semantics, account-selection decision and provider readiness gates"}

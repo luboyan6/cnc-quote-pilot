@@ -219,6 +219,10 @@ describe("受控浏览器输入", () => {
       session: state({ status: "CLOSED", reason: "SESSION_LIFETIME_EXPIRED" }),
     });
     expect(wrapper.get(".el-alert").text()).toContain("会话已过期");
+    await wrapper.setProps({
+      session: state({ status: "FAILED", reason: "browser_failed" }),
+    });
+    expect(wrapper.get(".el-alert").text()).toContain("浏览器启动失败");
   });
 
   it("缩放坐标映射至固定 viewport，并提供键盘、文本及滚动操作", async () => {

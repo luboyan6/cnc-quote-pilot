@@ -1,4 +1,5 @@
 import asyncio
+import socket
 import threading
 import unittest
 from unittest.mock import AsyncMock, patch
@@ -23,11 +24,11 @@ async def socks_request(proxy_url, host, port):
 
 
 class EgressTests(unittest.IsolatedAsyncioTestCase):
-    async def test_protocol_rejects_non443_unknown_and_mixed_dns_before_connect(self):
+    async def test_protocol_rejects_non443_unknown_and_unsafe_only_dns_before_connect(self):
         for port, host, answers in (
             (80, "fixture.example.com", ["8.8.8.8"]),
             (443, "unknown.test", ["8.8.8.8"]),
-            (443, "fixture.example.com", ["8.8.8.8", "127.0.0.1"]),
+            (443, "fixture.example.com", ["127.0.0.1", "2001:2::120", "fec0::1"]),
         ):
             with self.subTest(port=port, host=host):
                 proxy = BrowserEgressProxy(POLICY.resolve)
@@ -47,6 +48,30 @@ class EgressTests(unittest.IsolatedAsyncioTestCase):
                 finally:
                     await proxy.close()
                 self.assertFalse(proxy._handlers)
+
+    async def test_mixed_dns_connects_only_to_safe_pinned_ips(self):
+        answers = ["127.0.0.1", "8.8.8.8", "2001:2::120", "fec0::1", "2001:4860:4860::8888", "8.8.8.8", "10.0.0.1"]
+        records = [(2, 1, 6, "", (ip, 443)) for ip in answers]
+        proxy = BrowserEgressProxy(POLICY.resolve)
+        url = await proxy.start()
+        writer = None
+        try:
+            with (
+                patch("app.modules.cnc.browser.policy.socket.getaddrinfo", return_value=records) as dns,
+                patch("app.modules.cnc.browser.third_party.egress._open_first", new_callable=AsyncMock, return_value=None) as connect,
+            ):
+                reader, writer = await socks_request(url, "fixture.example.com", 443)
+                response = await asyncio.wait_for(reader.readexactly(10), 2)
+                self.assertEqual(response[1], 4)
+                connect.assert_awaited_once_with(["8.8.8.8", "2001:4860:4860::8888"], 443)
+                dns.assert_called_once_with("fixture.example.com", 443, type=socket.SOCK_STREAM, proto=socket.IPPROTO_TCP)
+        finally:
+            if writer is not None:
+                writer.close()
+                await writer.wait_closed()
+            await proxy.close()
+        self.assertFalse(proxy._handlers)
+        self.assertFalse(proxy._client_writers)
 
     async def test_proxy_passes_only_vetted_ips_to_connection_and_logs_no_raw_fault(self):
         proxy = BrowserEgressProxy(lambda host: ["8.8.8.8"])

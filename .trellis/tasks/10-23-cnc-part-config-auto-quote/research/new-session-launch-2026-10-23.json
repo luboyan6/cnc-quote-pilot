@@ -1,0 +1,29 @@
+{
+  "id": "0d69f26e-c9bd-4611-9e3a-2e2f59ac1ceb",
+  "ok": true,
+  "result": {
+    "outcome": {
+      "kind": "terminal",
+      "handle": "term_97b499ec-a8cc-4e3b-8032-9c3244b7645d",
+      "paneKey": "c230567b-89a0-4eac-9fe7-c1e4e3819dfd:aa2598d2-fdeb-402b-9f9b-8dac52003e16"
+    },
+    "worktreeId": "53a57f64-b833-487c-817e-e4489d58c742::E:/AIWorkspace/cnc-quote-pilot",
+    "receipt": {
+      "mode": "terminal",
+      "preferred": "terminal",
+      "reason": "user_default",
+      "detail": "Started a terminal agent, the default for new agent tabs in your settings."
+    },
+    "prompt": {
+      "delivery": "submit",
+      "outcome": "handed-to-terminal"
+    },
+    "placement": {
+      "groupId": "bd836c64-33d4-4ed1-9314-f687ab74eda7"
+    },
+    "operationId": "1792753940868-429c3398786846c98d97c205bcb696e1"
+  },
+  "_meta": {
+    "runtimeId": "0d929572-c94c-48bb-9d34-01b1b45b3dd8"
+  }
+}

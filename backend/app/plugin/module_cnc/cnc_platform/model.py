@@ -12,7 +12,7 @@ class CncPlatformModel(ModelMixin, UserMixin):
     """
     __tablename__: str = 'cnc_platform'
     __table_args__: dict[str, str] = {'comment': '竞价平台'}
-    name: Mapped[str | None] = mapped_column(String(100), nullable=True, comment='平台显示名称')
+    name: Mapped[str | None] = mapped_column(String(100), nullable=True, comment='平台名称')
     login_url: Mapped[str | None] = mapped_column(Text, nullable=True, comment='登录地址')
     quote_entry_url: Mapped[str | None] = mapped_column(Text, nullable=True, comment='询价地址')
 

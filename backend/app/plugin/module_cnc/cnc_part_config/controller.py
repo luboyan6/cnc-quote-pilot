@@ -10,12 +10,14 @@ from app.common.response import ResponseSchema, StreamResponse, SuccessResponse
 from app.core.base_schema import AuthSchema, BatchSetAvailable, PageResultSchema, PaginationQueryParam
 from app.core.dependencies import AuthPermission, db_getter
 from app.core.router_class import OperationLogRoute
+from app.modules.cnc.quote.routes import register_quote_routes
 from app.utils.common_util import bytes2file_response
 
 from .schema import CncPartConfigCreateSchema, CncPartConfigOutSchema, CncPartConfigQueryParam, CncPartConfigUpdateSchema
 from .service import CncPartConfigService
 
 CncPartConfigRouter = APIRouter(route_class=OperationLogRoute, prefix="/cnc_part_config", tags=["图纸参数配置表模块"])
+register_quote_routes(CncPartConfigRouter)
 
 
 @CncPartConfigRouter.get("/detail/{id}", summary="获取图纸参数配置表详情", response_model=ResponseSchema[CncPartConfigOutSchema])

@@ -8,6 +8,9 @@ from typing import Any
 
 from .errors import BrowserStop, Reason
 
+# Keep the upload form's legacy .setp spelling without renaming stored files.
+STEP_SUFFIXES = frozenset({".step", ".stp", ".setp"})
+
 
 @dataclass(frozen=True)
 class StepPayload:
@@ -36,7 +39,7 @@ class TrustedStep:
                 raise ValueError
             root = self.root.resolve(strict=True)
             path = self.path.resolve(strict=True)
-            if not root.is_dir() or not path.is_relative_to(root) or path.suffix.lower() not in {".step", ".stp"}:
+            if not root.is_dir() or not path.is_relative_to(root) or path.suffix.lower() not in STEP_SUFFIXES:
                 raise ValueError
             with path.open("rb") as stream:
                 contents = stream.read(self.max_size + 1)

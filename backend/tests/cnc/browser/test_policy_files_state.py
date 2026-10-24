@@ -1,4 +1,5 @@
 import hashlib
+import socket
 import tempfile
 import unittest
 from dataclasses import replace
@@ -46,18 +47,37 @@ class PolicyTests(unittest.TestCase):
     def records(*ips):
         return [(2, 1, 6, "", (ip, 443)) for ip in ips]
 
-    def test_dns_rejects_every_private_special_or_mixed_answer(self):
-        for ip in ("127.0.0.1", "10.0.0.1", "169.254.169.254", "::1", "fd00::1", "fe80::1", "fec0::1", "feff:ffff::1", "0.0.0.0", "224.0.0.1", "100.64.0.1", "192.0.2.1"):
-            for answers in ((ip,), ("8.8.8.8", ip)):
-                with self.subTest(answers=answers), patch("app.modules.cnc.browser.policy.socket.getaddrinfo", return_value=self.records(*answers)), self.assertRaises(ValueError):
+    def test_dns_filters_unsafe_candidates_and_rejects_unsafe_only_answers(self):
+        for ip in ("127.0.0.1", "10.0.0.1", "169.254.169.254", "::1", "fd00::1", "fe80::1", "fec0::1", "feff:ffff::1", "0.0.0.0", "224.0.0.1", "100.64.0.1", "192.0.2.1", "2001:2::120"):
+            with self.subTest(unsafe_only=ip), patch("app.modules.cnc.browser.policy.socket.getaddrinfo", return_value=self.records(ip)):
+                with self.assertRaises(ValueError) as error:
                     POLICY.resolve("fixture.example.com")
+                self.assertEqual(str(error.exception), Reason.POLICY_BLOCKED.value)
+            for answers in (("8.8.8.8", ip), (ip, "8.8.8.8")):
+                with self.subTest(answers=answers), patch("app.modules.cnc.browser.policy.socket.getaddrinfo", return_value=self.records(*answers)):
+                    self.assertEqual(POLICY.resolve("fixture.example.com"), ["8.8.8.8"])
 
     def test_resolver_returns_only_vetted_literal_ips_and_denies_unknown_host(self):
-        with patch("app.modules.cnc.browser.policy.socket.getaddrinfo", return_value=self.records("8.8.8.8", "8.8.8.8", "1.1.1.1")) as dns:
-            self.assertEqual(POLICY.resolve("fixture.example.com"), ["8.8.8.8", "1.1.1.1"])
+        with patch("app.modules.cnc.browser.policy.socket.getaddrinfo", return_value=self.records("8.8.8.8", "2001:4860:4860::8888", "8.8.8.8", "1.1.1.1", "2001:4860:4860::8888")) as dns:
+            self.assertEqual(POLICY.resolve("fixture.example.com"), ["8.8.8.8", "2001:4860:4860::8888", "1.1.1.1"])
+            dns.assert_called_once_with("fixture.example.com", 443, type=socket.SOCK_STREAM, proto=socket.IPPROTO_TCP)
             with self.assertRaises(ValueError):
                 POLICY.resolve("evil.test")
             self.assertEqual(dns.call_count, 1)
+
+    def test_dns_rejects_empty_or_malformed_answers_with_fixed_reason(self):
+        for records in ([], None, self.records("invalid-synthetic-detail"), self.records("8.8.8.8", "invalid-synthetic-detail"), [()], self.records("8.8.8.8") + [()], [(2, 1, 6, "", ())]):
+            with self.subTest(records=records), patch("app.modules.cnc.browser.policy.socket.getaddrinfo", return_value=records):
+                with self.assertRaises(ValueError) as error:
+                    POLICY.resolve("fixture.example.com")
+                self.assertEqual(str(error.exception), Reason.POLICY_BLOCKED.value)
+
+    def test_dns_resolver_faults_have_fixed_reason(self):
+        for fault in (OSError("synthetic-private-detail"), ValueError("synthetic-private-detail"), TypeError("synthetic-private-detail")):
+            with self.subTest(fault=type(fault).__name__), patch("app.modules.cnc.browser.policy.socket.getaddrinfo", side_effect=fault):
+                with self.assertRaises(ValueError) as error:
+                    POLICY.resolve("fixture.example.com")
+                self.assertEqual(str(error.exception), Reason.POLICY_BLOCKED.value)
 
     def test_scope_and_full_parameters_have_no_global_or_float_default(self):
         for values in (("", "p", "a"), ("o", " ", "a"), ("o", "p", "a\nsecret")):
@@ -92,6 +112,21 @@ class StateTests(unittest.TestCase):
 
 
 class FileTests(unittest.IsolatedAsyncioTestCase):
+    async def test_setp_alias_preserves_verified_bytes_and_sdk_name(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            step = fixture_step(root)
+            for suffix in (".setp", ".SETP"):
+                path = root / ("alias" + suffix)
+                path.write_bytes(STEP_BYTES)
+                payload = replace(step, path=path).read_verified()
+                self.assertEqual(payload.buffer, STEP_BYTES)
+                self.assertEqual(payload.sha256, step.expected_sha256)
+                locator = AsyncMock()
+                await upload_step(locator, payload)
+                locator.set_input_files.assert_awaited_once_with({"name": "part.step", "mimeType": "application/step", "buffer": STEP_BYTES})
+                self.assertTrue(path.exists())
+
     async def test_verified_bytes_avoid_path_reopen_and_sdk_uses_buffer(self):
         with tempfile.TemporaryDirectory() as directory:
             step = fixture_step(Path(directory))

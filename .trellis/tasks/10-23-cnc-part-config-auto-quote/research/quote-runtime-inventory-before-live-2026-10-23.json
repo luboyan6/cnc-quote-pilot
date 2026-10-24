@@ -1,0 +1,53 @@
+{
+  "read_only": true,
+  "database_revisions": [
+    "4e51456ea4db"
+  ],
+  "configurations": [
+    {
+      "config_id": 1,
+      "part_id": 2,
+      "platform_id": 1,
+      "enabled": true,
+      "material": "Aluminum 6061-T6x (Best Available)",
+      "quantity": 1,
+      "surface_finish": "Standard",
+      "extension": "step",
+      "upload_authorized": true,
+      "validation_status": "PENDING",
+      "enabled_accounts": 1
+    }
+  ],
+  "runs": [
+    {
+      "run_id": "e8dea2c1-3430-4279-832e-1e655ced79b8",
+      "config_id": 1,
+      "part_id": 2,
+      "platform_id": 1,
+      "account_id": 1,
+      "status": "CANCELLED",
+      "stage": "parse",
+      "reason": "RESEARCH_UPLOAD_UNCONFIRMED_NO_RETRY",
+      "active_config_id": null
+    },
+    {
+      "run_id": "e7b08106-cb2f-452e-a3ff-511d314b9630",
+      "config_id": 1,
+      "part_id": 2,
+      "platform_id": 1,
+      "account_id": 1,
+      "status": "CANCELLED",
+      "stage": "login",
+      "reason": "LOGIN_VERIFIED",
+      "active_config_id": null
+    }
+  ],
+  "intent_counts": [
+    {
+      "run_id": "e8dea2c1-3430-4279-832e-1e655ced79b8",
+      "operation": "upload",
+      "state": "uncertain",
+      "count": 1
+    }
+  ]
+}

@@ -64,6 +64,11 @@ OPTIONAL_RESOURCES = frozenset(
         "bzrcdn.openai.com",
         "ingress.us1.rum-ingress-coralogix.com",
         "rcg.conviva.com",
+        # Current quote-app instrumentation (official env.js/app source plus
+        # managed request evidence, 2026-10-23). Denied subresources only;
+        # these exact hosts never become allowed egress or navigation entries.
+        "d2d1457e431c55589cd6869389fcdc7da348eb3d.appgw.conviva.com",
+        "sentry.mgmt.global.xmtr.io",
         "xometry5836.my.salesforce-scrt.com",
         "xometry5836.my.site.com",
         "js.stripe.com",
@@ -206,6 +211,9 @@ PROVIDERS = (
                 "login.xometry.com",
                 "api.xometry.com",
                 "assets.xometry.com",
+                # Current authenticated quote-home native image previews;
+                # exact business file-delivery host, not a platform entry.
+                "us-files.xometry.com",
                 "cdn.auth0.com",
                 "fonts.gstatic.com",
                 "images.prismic.io",

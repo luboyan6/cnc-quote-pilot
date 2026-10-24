@@ -1,0 +1,82 @@
+[
+  {
+    "label": "Resumed session: read-only isolated Chrome page inventory",
+    "tool": "list_pages",
+    "args": {}
+  },
+  {
+    "label": "Resumed session: read-only current local configuration lifecycle and action semantics",
+    "tool": "evaluate_script",
+    "args": {
+      "pageId": 2,
+      "waitForStableDom": false,
+      "function": "() => ({url:location.href,visibleDialogs:Array.from(document.querySelectorAll('[role=dialog]')).filter(d=>d.getBoundingClientRect().width>0).map(d=>d.innerText),rowOperations:Array.from(document.querySelectorAll('tbody tr .hover-btn')).map(b=>({tag:b.tagName,role:b.getAttribute('role'),name:b.getAttribute('aria-label'),tabindex:b.getAttribute('tabindex'),loading:!!b.querySelector('.iconify--svg-spinners'),disabled:b.classList.contains('cursor-not-allowed')}))})"
+    }
+  },
+  {
+    "label": "Resumed session: read-only network index, no repeated quote or upload",
+    "tool": "list_network_requests",
+    "args": {
+      "pageId": 2,
+      "resourceTypes": [
+        "xhr",
+        "fetch"
+      ],
+      "pageSize": 100
+    }
+  },
+  {
+    "label": "Resumed session: current real-page console warnings/errors",
+    "tool": "list_console_messages",
+    "args": {
+      "pageId": 2,
+      "types": [
+        "error",
+        "warn"
+      ],
+      "pageSize": 20
+    }
+  },
+  {
+    "label": "Current browser: map the quote-row operation icons and linked config",
+    "tool": "evaluate_script",
+    "args": {
+      "waitForStableDom": false,
+      "function": "() => ({url:location.href, rows:Array.from(document.querySelectorAll(\"tbody tr\")).map((tr,row)=>({row,text:tr.innerText.trim(),operations:Array.from(tr.querySelectorAll(\".hover-btn\")).map((el,index)=>({index,title:el.title||el.getAttribute(\"data-tooltip\")||el.parentElement?.title||el.parentElement?.getAttribute(\"title\")||null,className:typeof el.className===\"string\"?el.className:\"\",iconClass:el.querySelector(\"svg\")?.getAttribute(\"class\")||el.querySelector(\"[class*=iconify]\")?.getAttribute(\"class\")||null,rect:(()=>{const r=el.getBoundingClientRect();return{x:Math.round(r.x),y:Math.round(r.y),width:Math.round(r.width),height:Math.round(r.height)}})(),disabled:el.classList.contains(\"cursor-not-allowed\")}))}))})",
+      "pageId": 2
+    }
+  },
+  {
+    "label": "Read-only continuation: wait for the single active UI run to reach terminal state",
+    "tool": "evaluate_script",
+    "args": {
+      "waitForStableDom": false,
+      "pageId": 2,
+      "function": "async () => { await new Promise(resolve=>setTimeout(resolve,15000)); return {dialogs:Array.from(document.querySelectorAll(\"[role=dialog]\")).filter(d=>d.getBoundingClientRect().width>0).map(d=>d.innerText.trim()),rowActions:Array.from(document.querySelectorAll(\"tbody tr .hover-btn\")).map((el,index)=>({index,loading:!!el.querySelector(\".iconify--svg-spinners\"),disabled:el.classList.contains(\"cursor-not-allowed\")}))}; }"
+    }
+  },
+  {
+    "label": "Read-only continuation: inspect the run account start and status requests",
+    "tool": "list_network_requests",
+    "args": {
+      "resourceTypes": [
+        "xhr",
+        "fetch"
+      ],
+      "pageSize": 100,
+      "pageId": 2
+    }
+  },
+  {
+    "label": "Read-only continuation: verify current page console",
+    "tool": "list_console_messages",
+    "args": {
+      "pageSize": 30,
+      "pageId": 2,
+      "types": [
+        "error",
+        "warn"
+      ]
+    }
+  }
+]

@@ -99,7 +99,10 @@ def console_start(
         padding=(0, 2),
     )
 
-    console.print(result)
+    try:
+        console.print(result)
+    except Exception:
+        pass
 
 
 def console_end() -> None:
@@ -121,4 +124,7 @@ def console_end() -> None:
         padding=(1, 2),
     )
 
-    console.print(result)
+    try:
+        console.print(result)
+    except Exception:
+        pass
