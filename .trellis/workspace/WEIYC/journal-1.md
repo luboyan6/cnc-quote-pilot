@@ -315,3 +315,261 @@ Implemented approved controlled account login slice; live provider auth pending 
 ### Next Steps
 
 - 依据已安装站点 skill 核清旧上传回执；验证正常受控报价路由及嘉立创账号/材料编辑，再推进生产适配器
+
+
+## Session 10: Xometry 登录核对修复与用户暂停交接
+<!-- trellis-session: v=2 fp=4c3686cfae40a50b -->
+
+**Date**: 2026-10-26
+**Task**: Xometry 登录核对修复与用户暂停交接
+**Branch**: `feat/deerflow-cnc-lead-agent`
+
+### Summary
+
+恢复已批准任务，完成超时及正常成功提交后的只读就绪核对；用户明确要求记录后暂停，自动报价仍未整体完成。接续入口：.trellis/tasks/10-25-cnc-xometry-quote-methods/research/pause-handoff-2026-10-26.md。
+
+### Main Changes
+
+- 同一提交只执行一次；正常成功和超时共用有界界面与精确身份核对，拒绝禁用、重复及非原生账号控件。
+- 参考浏览器已匹配同一账号且可打开空上传弹窗；受控应用的新身份缓存衔接未解决，无新上传、声明或报价变更。
+
+### Git Commits
+
+(No commits - implementation session paused at the user's request.)
+
+### Testing
+
+- [OK] 最终登录74项、Xometry owner9项通过，范围Ruff/format/basedpyright通过；既有30ms idle用例一次时序失败及复测已记录。
+
+### Status
+
+**Paused at the user's request; task remains incomplete and in_progress.**
+
+### Next Steps
+
+- 用户恢复后先独立复核最新正常成功分支，再继续受控登录缓存衔接、真实文件回执、参数回读和当前取价。
+
+
+## Session 11: CNC 图纸参数多平台详细配置与联动规则落地
+<!-- trellis-session: v=2 fp=8e5f2a1c0d4b99aa -->
+
+**Date**: 2026-10-26
+**Task**: CNC 图纸参数多平台详细配置与联动规则落地
+**Branch**: `feat/deerflow-cnc-lead-agent`
+
+### Summary
+
+根据嘉立创（JLC CNC）与 Xometry US 两个平台的加工配置参数，完成了数据库表结构设计与元数据校验，扩展了后端字段与参数字典 API，重构了前端图纸参数配置模块（`cnc_part_config/index.vue`），支持材料分类、标准牌号、表面处理工艺联动、公差精度、粗糙度、螺纹/镶件特征及 2D 图纸触发规则判定，全量单元测试与组件契约验证通过。
+
+### Main Changes
+
+1. **数据库元数据与 MCP 校验**:
+   - 基于 `jlc_cnc_params.json` 与 `xometry_cnc_params.json` 生成并导入 `cnc_param_dict`、`cnc_param_relation`、`cnc_param_constraint_rule`。
+   - 使用 PostgreSQL MCP 查询 top1 数据，实查验证字典与关联关系完全正常。
+2. **后端服务扩展**:
+   - `model.py` / `schema.py`: 为 `CncPartConfigModel` 扩展材料分类、牌号、表面处理、公差、粗糙度、螺纹孔、镶件、检验、认证、2D图纸需求等 18 个字段。
+   - `service.py`: 增加 `get_params_catalog` 服务，按平台组装材料工艺级联字典与约束；`create` / `update` 同步补充 `extra_params` 兼容字段。
+   - `controller.py`: 暴露 `GET /cnc_part_config/params-catalog` 端点。
+3. **前端视图与逻辑改造**:
+   - `cnc_part_config.ts`: 增加 `CncParamsCatalog` 接口与 `getParamsCatalog` API。
+   - `useParamCatalog.ts`: 封装内置兜底规则库（JLC/XOM）与热加载缓存组合式函数。
+   - `index.vue`: 重构弹窗配置表单，严格保留第 1/2 下拉为报价平台和关联图纸以维系既有测试契约；增加材料分类、标准材料选择、材料支持工艺动态联动、公差等级联动、螺纹攻牙与孔数、压铆镶件与数量、检验认证等字段；内置 2D 图纸需求自动判定规则；列表与详情全面展示新配置维度。
+
+### Testing
+
+- [OK] 前端测试全量通过：10 个测试文件共 117 项 Vitest 用例 100% PASS（覆盖 `cnc-part-config-options.spec.ts`、`cnc-part-config-auto-quote.spec.ts` 等）。
+- [OK] 后端测试全量通过：`test_jlc_cnc_params.py` 与 `test_xometry_cnc_params.py` 共 17 项 pytest 用例全部 PASS。
+- [OK] PostgreSQL MCP 交互验证通过，查询字典及关联规则结果精准。
+
+### Status
+
+[OK] **Completed & Paused**
+
+### Next Steps
+
+- 若需在生产环境中测试真实图纸，可通过平台账号启动自动报价全链路联调，验证平台端材料工艺的映射与回填。
+
+
+## Session 12: Xometry canonical login recovery and identity bridge diagnostics
+<!-- trellis-session: v=2 fp=d8d51ea0fbcada7f -->
+
+**Date**: 2026-10-26
+**Task**: Xometry canonical login recovery and identity bridge diagnostics
+**Branch**: `feat/deerflow-cnc-lead-agent`
+
+### Summary
+
+Resumed the approved Xometry task, completed pending independent review, fixed obsolete canonical login fallback and added six regressions. Login 80 and owner 9 passed; live new-identity bridge and real quote remain incomplete.
+
+### Main Changes
+
+- Replaced only the fixed Xometry login fallback with the current official native entry; preserved existing hosted forms, final readiness, JLC and parallel workspace changes.
+- Recorded guarded legacy-to-Next callback discrepancy and native-follow refresh 404 HTML without new upload/declaration/save/quote actions; updated task handoff and login spec.
+
+### Git Commits
+
+(No commits - planning session)
+
+### Testing
+
+- [OK] 80 login and 9 Xometry owner tests passed, zero skips; scoped Ruff/format/basedpyright and independent incremental review passed; research helper syntax and Ruff passed.
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- Await controlled account-login window readiness observation; reverify exact account/file and same owner before continuing real quotation acceptance.
+
+
+## Session 13: 官方 DeerFlowClient 计划修订与旧运行层清理
+<!-- trellis-session: v=2 fp=45879f7eaaf32e68 -->
+
+**Date**: 2026-10-27
+**Task**: 官方 DeerFlowClient 计划修订与旧运行层清理
+**Branch**: `feat/deerflow-cnc-lead-agent`
+
+### Summary
+
+用户选择先改计划并清理旧实现；已删除自建 Agent，官方 Client 尚未实施。静态检查通过，既有回归非全绿。
+
+### Main Changes
+
+- 修订现有五个任务为官方 DeerFlowClient Harness，保留项目身份/模型/业务工具/聊天兼容边界；标记旧调研已被取代。
+- 删除旧运行层、测试、requirements 和 smoke，移除19项专属依赖及2项旧设置；保留既有聊天/CNC/MCP和三条历史迁移，未操作用户数据库。
+
+### Git Commits
+
+(No commits - planning session)
+
+### Testing
+
+- [OK] Ruff、basedpyright、uv lock --check、迁移图/哈希和十个 manifests 验证通过；独立复核完成。
+- [OK] 隔离回归315 passed、17 failed、13 skipped、1 error，另466 subtests passed；既有Xometry测试桩、upload_authorized模型和SQLite JSONB问题未扩大修复；质量门禁未通过。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 官方 Client 接入继续 planning；先评审新计划并验证固定官方包/API、个人模型隔离、工具/技能、能力关闭、checkpoint和真实取消。
+
+
+## Session 14: CNC 批量执行与共享执行入口质量复核与收尾
+<!-- trellis-session: v=2 fp=b4ee5e5d3037a8a4 -->
+
+**Date**: 2026-10-28
+**Task**: CNC 批量执行与共享执行入口质量复核与收尾
+**Branch**: `feat/deerflow-cnc-lead-agent`
+
+### Summary
+
+完成 T1 批量执行与共享入口质量复核，修复 SQLite 游标锁、过期周期恢复、权限撤销取消、关闭超时与 JLC 参数停止，通过综合回归与隔离 PostgreSQL 并发测试
+
+### Main Changes
+
+- 完成 Batch/Item 领域模型、QuoteDispatcher 调度器、原子容量准入与 SKIP LOCKED 行级锁
+- 修复 Windows SQLite 测试游标未关闭导致文件占用问题
+- 修复跨 tick 周期恢复到期领取、续租边界及行锁等待超时
+- 修复权限撤销后取消仍能安全停止匹配本地所有者
+- 修复关闭应用时 35s 超时边界与未决结果暂存，保全 Intent
+- JLC 快捷执行在缺少保存后有效参数回读前在上传前停止，提示 JLC_EFFECTIVE_PARAMETERS_UNVERIFIED
+- 更新 .trellis/spec/backend/cnc-batch.md 规范
+
+### Git Commits
+
+(No commits - planning session)
+
+### Testing
+
+- [OK] 综合回归：247 passed、19 skipped、167 subtests passed
+- [OK] 隔离 PostgreSQL 16.8 并发与迁移测试：28 passed
+- [OK] 新增 tests/cnc/batch：33 passed
+- [OK] 前端 Vitest：37 passed、类型检查与 Vite build 均通过
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 启动 T2 异常分类、重试与执行恢复任务
+
+
+## Session 15: CNC 异常分类、重试与执行恢复（T2）落地与验证
+<!-- trellis-session: v=2 fp=8df5070d112b241e -->
+
+**Date**: 2026-10-28
+**Task**: CNC 异常分类、重试与执行恢复（T2）落地与验证
+**Branch**: `feat/deerflow-cnc-lead-agent`
+
+### Summary
+
+完成 T2 异常分类决策器、有限重试退避算法、未决状态 RECONCILING 隔离、本地存储恢复、RecoveryScanner 扫描器与安全手动重试接口开发及全面测试
+
+### Main Changes
+
+- 新增 app/modules/cnc/recovery 领域模块（contracts、policy、service、scanner）
+- 实现 9 大类异常分类决策，退避基准 30s/120s 抖动与单次重认证预算控制
+- 未决外部写操作进入 RECONCILING，强制阻止盲目自动重试
+- 实现 RecoveryScanner：扫描并超时终结 WAITING_HUMAN，自动结算暂存的 RECONCILING 结果
+- 扩展 BatchRepository 与控制器，新增 POST /cnc_quote_batch/items/{id}/retry 接口并登记权限
+- 编写并在 .trellis/spec/backend/cnc-recovery.md 沉淀恢复规范与契约
+
+### Git Commits
+
+(No commits - planning session)
+
+### Testing
+
+- [OK] 新增 tests/cnc/recovery 全套测试 22 passed（策略、服务、扫描器、HTTP 路由与鉴权）
+- [OK] 联合回归 tests/cnc/batch + tests/cnc/recovery：55 passed（28 项 PG 跳过）
+- [OK] 基于后端环境 basedpyright 检查：0 errors, 0 warnings, 0 notes；Ruff 格式检查与规范全部通过
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 进入 T3 定时检测、监测计划与轮次（10-28-cnc-monitor-03-schedules）规划与实施
+
+
+## Session 16: CNC 定时检测、监测计划与轮次（T3）落地与验证
+<!-- trellis-session: v=2 fp=39f025c245354c19 -->
+
+**Date**: 2026-10-28
+**Task**: CNC 定时检测、监测计划与轮次（T3）落地与验证
+**Branch**: `feat/deerflow-cnc-lead-agent`
+
+### Summary
+
+完成 T3 数据库驱动监测计划生命周期、轮次防重叠与漏跑判定、容量准入控制、APScheduler扫描器集成与全部用例验证
+
+### Main Changes
+
+- 新增 CncQuoteScheduleModel 与 CncQuoteScheduleRoundModel 数据模型及 Alembic 迁移脚本
+- 实现 app/modules/cnc/monitor 领域模块：slot对齐算法、时区安全规范化、计划CRUD、暂停/恢复与轮次查询
+- 实现 scan_due 准入状态机：处理并发重叠(SKIPPED_OVERLAP)、超时漏跑(MISSED)、队列拥堵(CAPACITY_WAIT)与原子批次入队
+- 注册内置调度处理器 builtin:cnc_monitor.scan_due 并在 sys_menu.json 登记菜单权限
+- 沉淀 .trellis/spec/backend/cnc-schedules.md 规范并索引至 backend/index.md
+
+### Git Commits
+
+(No commits - planning session)
+
+### Testing
+
+- [OK] [OK] 新增 tests/cnc/monitor 全套 13 项测试全绿通过
+- [OK] [OK] 联合回归 tests/cnc/batch + tests/cnc/recovery + tests/cnc/monitor：68 passed, 28 skipped
+- [OK] [OK] basedpyright: 0 errors, 0 warnings, 0 notes; ruff check & format 全绿
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 启动 T4 结果展示与可比价格历史任务

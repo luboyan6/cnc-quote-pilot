@@ -8,8 +8,8 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 9
-- **Last Active**: 2026-10-24
+- **Total Sessions**: 16
+- **Last Active**: 2026-10-28
 <!-- @@@/auto:current-status -->
 
 ---
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~317 | Active |
+| `journal-1.md` | ~575 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,12 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 16 | 2026-10-28 | CNC 定时检测、监测计划与轮次（T3）落地与验证 | - | `feat/deerflow-cnc-lead-agent` |
+| 15 | 2026-10-28 | CNC 异常分类、重试与执行恢复（T2）落地与验证 | - | `feat/deerflow-cnc-lead-agent` |
+| 14 | 2026-10-28 | CNC 批量执行与共享执行入口质量复核与收尾 | - | `feat/deerflow-cnc-lead-agent` |
+| 13 | 2026-10-27 | 官方 DeerFlowClient 计划修订与旧运行层清理 | - | `feat/deerflow-cnc-lead-agent` |
+| 12 | 2026-10-26 | Xometry canonical login recovery and identity bridge diagnostics | - | `feat/deerflow-cnc-lead-agent` |
+| 10 | 2026-10-26 | Xometry 登录核对修复与用户暂停交接 | - | `feat/deerflow-cnc-lead-agent` |
 | 9 | 2026-10-24 | 独立 Xometry 与嘉立创报价 skills 完成并验证 | - | `dev` |
 | 8 | 2026-10-23 | 自动报价 Chrome DevTools 验证与会话交接 | - | `dev` |
 | 7 | 2026-10-23 | D-18 CNC account login implementation and checks | - | `dev` |
