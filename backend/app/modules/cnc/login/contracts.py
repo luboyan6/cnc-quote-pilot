@@ -15,9 +15,11 @@ class LoginError(Exception):
 
 class LoginInput(BaseModel):
     model_config = ConfigDict(extra="forbid", hide_input_in_errors=True)
-    kind: Literal["click", "scroll", "key", "text"]
+    kind: Literal["click", "drag", "scroll", "key", "text"]
     x: int | None = Field(None, ge=0, lt=1280, strict=True)
     y: int | None = Field(None, ge=0, lt=720, strict=True)
+    x2: int | None = Field(None, ge=0, lt=1280, strict=True)
+    y2: int | None = Field(None, ge=0, lt=720, strict=True)
     delta_x: int | None = Field(None, ge=-1500, le=1500, strict=True)
     delta_y: int | None = Field(None, ge=-1500, le=1500, strict=True)
     key: Literal["Enter", "Tab", "Shift+Tab", "Backspace", "Delete", "Escape", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Space"] | None = None
@@ -25,8 +27,16 @@ class LoginInput(BaseModel):
 
     @model_validator(mode="after")
     def command_shape(self):
-        required = {"click": {"x", "y"}, "scroll": {"delta_y"}, "key": {"key"}, "text": {"text"}}[self.kind]
-        supplied = {name for name in ("x", "y", "delta_x", "delta_y", "key", "text") if getattr(self, name) is not None}
+        required = {
+            "click": {"x", "y"},
+            # Slider challenges only accept a press-move-release sequence, so a
+            # human completing one needs both the origin and the release point.
+            "drag": {"x", "y", "x2", "y2"},
+            "scroll": {"delta_y"},
+            "key": {"key"},
+            "text": {"text"},
+        }[self.kind]
+        supplied = {name for name in ("x", "y", "x2", "y2", "delta_x", "delta_y", "key", "text") if getattr(self, name) is not None}
         allowed = required | ({"delta_x"} if self.kind == "scroll" else set())
         if not required <= supplied or not supplied <= allowed:
             raise ValueError("INVALID_INPUT")
@@ -62,3 +72,6 @@ class AccountSnapshot:
     quote_url: str
     revision: str
     encrypted_state: str | None = field(repr=False)
+    # Platform-side account code bound on the first proven credential submit.
+    # Providers whose identity endpoint echoes the login identifier leave it empty.
+    identity_code: str | None = None

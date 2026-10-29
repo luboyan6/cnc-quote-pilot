@@ -18,9 +18,9 @@ from app.core.base_schema import AuthSchema, CoreUserSchema
 from app.core.dependencies import get_current_user
 from app.core.exceptions import handle_exception
 from app.modules.cnc.browser.errors import BrowserStop, Reason
+from app.modules.cnc.cnc_part_config.controller import CncPartConfigRouter
 from app.modules.cnc.quote import routes
 from app.modules.cnc.quote.contracts import QuoteAccount, QuoteRunView
-from app.plugin.module_cnc.cnc_part_config.controller import CncPartConfigRouter
 
 PERMISSIONS = ["module_cnc:cnc_part_config:query", "module_cnc:cnc_part_config:update", "module_cnc:cnc_account:query", "module_cnc:cnc_account:update"]
 
@@ -117,5 +117,5 @@ class HttpTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(response.headers["cache-control"], "no-store")
         self.assertEqual(response.headers["x-content-type-options"], "nosniff")
         paths = [path for path in self.app.openapi()["paths"] if "/quote/" in path]
-        self.assertEqual(len(paths), 6)
-        self.assertEqual(sum(len([method for method in operations if method in {"get", "post", "delete"}]) for path, operations in self.app.openapi()["paths"].items() if "/quote/" in path), 7)
+        self.assertEqual(len(paths), 7)
+        self.assertEqual(sum(len([method for method in operations if method in {"get", "post", "delete"}]) for path, operations in self.app.openapi()["paths"].items() if "/quote/" in path), 8)

@@ -9,9 +9,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
 from alembic.migration import MigrationContext
 from alembic.operations import Operations
-from sqlalchemy import create_engine, inspect
+from sqlalchemy import Table, UniqueConstraint, create_engine, inspect
 
-from app.plugin.module_cnc.cnc_quote.model import CncQuoteIntentModel, CncQuoteRunModel
+from app.modules.cnc.cnc_quote.model import CncQuoteIntentModel, CncQuoteRunModel
 
 
 class MigrationTests(unittest.TestCase):
@@ -24,14 +24,21 @@ class MigrationTests(unittest.TestCase):
         engine = create_engine("sqlite://")
         try:
             with engine.begin() as connection:
-                module.op = Operations(MigrationContext.configure(connection))
+                setattr(module, "op", Operations(MigrationContext.configure(connection)))
                 module.upgrade()
                 inspector = inspect(connection)
                 self.assertEqual(set(inspector.get_table_names()), {"cnc_quote_run", "cnc_quote_intent"})
                 for model in [CncQuoteRunModel, CncQuoteIntentModel]:
+                    table = model.__table__
+                    assert isinstance(table, Table)
                     columns = inspector.get_columns(model.__tablename__)
-                    self.assertEqual({column["name"] for column in columns}, set(model.__table__.columns.keys()))
-                    expected_unique = {tuple(column.name for column in constraint.columns) for constraint in model.__table__.constraints if constraint.__class__.__name__ == "UniqueConstraint"}
+                    self.assertEqual(
+                        {column["name"] for column in columns},
+                        set(model.__table__.columns.keys()) - ({"item_id", "attempt_no", "item_claim_owner", "item_claim_token"} if model is CncQuoteRunModel else set()),
+                    )
+                    expected_unique = {
+                        tuple(column.name for column in constraint.columns) for constraint in table.constraints if isinstance(constraint, UniqueConstraint) and constraint.name != "uq_cnc_item_attempt"
+                    }
                     self.assertEqual({tuple(constraint["column_names"]) for constraint in inspector.get_unique_constraints(model.__tablename__)}, expected_unique)
                 module.downgrade()
                 self.assertEqual(inspect(connection).get_table_names(), [])

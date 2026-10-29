@@ -1,0 +1,1 @@
+"""Frozen independent batch targets."""

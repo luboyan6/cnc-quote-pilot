@@ -14,7 +14,7 @@ from app.modules.cnc.browser.errors import BrowserStop
 from app.modules.cnc.login.contracts import LoginError, LoginInput
 from app.modules.cnc.login.routes import PrivateAccountRoute
 
-from .contracts import QuoteAccount, QuoteRunView, StartQuote
+from .contracts import ExportDeclarationDecision, QuoteAccount, QuoteRunView, StartQuote
 from .service import get_quote_service
 
 ConfigId = Annotated[int, Path(ge=1)]
@@ -65,6 +65,10 @@ def register_quote_routes(parent: APIRouter) -> None:
     @router.post("/{id}/quote/runs/{run_id}/resume", summary="验证并继续当前报价", response_model=ResponseSchema[QuoteRunView], dependencies=[AccountWrite])
     async def resume(id: ConfigId, run_id: RunId, auth: RunAuth) -> JSONResponse:
         return SuccessResponse(data=await _action(auth, id, run_id, "resume"))
+
+    @router.post("/{id}/quote/runs/{run_id}/declaration", summary="确认当前图纸的出口声明", response_model=ResponseSchema[QuoteRunView], dependencies=[AccountWrite])
+    async def declaration(id: ConfigId, run_id: RunId, auth: RunAuth, data: ExportDeclarationDecision) -> JSONResponse:
+        return SuccessResponse(data=await _action(auth, id, run_id, "declaration", data))
 
     @router.delete("/{id}/quote/runs/{run_id}", summary="停止并释放当前报价", response_model=ResponseSchema[QuoteRunView], dependencies=[AccountWrite])
     async def close(id: ConfigId, run_id: RunId, auth: RunAuth) -> JSONResponse:

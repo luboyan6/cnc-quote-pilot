@@ -7,7 +7,7 @@ from typing import Any
 
 from sqlalchemy import func, or_, select, update
 
-from app.plugin.module_cnc.cnc_account.model import CncAccountModel
+from app.modules.cnc.cnc_account.model import CncAccountModel
 
 from .contracts import AccountSnapshot, LoginError
 from .credentials import read_credentials, seal_credentials
@@ -54,8 +54,9 @@ class LoginRepository:
             if not account.platform_id or not account.platform or account.platform.is_deleted or not account.platform.login_url or not account.platform.quote_entry_url:
                 raise LoginError("PLATFORM_CONFIGURATION_INVALID")
             username, password = read_credentials(account)
-            if not account.credential_ciphertext and password:
-                account.credential_ciphertext = seal_credentials(username, password)
+            if account.password:
+                if not account.credential_ciphertext:
+                    account.credential_ciphertext = seal_credentials(username, password)
                 account.password = ""
                 await db.flush()
             return AccountSnapshot(
@@ -71,6 +72,7 @@ class LoginRepository:
                 account.platform.quote_entry_url,
                 revision(account),
                 bytes(account.session_ciphertext).decode() if account.session_ciphertext else None,
+                account.account_fingerprint,
             )
 
     async def claim(self, snapshot: AccountSnapshot, owner: str) -> int:
@@ -112,6 +114,23 @@ class LoginRepository:
                 # The lease can expire while waiting for the row lock. A prior
                 # read never substitutes for the final conditional write.
                 raise LoginError("ACCOUNT_CHANGED_OR_LEASE_LOST")
+
+    async def bind_identity(self, snapshot, owner, token, code: str) -> None:
+        """Persist the platform account code proven by this credential submit.
+
+        Write-once: an already bound account keeps its original code so a
+        different customer authenticated later is reported as a mismatch by
+        `verify` instead of silently replacing the binding. The fingerprint is
+        deliberately outside `revision` — binding must not invalidate the lease
+        that is performing it.
+        """
+        async with self.sessions() as db, db.begin():
+            account = await db.scalar(select(CncAccountModel).where(*self._fence(snapshot, owner, token)).with_for_update(of=CncAccountModel))
+            if account is None:
+                raise LoginError("ACCOUNT_CHANGED_OR_LEASE_LOST")
+            if account.account_fingerprint:
+                return
+            await db.execute(update(CncAccountModel).where(*self._fence(snapshot, owner, token)).values(account_fingerprint=code))
 
     async def release(self, snapshot, owner, token):
         async with self.sessions() as db, db.begin():

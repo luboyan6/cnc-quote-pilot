@@ -2,9 +2,11 @@
 
 import asyncio
 import logging
+import sqlite3
 import sys
 import tempfile
 import unittest
+import weakref
 from contextlib import asynccontextmanager
 from datetime import datetime
 from pathlib import Path
@@ -13,17 +15,19 @@ from unittest.mock import AsyncMock, patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
-from sqlalchemy import JSON, Boolean, Column, DateTime, ForeignKey, String, Table
+from sqlalchemy import JSON, Boolean, Column, DateTime, ForeignKey, Integer, String, Table
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy.pool import AsyncAdaptedQueuePool
 
 from app.core.base_schema import AuthSchema, CoreUserSchema
 from app.modules.cnc.browser.errors import BrowserStop, Reason
+from app.modules.cnc.cnc_quote.model import CncQuoteIntentModel as IntentDeclaration
+from app.modules.cnc.cnc_quote.model import CncQuoteRunModel as RunDeclaration
+from app.modules.cnc.cnc_quote_result.model import CncQuoteResultModel as ResultDeclaration
 from app.modules.cnc.login.contracts import AccountSnapshot
 from app.modules.cnc.login.runtime import LoginManager
 from app.modules.cnc.quote import authorization, repository
-from app.plugin.module_cnc.cnc_quote.model import CncQuoteIntentModel as IntentDeclaration
-from app.plugin.module_cnc.cnc_quote.model import CncQuoteRunModel as RunDeclaration
 
 STEP = b"ISO-10303-21;\nHEADER;\nENDSEC;\nDATA;\nENDSEC;\nEND-ISO-10303-21;"
 
@@ -32,15 +36,54 @@ class Base(DeclarativeBase):
     pass
 
 
+class FixtureSQLiteConnection(sqlite3.Connection):
+    """Finalize this fixture's cursors even if a query was cancelled.
+
+    An interrupted aiosqlite read can leave a cursor alive after SQLAlchemy
+    invalidates its connection. On Windows sqlite3_close_v2 keeps the file
+    open until that cursor is finalized, even when the pool is empty.
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fixture_cursors: weakref.WeakSet[sqlite3.Cursor] = weakref.WeakSet()
+
+    def cursor(self, factory=None):
+        cursor = super().cursor() if factory is None else super().cursor(factory)
+        self.fixture_cursors.add(cursor)
+        return cursor
+
+    def close(self):
+        try:
+            for cursor in tuple(self.fixture_cursors):
+                cursor.close()
+        finally:
+            super().close()
+
+
+def copy_table(table):
+    assert isinstance(table, Table)
+    return table.to_metadata(Base.metadata)
+
+
 # Use the exact production tables/constraints in an independent ORM registry.
 # The app registry includes unrelated UserMixin relations and is deliberately
 # not configured by these transaction tests or connected to a business DB.
 class CncQuoteRunModel(Base):
-    __table__ = RunDeclaration.__table__.to_metadata(Base.metadata)
+    __table__ = copy_table(RunDeclaration.__table__)
 
 
 class CncQuoteIntentModel(Base):
-    __table__ = IntentDeclaration.__table__.to_metadata(Base.metadata)
+    __table__ = copy_table(IntentDeclaration.__table__)
+
+
+Table("sys_user", Base.metadata, Column("id", Integer, primary_key=True))
+_result_table = copy_table(ResultDeclaration.__table__)
+_result_table.c.id.type = Integer()
+
+
+class CncQuoteResultModel(Base):
+    __table__ = _result_table
 
 
 USER_ROLES = Table("isolated_user_roles", Base.metadata, Column("user_id", ForeignKey("isolated_user.id"), primary_key=True), Column("role_id", ForeignKey("isolated_role.id"), primary_key=True))
@@ -122,7 +165,9 @@ class Account(Base):
     lease_until: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
 
 
-ACCOUNT = AccountSnapshot(31, 7, 7, 48, "Synthetic", "synthetic@example.test", "synthetic-password", "PASSWORD", "https://www.xometry.com/account/login/", "https://www.xometry.com/quoting/home/", "account-rev", None)
+ACCOUNT = AccountSnapshot(
+    31, 7, 7, 48, "Synthetic", "synthetic@example.test", "synthetic-password", "PASSWORD", "https://www.xometry.com/account/login/", "https://www.xometry.com/quoting/home/", "account-rev", None
+)
 
 
 class QuoteDatabase(unittest.IsolatedAsyncioTestCase):
@@ -133,15 +178,32 @@ class QuoteDatabase(unittest.IsolatedAsyncioTestCase):
         self.root = Path(self.temp.name)
         self.file = self.root / "synthetic.step"
         self.file.write_bytes(STEP)
-        self.engine = create_async_engine("sqlite+aiosqlite:///" + str(self.root / "test.db"), hide_parameters=True)
+        self.engine = create_async_engine("sqlite+aiosqlite:///" + str(self.root / "test.db"), hide_parameters=True, connect_args={"factory": FixtureSQLiteConnection})
         async with self.engine.begin() as connection:
             await connection.run_sync(Base.metadata.create_all)
         self.sessions = async_sessionmaker(self.engine, expire_on_commit=False)
         async with self.sessions() as db, db.begin():
             db.add_all([Config(id=5), Part(id=9, file_path=str(self.file)), Platform(id=48), Account(id=31)])
-            role = Role(id=1, menus=[Menu(id=index, permission=value) for index, value in enumerate(["module_cnc:cnc_part_config:query", "module_cnc:cnc_part_config:update", "module_cnc:cnc_account:query", "module_cnc:cnc_account:update"], start=1)])
+            role = Role(
+                id=1,
+                menus=[
+                    Menu(id=index, permission=value)
+                    for index, value in enumerate(["module_cnc:cnc_part_config:query", "module_cnc:cnc_part_config:update", "module_cnc:cnc_account:query", "module_cnc:cnc_account:update"], start=1)
+                ],
+            )
             db.add_all([User(id=7, roles=[role]), User(id=99, roles=[role])])
-        self.patches = [patch.object(repository, name, model) for name, model in [("CncPartConfigModel", Config), ("CncPartModel", Part), ("CncPlatformModel", Platform), ("CncAccountModel", Account), ("CncQuoteRunModel", CncQuoteRunModel), ("CncQuoteIntentModel", CncQuoteIntentModel)]]
+        self.patches = [
+            patch.object(repository, name, model)
+            for name, model in [
+                ("CncPartConfigModel", Config),
+                ("CncPartModel", Part),
+                ("CncPlatformModel", Platform),
+                ("CncAccountModel", Account),
+                ("CncQuoteRunModel", CncQuoteRunModel),
+                ("CncQuoteIntentModel", CncQuoteIntentModel),
+                ("CncQuoteResultModel", CncQuoteResultModel),
+            ]
+        ]
         self.patches.extend([patch.object(authorization, name, model) for name, model in [("UserModel", User), ("RoleModel", Role), ("MenuModel", Menu)]])
         for item in self.patches:
             item.start()
@@ -150,6 +212,14 @@ class QuoteDatabase(unittest.IsolatedAsyncioTestCase):
         self.auth = AuthSchema(user=CoreUserSchema(id=7, is_superuser=False))
 
     async def asyncTearDown(self):
+        # AsyncSession shields connection close when an owner is cancelled.
+        # Drain those outstanding returns before disposal replaces the pool;
+        # Windows cannot remove the SQLite file while a close is still pending.
+        pool = self.engine.pool
+        assert isinstance(pool, AsyncAdaptedQueuePool)
+        async with asyncio.timeout(2):
+            while pool.checkedout():
+                await asyncio.sleep(0.01)
         for item in reversed(self.patches):
             item.stop()
         await self.engine.dispose()
@@ -182,7 +252,7 @@ class BrowserExecutor:
         self.active = 0
         self.navigation = []
         self.page = None
-        self.cleanup_gate = None
+        self.cleanup_gate: asyncio.Event | None = None
         self.cleanup_entered = False
 
     @asynccontextmanager
@@ -199,13 +269,22 @@ class BrowserExecutor:
             self.navigation.append(url)
 
         page = SimpleNamespace(
-            set_viewport_size=AsyncMock(), on=lambda *args: None,
+            set_viewport_size=AsyncMock(),
+            on=lambda *args: None,
             screenshot=AsyncMock(return_value=b"\xff\xd8synthetic\xff\xd9"),
             mouse=SimpleNamespace(click=AsyncMock(), wheel=AsyncMock()),
             keyboard=SimpleNamespace(press=AsyncMock(), insert_text=AsyncMock()),
         )
         self.page = page
-        session = SimpleNamespace(scope=scope, check_active=check, invalidate_authentication=check, confirm_authentication=lambda auth: check(), page=page, goto=goto, export_encrypted_state=AsyncMock(return_value="encrypted-synthetic-state"))
+        session = SimpleNamespace(
+            scope=scope,
+            check_active=check,
+            invalidate_authentication=check,
+            confirm_authentication=lambda auth: check(),
+            page=page,
+            goto=goto,
+            export_encrypted_state=AsyncMock(return_value="encrypted-synthetic-state"),
+        )
         try:
             yield session
         finally:

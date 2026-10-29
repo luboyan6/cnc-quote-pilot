@@ -17,7 +17,7 @@ from app.core.base_crud import CRUDBase
 from app.core.base_schema import AuthSchema, CoreUserSchema
 from app.core.database import create_async_engine_and_session, create_sync_engine
 from app.core.logger import logger
-from app.plugin.module_cnc.cnc_account.crud import CncAccountCRUD
+from app.modules.cnc.cnc_account.crud import CncAccountCRUD
 
 
 class PlainRow:
@@ -33,7 +33,7 @@ class StoragePrivacyTests(unittest.IsolatedAsyncioTestCase):
         account_crud = CncAccountCRUD(auth, db)
         with (
             patch.object(account_crud, "model", PlainRow),
-            patch("app.plugin.module_cnc.cnc_account.crud.logger.error") as safe_log,
+            patch("app.modules.cnc.cnc_account.crud.logger.error") as safe_log,
             patch("app.core.base_crud.logger.exception") as trace_log,
         ):
             with self.assertRaises(StatementError):

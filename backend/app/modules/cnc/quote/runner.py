@@ -1,6 +1,7 @@
 """One bounded step at a time, called ONLY by the existing browser owner task."""
 
 import asyncio
+from collections.abc import Awaitable, Callable
 from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from decimal import Decimal
@@ -10,6 +11,7 @@ from app.modules.cnc.browser.contracts import (
     Authentication,
     AuthStatus,
     ConfigurationReceipt,
+    DeclarationReceipt,
     IntentKey,
     Operation,
     PriceScope,
@@ -22,8 +24,8 @@ from app.modules.cnc.browser.errors import BrowserStop, Reason
 from app.modules.cnc.browser.files import StepPayload
 from app.modules.cnc.browser.workflow import KNOWN_CURRENCIES, QuoteRequest, QuoteWorkflow, validate_quote
 
-from .contracts import TERMINAL, ProvisionalQuote, QuoteError, QuoteResult
-from .providers import resolve_quote_adapter
+from .contracts import TERMINAL, ExportDeclaration, ExportDeclarationAdapter, ExportDeclarationDecision, ProvisionalQuote, QuoteError, QuoteResult
+from .providers import AdapterBinding, resolve_quote_adapter
 from .repository import DurableIntentStore
 
 
@@ -36,15 +38,31 @@ class QuoteActivity:
         self.adapter_factory = adapter_factory
         self.intents = DurableIntentStore(repository.sessions)
         self.workflow = QuoteWorkflow(self.intents, read_retries=0, read_timeout_seconds=12)
-        self.binding = None
-        self.upload = None
-        self.submitted = None
+        self.binding: AdapterBinding | None = None
+        self.upload: UploadReceipt | None = None
+        self.submitted: SubmissionReceipt | None = None
         self.started_at = datetime.now(UTC)
         self.begun = False
         self.parse_observations = 0
         self.parse_deadline = 0.0
         self.next_step_at = 0.0
         self.phase_deadline = 0.0
+        self.configure_pending = False
+        self.configure_observations = 0
+        self.configure_deadline = 0.0
+        self.declaration_reauth = False
+        self.pending_declaration: ExportDeclaration | None = None
+        self.batch_claim: dict | None = None
+        self.export_controlled: bool | None = None
+        self.preclaimed_lease: tuple[str, int] | None = None
+        self.shortcut_operations: set[str] = set()
+        self.pending_result = False
+        self.input_guard: Callable[[], Awaitable[None]] = self.check_inputs
+        self.mutation_guard: Callable[[str], Awaitable[None]] = self._missing_guard
+        self.authenticated_guard: Callable[[str | None, str], Awaitable[None]] = self._missing_guard
+
+    async def _missing_guard(self, *args):
+        raise QuoteError("QUOTE_EXECUTION_UNAVAILABLE")
 
     @property
     def ready_for_step(self):
@@ -72,7 +90,8 @@ class QuoteActivity:
         return self.view.status == "WAITING_HUMAN"
 
     async def change(self, status, stage, reason):
-        candidate = self.view.model_copy(update={"status": status, "stage": stage, "reason": reason, "can_input": status == "WAITING_HUMAN"})
+        declaration = self.view.export_declaration if status == "WAITING_HUMAN" else None
+        candidate = self.view.model_copy(update={"status": status, "stage": stage, "reason": reason, "can_input": status == "WAITING_HUMAN" and declaration is None, "export_declaration": declaration})
         await self.repository.save(candidate)
         self.view = candidate
 
@@ -85,10 +104,104 @@ class QuoteActivity:
 
     async def check_inputs(self):
         await self.repository.validate(self.auth, self.snapshot)
+        if getattr(self, "batch_claim", None):
+            await self.repository.validate_claim(self.activity_id)
         await self.repository.assert_active(self.snapshot.account.actor_id, self.activity_id)
+        if self.upload is None:
+            await self.repository.assert_upload_available(self.snapshot, run_id=self.activity_id)
+
+    async def _adapter_pause(self, adapter, reason):
+        declaration = getattr(adapter, "export_declaration", None)
+        if declaration is None and reason == "QUOTE_EXPORT_DECLARATION_UNCONFIRMED_NO_RETRY":
+            declaration = self.view.export_declaration
+        if declaration is not None and not isinstance(declaration, ExportDeclaration):
+            raise QuoteError("QUOTE_EXPORT_DECLARATION_INVALID")
+        candidate = self.view.model_copy(update={"status": "WAITING_HUMAN", "stage": "parse", "reason": reason, "can_input": declaration is None, "export_declaration": declaration})
+        await self.repository.save(candidate)
+        self.view = candidate
+
+    async def declare(self, session, provider, decision: ExportDeclarationDecision):
+        await self.check_inputs()
+        if not self.can_input or self.binding is None or self.view.export_declaration is None:
+            raise QuoteError("QUOTE_EXPORT_DECLARATION_INVALID")
+        adapter = self.binding.adapter
+        if not isinstance(adapter, ExportDeclarationAdapter):
+            raise QuoteError("QUOTE_EXPORT_DECLARATION_INVALID")
+        if decision.declaration_id != self.view.export_declaration.declaration_id:
+            await self._adapter_pause(adapter, "QUOTE_EXPORT_DECLARATION_STALE")
+            return
+        session.invalidate_authentication()
+        if not await provider.verify(session, self.snapshot.account.username):
+            if adapter.can_reauthenticate(session):
+                self.declaration_reauth = True
+                self.pending_declaration = self.view.export_declaration
+                self.view = self.view.model_copy(update={"export_declaration": None})
+            await self.change("WAITING_HUMAN", self.view.stage, "LOGIN_IDENTITY_VERIFICATION_REQUIRED")
+            return
+        session.confirm_authentication(Authentication(AuthStatus.AUTHENTICATED, session.scope))
+        current = await adapter.read_export_declaration(session)
+        key = IntentKey(session.scope, self.activity_id, "1", Operation.DECLARATION, item_fingerprint(self.snapshot.payload.sha256, self.snapshot.requested))
+        if current is None:
+            receipt = await self.binding.adapter.reconcile(session, key)
+            if isinstance(receipt, DeclarationReceipt) and receipt.declaration_id == decision.declaration_id and receipt.choice == decision.choice and receipt.sha256 == self.snapshot.payload.sha256:
+                await self.intents.confirm(key, receipt)
+                self.parse_deadline, self.parse_observations, self.next_step_at = monotonic() + 180, 0, 0
+                await self.change("RUNNING", "parse", "QUOTE_CONTINUING")
+            else:
+                await self._adapter_pause(adapter, "QUOTE_EXPORT_DECLARATION_UNCONFIRMED_NO_RETRY")
+            return
+        if current.declaration_id != decision.declaration_id or current != self.view.export_declaration:
+            await self._adapter_pause(adapter, "QUOTE_EXPORT_DECLARATION_STALE")
+            return
+        await self.repository.record_declaration(self.auth, self.snapshot, self.activity_id, current, decision.choice)
+        await self.check_inputs()
+        try:
+            receipt = await self.workflow._mutation(
+                key, session, self.binding.adapter, lambda: adapter.continue_declaration(session, current, decision.choice), self.snapshot.payload.sha256, self.snapshot.requested
+            )
+        except BrowserStop as exc:
+            if exc.reason != Reason.MUTATION_UNCERTAIN:
+                raise
+            await self._adapter_pause(adapter, "QUOTE_EXPORT_DECLARATION_UNCONFIRMED_NO_RETRY")
+            return
+        if not isinstance(receipt, DeclarationReceipt) or receipt.declaration_id != current.declaration_id or receipt.choice != decision.choice:
+            raise QuoteError("QUOTE_EXPORT_DECLARATION_UNCONFIRMED_NO_RETRY")
+        self.parse_deadline, self.parse_observations, self.next_step_at = monotonic() + 180, 0, 0
+        await self.change("RUNNING", "parse", "QUOTE_CONTINUING")
+
+    async def allow_manual_input(self, session):
+        if not self.declaration_reauth:
+            return self.view.can_input
+        adapter = self.binding.adapter if self.binding else None
+        if not isinstance(adapter, ExportDeclarationAdapter):
+            return False
+        if adapter.can_reauthenticate(session):
+            return True
+        # Authentication may redirect between the status response and a human
+        # click. Re-observe the declaration before allowing any more input.
+        self.declaration_reauth = False
+        current = await adapter.read_export_declaration(session)
+        if current is None:
+            self.view = self.view.model_copy(update={"export_declaration": self.pending_declaration})
+            await self._adapter_pause(adapter, "QUOTE_EXPORT_DECLARATION_UNCONFIRMED_NO_RETRY")
+        else:
+            await self._adapter_pause(adapter, "QUOTE_EXPORT_DECLARATION_REQUIRED")
+        self.pending_declaration = None
+        return False
 
     async def resume(self, session, provider):
         await self.check_inputs()
+        if self.declaration_reauth:
+            adapter = self.binding.adapter if self.binding else None
+            if not isinstance(adapter, ExportDeclarationAdapter):
+                raise QuoteError("QUOTE_EXPORT_DECLARATION_INVALID")
+            if adapter.can_reauthenticate(session):
+                await self.change("WAITING_HUMAN", self.view.stage, "LOGIN_IDENTITY_VERIFICATION_REQUIRED")
+                return
+            await self.allow_manual_input(session)
+            return
+        if self.view.export_declaration is not None:
+            raise QuoteError("QUOTE_EXPORT_DECLARATION_REQUIRED")
         if not self.begun:
             return
         # This check never navigates away from an uploaded/configured item.
@@ -120,6 +233,9 @@ class QuoteActivity:
                 raise QuoteError("PROVIDER_AUTOMATION_UNVERIFIED")
             if not self.binding.version or type(self.binding.max_size) is not int or not 0 < len(self.snapshot.payload.buffer) <= self.binding.max_size:
                 raise QuoteError("FILE_EXCEEDS_PROVIDER_LIMIT")
+            set_guard = getattr(self.binding.adapter, "set_input_guard", None)
+            if callable(set_guard):
+                set_guard(self.check_inputs)
             self.begun = True
             await self.change("RUNNING", "upload", "UPLOADING_FILE")
             return
@@ -142,7 +258,7 @@ class QuoteActivity:
                 if receipt is None:
                     manual_reason = self._manual_reason(adapter)
                     if manual_reason:
-                        await self.change("WAITING_HUMAN", "parse", manual_reason)
+                        await self._adapter_pause(adapter, manual_reason)
                     elif self.parse_observations >= 90 or monotonic() >= self.parse_deadline:
                         await self.change("WAITING_HUMAN", "parse", "UPLOAD_RECEIPT_UNCONFIRMED_NO_RETRY")
                     else:
@@ -151,6 +267,7 @@ class QuoteActivity:
                 self.workflow._check_receipt(receipt, key(Operation.UPLOAD), sha256, requested, None)
                 await self.intents.confirm(key(Operation.UPLOAD), receipt)
             else:
+
                 async def upload_once():
                     # Shorter than the owner phase bound, leaving time to keep
                     # the durable uncertainty and enter read-only reconciliation.
@@ -171,7 +288,10 @@ class QuoteActivity:
                     self.parse_deadline = monotonic() + 180
                     self.next_step_at = monotonic() + 2
                     manual_reason = self._manual_reason(adapter)
-                    await self.change("WAITING_HUMAN" if manual_reason else "RUNNING", "parse", manual_reason or "AWAITING_MODEL_PARSE")
+                    if manual_reason:
+                        await self._adapter_pause(adapter, manual_reason)
+                    else:
+                        await self.change("RUNNING", "parse", "AWAITING_MODEL_PARSE")
                     return
             if not isinstance(receipt, UploadReceipt):
                 raise BrowserStop(Reason.MUTATION_UNCERTAIN)
@@ -186,14 +306,37 @@ class QuoteActivity:
                 return ConfigurationReceipt(await adapter.read_effective(session, upload))
 
             await self.check_inputs()
-            await self.workflow._mutation(key(Operation.CONFIGURE), session, adapter, configure, sha256, requested, upload)
+            if self.configure_pending:
+                self.configure_observations += 1
+                receipt = await adapter.reconcile(session, key(Operation.CONFIGURE))
+                if receipt is None:
+                    if self.configure_observations >= 90 or monotonic() >= self.configure_deadline:
+                        await self.change("WAITING_HUMAN", "configure", "QUOTE_CONFIGURATION_UNCONFIRMED_NO_RETRY")
+                    else:
+                        self.next_step_at = monotonic() + 2
+                    return
+                self.workflow._check_receipt(receipt, key(Operation.CONFIGURE), sha256, requested, upload)
+                await self.intents.confirm(key(Operation.CONFIGURE), receipt)
+            else:
+                try:
+                    await self.workflow._mutation(key(Operation.CONFIGURE), session, adapter, configure, sha256, requested, upload)
+                except BrowserStop as exc:
+                    if exc.reason != Reason.MUTATION_UNCERTAIN:
+                        raise
+                    self.configure_pending = True
+                    self.configure_deadline = monotonic() + 180
+                    self.next_step_at = monotonic() + 2
+                    await self.change("RUNNING", "configure", "QUOTE_CONFIGURATION_RECONCILING")
+                    return
+            self.next_step_at = 0
             await self.change("RUNNING", "quote", "FETCHING_QUOTE")
         elif self.submitted is None:
-            effective = await adapter.read_effective(session, self.upload)
+            upload = self.upload
+            effective = await adapter.read_effective(session, upload)
             if effective != requested:
                 raise BrowserStop(Reason.PARAMETERS_MISMATCH)
             await self.check_inputs()
-            receipt = await self.workflow._mutation(key(Operation.SUBMIT), session, adapter, lambda: adapter.submit(session, self.upload, requested), sha256, requested, self.upload)
+            receipt = await self.workflow._mutation(key(Operation.SUBMIT), session, adapter, lambda: adapter.submit(session, upload, requested), sha256, requested, upload)
             if not isinstance(receipt, SubmissionReceipt):
                 raise BrowserStop(Reason.MUTATION_UNCERTAIN)
             self.submitted = receipt
@@ -230,8 +373,14 @@ class QuoteActivity:
                 "observed_at": actual.observed_at.isoformat(),
                 "priced_at": result.priced_at.isoformat() if result.priced_at is not None else None,
             }
+            if self.batch_claim:
+                # Preserve the already observed quote before attempting the
+                # atomic result/Run/item commit; recovery may only retry locally.
+                await self.repository.stage_shortcut_result(candidate, evidence)
+                self.pending_result = True
             await self.repository.save(candidate, evidence=evidence)
             self.view = candidate
+            self.pending_result = False
 
     def _provisional_result(self, outcome: ProvisionalQuote, session):
         quote = outcome.observation
@@ -273,15 +422,25 @@ class QuoteActivity:
         if quote.lead_time is not None:
             quote.lead_time.validate()
         return QuoteResult(
-            status=outcome.status, amount=str(quote.amount) if quote.amount is not None else None,
-            currency=quote.currency, price_scope=quote.price_scope.value if quote.price_scope is not None else None,
+            status=outcome.status,
+            amount=str(quote.amount) if quote.amount is not None else None,
+            currency=quote.currency,
+            price_scope=quote.price_scope.value if quote.price_scope is not None else None,
             lead_time=quote.lead_time.as_dict() if quote.lead_time is not None else None,
-            effective=dict(quote.effective.values), priced_at=outcome.platform_priced_at, observed_at=quote.observed_at,
+            effective=dict(quote.effective.values),
+            priced_at=outcome.platform_priced_at,
+            observed_at=quote.observed_at,
             freshness=quote.freshness.value,
         )
 
     async def finish(self, reason: str):
         try:
+            # A remote observation can be staged immediately before a close
+            # interrupts its caller. Preserve it before settling cancellation.
+            if (reason == "SESSION_CLOSED" or self.pending_result) and not self.terminal:
+                pending = await self.repository.persist_pending_result(self.view.run_id)
+                if pending is not None:
+                    self.view = pending
             if not self.terminal:
                 status = "CANCELLED" if reason == "SESSION_CLOSED" else "FAILED"
                 await self.change(status, self.view.stage, "QUOTE_CANCELLED" if status == "CANCELLED" else reason)

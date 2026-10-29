@@ -2,12 +2,13 @@
 
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Any, Literal
+from typing import Any, Literal, Protocol, runtime_checkable
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from app.modules.cnc.browser.contracts import Parameters, QuoteObservation
+from app.modules.cnc.browser.contracts import DeclarationReceipt, Parameters
+from app.modules.cnc.browser.contracts import ProvisionalQuote as ProvisionalQuote
 from app.modules.cnc.browser.files import StepPayload, TrustedStep
 from app.modules.cnc.login.contracts import AccountSnapshot, LoginError
 
@@ -31,6 +32,51 @@ class QuoteAccount(BaseModel):
     masked_username: str
 
 
+class InstantQuote(BaseModel):
+    """列表「自动报价」按钮的入参。
+
+    ``export_controlled`` 必须由调用方显式给出，服务端不做推断：
+    出口管制声明只能由人按图纸决定。
+    """
+
+    model_config = ConfigDict(extra="forbid", hide_input_in_errors=True)
+    account_id: int = Field(ge=1, strict=True)
+    export_controlled: bool | None = None
+    quantity_override: int | None = Field(None, ge=1, le=100000, strict=True)
+    quote_id: str | None = Field(None, max_length=32)
+    tolerance: str | None = Field(None, max_length=120)
+    roughness: str | None = Field(None, max_length=120)
+
+
+ExportChoice = Literal["not_controlled", "controlled"]
+
+
+class ExportDeclarationOption(BaseModel):
+    value: ExportChoice
+    label: str = Field(min_length=1, max_length=4000)
+
+
+class ExportDeclaration(BaseModel):
+    """The current displayed declaration, never HTML, credentials or a locator."""
+
+    declaration_id: str = Field(pattern=r"^[0-9a-f]{64}$")
+    statement: str = Field(min_length=1, max_length=16000)
+    options: list[ExportDeclarationOption] = Field(min_length=2, max_length=2)
+
+
+class ExportDeclarationDecision(BaseModel):
+    model_config = ConfigDict(extra="forbid", hide_input_in_errors=True)
+    declaration_id: str = Field(pattern=r"^[0-9a-f]{64}$")
+    choice: ExportChoice
+
+
+@runtime_checkable
+class ExportDeclarationAdapter(Protocol):
+    async def read_export_declaration(self, session) -> ExportDeclaration | None: ...
+    async def continue_declaration(self, session, declaration: ExportDeclaration, choice: str) -> DeclarationReceipt: ...
+    def can_reauthenticate(self, session) -> bool: ...
+
+
 class QuoteResult(BaseModel):
     status: Literal["QUOTED", "REFERENCE_ESTIMATE", "PENDING_REVIEW"]
     amount: str | None = None
@@ -43,6 +89,10 @@ class QuoteResult(BaseModel):
     tax_included: bool | None = None
     shipping_included: bool | None = None
     freshness: str | None = None
+    tax_amount: str | None = None
+    total_amount: str | None = None
+    discount_amount: str | None = None
+    lead_time_tiers: list[dict[str, Any]] | None = None
 
 
 class QuoteRunView(BaseModel):
@@ -60,21 +110,7 @@ class QuoteRunView(BaseModel):
     viewport: dict[str, int] = Field(default_factory=lambda: {"width": 1280, "height": 720})
     expires_at: datetime
     result: QuoteResult | None = None
-
-
-@dataclass(frozen=True, repr=False)
-class ProvisionalQuote:
-    """Provider-confirmed estimate/review, never accepted by validate_quote.
-
-    The trusted adapter must carry the same run/file/parameters and explicit
-    current-page status evidence; a missing price cannot imply review status.
-    """
-
-    status: Literal["REFERENCE_ESTIMATE", "PENDING_REVIEW"]
-    observation: QuoteObservation
-    evidence_code: str
-    current_verified: bool
-    platform_priced_at: datetime | None = None
+    export_declaration: ExportDeclaration | None = None
 
 
 @dataclass(frozen=True, repr=False)

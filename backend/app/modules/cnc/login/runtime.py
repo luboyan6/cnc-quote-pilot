@@ -6,7 +6,7 @@ import time
 from contextlib import asynccontextmanager
 from dataclasses import dataclass, field, replace
 from datetime import UTC, datetime, timedelta
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from app.modules.cnc.browser.contracts import Authentication, AuthStatus, SessionScope
 from app.modules.cnc.browser.errors import BrowserStop
@@ -17,6 +17,9 @@ from app.utils.crypto_util import CryptoUtil
 from .contracts import AccountSnapshot, LoginError, LoginInput, LoginStatus, LoginView
 from .providers import resolve_provider
 from .repository import LoginRepository
+
+if TYPE_CHECKING:
+    from app.modules.cnc.quote.contracts import ExportDeclarationDecision
 
 
 def masked_username(username: str) -> str:
@@ -55,8 +58,12 @@ class OwnedSession:
     expires_at: datetime = field(default_factory=lambda: datetime.now(UTC) + timedelta(minutes=30))
     queue: asyncio.Queue = field(default_factory=lambda: asyncio.Queue(maxsize=16))
     task: asyncio.Task | None = None
+    close_task: asyncio.Task | None = None
     last_input: float = 0
     quote_activity: Any = None
+    # A credential submit keeps the owner task for up to 25 s. Status polls must
+    # observe that state instead of queueing behind it and timing out.
+    busy: bool = False
 
     def view(self):
         return LoginView(
@@ -83,10 +90,13 @@ class LoginManager:
         self.accounts: dict[int, OwnedSession] = {}
         self._lock = asyncio.Lock()
 
-    async def start(self, account: AccountSnapshot, *, quote_activity=None):
+    async def start(self, account: AccountSnapshot, *, quote_activity=None, lease=None):
         provider = self.provider_resolver(account.login_url, account.quote_url)
         async with self._lock:
             owned = self.accounts.get(account.id)
+            if owned and owned.close_task and not owned.close_task.done():
+                await finish_cleanup(owned.close_task)
+                owned = None
             if owned and owned.task and not owned.task.done() and (owned.status in {"CLOSED", "FAILED"} or (owned.quote_activity is not None and owned.quote_activity.terminal)):
                 # Terminal status can precede the final lease release. Never reuse
                 # a context that is closing or race a new claim against it.
@@ -114,7 +124,10 @@ class LoginManager:
                         self.sessions.pop(sid, None)
                 owned = OwnedSession(account, quote_activity=quote_activity)
                 owned.expires_at = datetime.now(UTC) + timedelta(seconds=self.lifetime_seconds)
-                owned.token = await self.repository.claim(account, owned.owner)
+                if lease is None:
+                    owned.token = await self.repository.claim(account, owned.owner)
+                else:
+                    owned.owner, owned.token = lease
                 self.sessions[owned.session_id] = owned
                 self.accounts[account.id] = owned
                 owned.task = asyncio.create_task(self._run(owned, provider), name="cnc-login-owner")
@@ -131,7 +144,7 @@ class LoginManager:
                 owned.task.cancel()
             raise LoginError("ACCOUNT_CHANGED")
 
-    async def command(self, account: AccountSnapshot, session_id: str, kind: str, payload: LoginInput | None = None, *, activity_id: str | None = None):
+    async def command(self, account: AccountSnapshot, session_id: str, kind: str, payload: "LoginInput | ExportDeclarationDecision | None" = None, *, activity_id: str | None = None):
         owned = self.sessions.get(session_id)
         if owned is None:
             raise LoginError("SESSION_UNAVAILABLE_ON_THIS_WORKER")
@@ -148,6 +161,10 @@ class LoginManager:
                 return owned.view()
             raise LoginError("SESSION_CLOSED")
         if kind == "status" and owned.status in {"STARTING", "AUTHENTICATING"}:
+            return owned.view()
+        if kind == "status" and owned.busy:
+            # The owner is inside a credential submit; report the current phase
+            # rather than occupying a queue slot the owner cannot drain yet.
             return owned.view()
         if kind == "frame" and owned.status in {"STARTING", "AUTHENTICATING"}:
             raise LoginError("FRAME_UNAVAILABLE")
@@ -168,19 +185,42 @@ class LoginManager:
     async def _verify(self, owned, session, provider):
         await self.repository.renew(owned.account, owned.owner, owned.token)
         session.invalidate_authentication()
-        if not await provider.verify(session, owned.account.username):
+        if not await provider.verify(session, owned.account.username, owned.account.identity_code):
             owned.status, owned.reason = "WAITING_HUMAN", "LOGIN_IDENTITY_VERIFICATION_REQUIRED"
             return
         session.confirm_authentication(Authentication(AuthStatus.AUTHENTICATED, session.scope))
         await self.repository.renew(owned.account, owned.owner, owned.token)
         await session.goto(owned.account.quote_url)
-        if not await provider.verify(session, owned.account.username):
+        if not await provider.verify(session, owned.account.username, owned.account.identity_code):
             session.invalidate_authentication()
             owned.status, owned.reason = "WAITING_HUMAN", "QUOTE_PAGE_IDENTITY_REQUIRED"
             return
         ciphertext = await session.export_encrypted_state()
         await self.repository.renew(owned.account, owned.owner, owned.token, state=ciphertext)
         owned.status, owned.reason = "READY", "LOGIN_VERIFIED"
+
+    async def _bind_identity(self, owned, session, provider):
+        """Trust on first use: bind the platform account code this submit proved.
+
+        Only reached after a credential submit that the provider accepted, so
+        the authenticated session cannot belong to an unrelated visitor. A
+        provider whose identity endpoint echoes the login identifier returns no
+        code and keeps matching against the stored username.
+        """
+        if owned.account.identity_code:
+            return
+        try:
+            code = await provider.identify(session)
+        except BrowserStop:
+            raise
+        except Exception:
+            # A read racing the login redirect must not fail the whole attempt;
+            # `verify` reports the missing identity as a human-action state.
+            return
+        if not code:
+            return
+        await self.repository.bind_identity(owned.account, owned.owner, owned.token, code)
+        owned.account = replace(owned.account, identity_code=code)
 
     async def _run(self, owned, provider):
         pending = None
@@ -211,12 +251,16 @@ class LoginManager:
                         if owned.quote_activity is not None:
                             await owned.quote_activity.check_inputs()
                         await self.repository.renew(owned.account, owned.owner, owned.token)
+                        owned.busy = True
                         try:
                             async with asyncio.timeout(25):
                                 submitted = await provider.submit(session, owned.account.username, owned.account.password, owned.account.quote_url)
                         except TimeoutError:
                             raise LoginError("LOGIN_ATTEMPT_UNCONFIRMED") from None
+                        finally:
+                            owned.busy = False
                         if submitted:
+                            await self._bind_identity(owned, session, provider)
                             await self._verify(owned, session, provider)
                         else:
                             owned.status, owned.reason = "WAITING_HUMAN", "PROVIDER_VERIFICATION_REQUIRED"
@@ -260,10 +304,17 @@ class LoginManager:
                             if kind == "frame":
                                 result = await session.page.screenshot(type="jpeg", quality=65, timeout=8000)
                             elif kind == "input":
-                                if quote is not None and not quote.can_input:
+                                if quote is not None and (not quote.can_input or not quote.view.can_input):
                                     raise LoginError("QUOTE_MANUAL_INPUT_NOT_ALLOWED")
                                 owned.activity = time.monotonic()
-                                await self._input(session, payload)
+                                if quote is None or await quote.allow_manual_input(session):
+                                    await self._input(session, payload)
+                                result = owned.view()
+                            elif kind == "declaration":
+                                if quote is None or not quote.can_input or quote.view.export_declaration is None:
+                                    raise LoginError("QUOTE_EXPORT_DECLARATION_INVALID")
+                                owned.activity = time.monotonic()
+                                await quote.declare(session, provider, payload)
                                 result = owned.view()
                             elif kind == "verify":
                                 owned.activity = time.monotonic()
@@ -315,20 +366,33 @@ class LoginManager:
                 await finish_cleanup(self.repository.release(owned.account, owned.owner, owned.token))
             except Exception:
                 owned.status, owned.reason = "FAILED", "LEASE_RELEASE_FAILED"
-            if self.accounts.get(owned.account.id) is owned:
-                self.accounts.pop(owned.account.id, None)
             if owned.quote_activity is not None:
                 try:
                     await finish_cleanup(owned.quote_activity.finish(owned.reason))
                 except Exception:
                     owned.status, owned.reason = "FAILED", "QUOTE_STORAGE_UNAVAILABLE"
             owned.account = replace(owned.account, password="", encrypted_state=None)
+            # Keep the owner discoverable until its final quote persistence
+            # finishes, so shutdown and a new start both await all cleanup.
+            if self.accounts.get(owned.account.id) is owned:
+                self.accounts.pop(owned.account.id, None)
 
     @staticmethod
     async def _input(session, command):
         page = session.page
         if command.kind == "click":
             await page.mouse.click(command.x, command.y)
+        elif command.kind == "drag":
+            # One press-move-release gesture: a slider cannot be moved by clicks.
+            await page.mouse.move(command.x, command.y)
+            await page.mouse.down()
+            for step in range(1, 13):
+                await page.mouse.move(
+                    command.x + (command.x2 - command.x) * step / 12,
+                    command.y + (command.y2 - command.y) * step / 12,
+                )
+                await page.wait_for_timeout(16)
+            await page.mouse.up()
         elif command.kind == "scroll":
             await page.mouse.wheel(command.delta_x or 0, command.delta_y)
         elif command.kind == "key":
@@ -338,19 +402,27 @@ class LoginManager:
         session.check_active()
 
     async def _close(self, owned):
-        if owned.task and not owned.task.done():
-            owned.task.cancel()
+        # Concurrent close/shutdown calls share one cleanup, including the
+        # fallback needed when the owner was cancelled before it first ran.
+        if owned.close_task is None:
+            owned.close_task = asyncio.create_task(self._close_owned(owned))
+        await finish_cleanup(owned.close_task)
+
+    async def _close_owned(self, owned):
+        if owned.task:
+            if not owned.task.done():
+                owned.task.cancel()
             try:
                 await finish_cleanup(owned.task)
             except (asyncio.CancelledError, BrowserStop):
                 # A coroutine cancelled before first execution has no finally.
                 await finish_cleanup(self.repository.release(owned.account, owned.owner, owned.token))
-                if self.accounts.get(owned.account.id) is owned:
-                    self.accounts.pop(owned.account.id, None)
                 owned.status, owned.reason = "CLOSED", "SESSION_CLOSED"
                 if owned.quote_activity is not None:
                     await finish_cleanup(owned.quote_activity.finish(owned.reason))
                 owned.account = replace(owned.account, password="", encrypted_state=None)
+                if self.accounts.get(owned.account.id) is owned:
+                    self.accounts.pop(owned.account.id, None)
 
     async def revoke(self, account_id: int):
         owned = self.accounts.get(account_id)

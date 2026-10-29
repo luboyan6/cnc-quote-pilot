@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from decimal import Decimal
 from enum import StrEnum
-from typing import TYPE_CHECKING, Protocol
+from typing import TYPE_CHECKING, Literal, Protocol
 
 from .errors import BrowserStop, Reason
 from .lead_time import DayBasis as DayBasis
@@ -108,10 +108,19 @@ class SubmissionReceipt:
     effective: Parameters
 
 
+@dataclass(frozen=True)
+class DeclarationReceipt:
+    declaration_id: str
+    choice: str
+    sha256: str
+    upload_reference: str = field(repr=False)
+
+
 class Operation(StrEnum):
     UPLOAD = "upload"
     CONFIGURE = "configure"
     SUBMIT = "submit"
+    DECLARATION = "declaration"
 
 
 class IntentState(StrEnum):
@@ -120,7 +129,7 @@ class IntentState(StrEnum):
     UNCERTAIN = "uncertain"
 
 
-MutationReceipt = UploadReceipt | ConfigurationReceipt | SubmissionReceipt
+MutationReceipt = UploadReceipt | ConfigurationReceipt | SubmissionReceipt | DeclarationReceipt
 
 
 @dataclass(frozen=True)
@@ -196,6 +205,17 @@ class QuoteObservation:
     observed_at: datetime
 
 
+@dataclass(frozen=True, repr=False)
+class ProvisionalQuote:
+    """An explicitly evidenced estimate/review, separate from a valid quote."""
+
+    status: Literal["REFERENCE_ESTIMATE", "PENDING_REVIEW"]
+    observation: QuoteObservation
+    evidence_code: str
+    current_verified: bool
+    platform_priced_at: datetime | None = None
+
+
 @dataclass(frozen=True)
 class ValidatedQuote:
     """Only the validator constructs successful results; exact decimal serialization."""
@@ -242,5 +262,5 @@ class PlatformAdapter(Protocol):
     async def configure(self, session: "BrowserSession", upload: UploadReceipt, requested: Parameters) -> None: ...
     async def read_effective(self, session: "BrowserSession", upload: UploadReceipt) -> Parameters: ...
     async def submit(self, session: "BrowserSession", upload: UploadReceipt, requested: Parameters) -> SubmissionReceipt: ...
-    async def extract_quote(self, session: "BrowserSession", upload: UploadReceipt, submission: SubmissionReceipt) -> QuoteObservation: ...
+    async def extract_quote(self, session: "BrowserSession", upload: UploadReceipt, submission: SubmissionReceipt) -> QuoteObservation | ProvisionalQuote: ...
     async def reconcile(self, session: "BrowserSession", key: IntentKey) -> MutationReceipt | None: ...

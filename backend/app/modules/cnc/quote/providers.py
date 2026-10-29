@@ -10,6 +10,13 @@ from typing import Protocol
 
 from app.modules.cnc.browser.contracts import PlatformAdapter
 
+from .contracts import QuoteError
+from .xometry import XometryDOMBinding, XometryQuoteAdapter
+
+# Only a reviewed source binding belongs here. A public uploader, old test-route
+# candidates, synthetic fixture, or user setting cannot activate managed quotes.
+_REVIEWED_XOMETRY_BINDING: XometryDOMBinding | None = None
+
 
 @dataclass(frozen=True)
 class AdapterBinding:
@@ -23,8 +30,13 @@ class AdapterFactory(Protocol):
 
 
 def resolve_quote_adapter(snapshot, run_id: str) -> AdapterBinding | None:
-    # Current evidence: neither platform has a verified production upload +
-    # full configure + current quote extraction contract. Login remains usable.
-    # Fail explicitly before claiming or sending a remote upload, never infer
-    # selectors or enable the draft research registry.
+    if snapshot.provider_code == "xometry_us":
+        binding = _REVIEWED_XOMETRY_BINDING
+        if binding is None:
+            raise QuoteError("XOMETRY_BINDING_UNVERIFIED")
+        adapter = XometryQuoteAdapter(snapshot, run_id, binding)
+        adapter.validate_parameters(snapshot.requested)
+        return AdapterBinding(adapter, binding.version, binding.max_size)
+    # Other providers remain explicitly unavailable rather than borrowing the
+    # Xometry upload/configuration/result semantics.
     return None

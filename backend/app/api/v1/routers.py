@@ -3,6 +3,13 @@
 from fastapi import APIRouter
 
 from app.modules.ai.chat.controller import ChatRouter
+from app.modules.cnc.cnc_account.controller import CncAccountRouter
+from app.modules.cnc.cnc_part.controller import CncPartRouter
+from app.modules.cnc.cnc_part_config.controller import CncPartConfigRouter
+from app.modules.cnc.cnc_platform.controller import CncPlatformRouter
+from app.modules.cnc.cnc_quote_batch.controller import CncQuoteBatchRouter
+from app.modules.cnc.cnc_quote_result.controller import CncQuoteResultRouter
+from app.modules.cnc.cnc_quote_schedule.controller import CncQuoteScheduleRouter
 from app.modules.common.file.controller import FileRouter
 from app.modules.generator.gencode.controller import GenRouter
 from app.modules.monitor.cache.controller import CacheRouter
@@ -59,6 +66,15 @@ DOMAIN_CONTROLLERS: dict[str, list[APIRouter]] = {
         StorageWorkflowRouter,
     ],
     "/ai": [ChatRouter],
+    "/cnc": [
+        CncAccountRouter,
+        CncPartRouter,
+        CncPartConfigRouter,
+        CncPlatformRouter,
+        CncQuoteBatchRouter,
+        CncQuoteResultRouter,
+        CncQuoteScheduleRouter,
+    ],
     "/generator": [GenRouter],
     "/common": [FileRouter],
 }

@@ -11,9 +11,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
 from app.core.base_schema import AuthSchema, BatchSetAvailable, CoreUserSchema
 from app.core.exceptions import CustomException
+from app.modules.cnc.cnc_account import service
+from app.modules.cnc.cnc_account.schema import CncAccountCreateSchema, CncAccountUpdateSchema
 from app.modules.cnc.login.credentials import read_credentials, seal_credentials
-from app.plugin.module_cnc.cnc_account import service
-from app.plugin.module_cnc.cnc_account.schema import CncAccountCreateSchema, CncAccountUpdateSchema
 
 
 class MemoryCrud:
@@ -84,6 +84,32 @@ class AccountServiceTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(self.crud.account.credential_ciphertext, previous)
         self.assertEqual(self.crud.account.session_ciphertext, b"private-state")
         self.manager.revoke.assert_not_awaited()
+
+    async def test_metadata_update_clears_residual_plaintext_without_reencrypting(self):
+        previous = self.crud.account.credential_ciphertext
+        self.crud.account.password = "stale-plaintext"
+        await self.service.update(31, CncAccountUpdateSchema(password="", alias="updated alias"))
+        self.assertEqual(self.crud.account.password, "")
+        self.assertEqual(self.crud.account.credential_ciphertext, previous)
+        self.assertEqual(read_credentials(self.crud.account)[1], "old-synthetic-password")
+        self.assertEqual(self.crud.account.session_ciphertext, b"private-state")
+        self.manager.revoke.assert_not_awaited()
+
+    async def test_metadata_update_migrates_legacy_password(self):
+        self.crud.account.credential_ciphertext = None
+        self.crud.account.password = "legacy-synthetic-password"
+        await self.service.update(31, CncAccountUpdateSchema(password="", alias="updated alias"))
+        self.assertEqual(self.crud.account.password, "")
+        self.assertEqual(read_credentials(self.crud.account)[1], "legacy-synthetic-password")
+        self.manager.revoke.assert_not_awaited()
+
+    async def test_corrupt_ciphertext_does_not_fall_back_to_residual_plaintext(self):
+        self.crud.account.credential_ciphertext = b"invalid-ciphertext"
+        self.crud.account.password = "stale-plaintext"
+        with self.assertRaises(CustomException):
+            await self.service.update(31, CncAccountUpdateSchema(alias="updated alias"))
+        self.assertEqual(self.crud.account.password, "stale-plaintext")
+        self.assertFalse(self.crud.values)
 
     async def test_username_change_reencrypts_retained_password_and_revokes_session(self):
         await self.service.update(31, CncAccountUpdateSchema(username="changed-synthetic"))

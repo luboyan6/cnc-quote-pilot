@@ -21,8 +21,8 @@ from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from app.core.base_schema import AuthSchema, CoreUserSchema
 from app.core.dependencies import get_current_user
 from app.core.exceptions import handle_exception
+from app.modules.cnc.cnc_account import controller
 from app.modules.cnc.login.contracts import LoginError, LoginView
-from app.plugin.module_cnc.cnc_account import controller
 
 ACCOUNT_ID = 31
 SESSION_ID = "synthetic-session-reference-12345"

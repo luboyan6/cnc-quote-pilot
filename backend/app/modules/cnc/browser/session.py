@@ -1,6 +1,7 @@
 """Fresh official SDK contexts, same-loop leases and cancellation-safe ownership."""
 
 import asyncio
+import platform
 from collections.abc import Awaitable, Callable
 from contextlib import asynccontextmanager
 from typing import Any
@@ -10,6 +11,26 @@ from .errors import BrowserStop, Reason
 from .policy import BrowserPolicy
 from .state import SessionCodec
 from .third_party.egress import BrowserEgressProxy
+
+# Headless Chromium advertises "HeadlessChrome" and `navigator.webdriver=true`.
+# Both are unconditional bot signals to a risk-control widget, which then
+# forces a slider challenge on every credential submit. The UA is rebuilt from
+# the real browser version so it stays consistent with the engine actually used.
+_PLATFORM_TOKENS = {
+    "Windows": "Windows NT 10.0; Win64; x64",
+    "Darwin": "Macintosh; Intel Mac OS X 10_15_7",
+    "Linux": "X11; Linux x86_64",
+}
+_CHROMIUM_ARGS = (
+    "--disable-quic",
+    "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+    "--disable-blink-features=AutomationControlled",
+)
+
+
+def desktop_user_agent(version: str) -> str:
+    token = _PLATFORM_TOKENS.get(platform.system(), _PLATFORM_TOKENS["Linux"])
+    return f"Mozilla/5.0 ({token}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/{version} Safari/537.36"
 
 
 def _playwright_manager() -> Any:
@@ -127,7 +148,10 @@ class BrowserSession:
             await route.continue_()
 
     async def _guard_websocket(self, route: Any) -> None:
-        self._policy_blocked = True
+        # No WebSocket egress is ever granted. Pages keep a notification socket
+        # open for their whole lifetime, so treating that channel as an unknown
+        # destination aborted the session of every such page; the socket is
+        # refused silently instead and the page continues without live pushes.
         await route.close(code=1008, reason=Reason.POLICY_BLOCKED.value)
 
 
@@ -206,9 +230,15 @@ class BrowserExecutor:
                 headless=True,
                 channel=self._channel,
                 proxy={"server": proxy_url, "bypass": "<-loopback>"},
-                args=["--disable-quic", "--force-webrtc-ip-handling-policy=disable_non_proxied_udp"],
+                args=list(_CHROMIUM_ARGS),
             )
-            context = await browser.new_context(storage_state=state, service_workers="block", accept_downloads=False)
+            context_options: dict[str, Any] = {"storage_state": state, "service_workers": "block", "accept_downloads": False}
+            version = getattr(browser, "version", "")
+            if isinstance(version, str) and version:
+                # Only override when the engine reports its version, so the UA
+                # stays consistent with the browser actually launched.
+                context_options["user_agent"] = desktop_user_agent(version)
+            context = await browser.new_context(**context_options)
             lease._context = context
             context.set_default_timeout(self._timeout_ms)
             context.set_default_navigation_timeout(self._timeout_ms)

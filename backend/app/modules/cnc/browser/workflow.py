@@ -8,6 +8,7 @@ from decimal import Decimal
 
 from .contracts import (
     ConfigurationReceipt,
+    DeclarationReceipt,
     IntentKey,
     IntentState,
     IntentStore,
@@ -111,6 +112,11 @@ class QuoteWorkflow:
             require_identity(receipt.reference)
             if receipt.upload_reference != upload.reference or receipt.effective != params:
                 raise BrowserStop(Reason.PARAMETERS_MISMATCH)
+        elif key.operation == Operation.DECLARATION and isinstance(receipt, DeclarationReceipt):
+            require_identity(receipt.declaration_id)
+            require_identity(receipt.upload_reference)
+            if receipt.sha256 != sha256 or receipt.choice not in {"not_controlled", "controlled"}:
+                raise BrowserStop(Reason.MUTATION_UNCERTAIN)
         else:
             raise BrowserStop(Reason.MUTATION_UNCERTAIN)
 
@@ -204,6 +210,10 @@ class QuoteWorkflow:
         if not isinstance(submitted, SubmissionReceipt):
             raise BrowserStop(Reason.MUTATION_UNCERTAIN)
         quote = await self._read(lambda: adapter.extract_quote(session, upload, submitted), session)
+        if not isinstance(quote, QuoteObservation):
+            # This utility returns final quotes only. The application runner
+            # persists explicitly provisional results through its separate path.
+            raise BrowserStop(Reason.QUOTE_INVALID)
         return validate_quote(quote, session, request, upload, submitted, started_at, max_age_seconds=self._max_age)
 
 
