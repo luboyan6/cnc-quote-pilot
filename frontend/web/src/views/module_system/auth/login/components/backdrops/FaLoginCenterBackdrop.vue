@@ -1,20 +1,18 @@
-<!-- 居中布局：与左侧栏一致的浅色底 + 中部淡化插画（不参与交互） -->
+<!-- 居中布局：与左侧栏一致的科技感渐变底色 + 柔和光晕（不参与交互） -->
 <template>
   <div
-    class="login-center-backdrop"
+    class="login-center-backdrop pointer-events-none"
     :class="{ 'login-center-backdrop--viewport-fixed': viewportFixed }"
     aria-hidden="true"
   >
     <div class="login-center-backdrop__bg" />
-    <div class="login-center-backdrop__hero-wrap">
-      <FaThemeSvg :src="loginIcon" size="100%" class="login-center-backdrop__hero" />
-    </div>
+    <div class="login-center-backdrop__grid" />
+    <div class="center-glow center-glow--top" />
+    <div class="center-glow center-glow--bottom" />
   </div>
 </template>
 
 <script setup lang="ts">
-import loginIcon from "@fa_imgs/background.svg";
-
 defineOptions({ name: "LoginCenterBackdrop" });
 
 interface Props {
@@ -45,39 +43,62 @@ withDefaults(defineProps<Props>(), { viewportFixed: false });
   inset: 0;
   background-color: color-mix(
     in srgb,
-    var(--el-color-primary-light-9) 100%,
+    var(--el-color-primary-light-9) 70%,
     var(--default-box-color)
+  );
+  transition: background-color 0.3s ease;
+}
+
+.login-center-backdrop__grid {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--el-color-primary) 10%, transparent) 1px,
+    transparent 1px
+  );
+  background-size: 28px 28px;
+  mask-image: radial-gradient(ellipse at center, rgb(0 0 0 / 100%) 20%, rgb(0 0 0 / 10%) 80%);
+}
+
+.center-glow {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 9999px;
+  opacity: 0.4;
+  filter: blur(90px);
+  transition: all 0.5s ease;
+}
+
+.center-glow--top {
+  top: 5%;
+  left: 20%;
+  width: 450px;
+  height: 450px;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--el-color-primary) 45%, transparent) 0%,
+    transparent 70%
   );
 }
 
-.login-center-backdrop__hero-wrap {
-  position: absolute;
-  top: 12%;
-  left: 50%;
-  width: min(420px, 52vw);
-  height: min(340px, 38vh);
-  opacity: 0.22;
-  transform: translateX(-50%);
-}
-
-.login-center-backdrop__hero {
-  width: 100%;
-  height: 100%;
+.center-glow--bottom {
+  right: 18%;
+  bottom: 8%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--el-color-success) 35%, transparent) 0%,
+    transparent 70%
+  );
 }
 
 html.dark .login-center-backdrop__bg {
-  background-color: color-mix(in srgb, var(--el-color-primary-light-9) 60%, #070707);
+  background-color: color-mix(in srgb, var(--el-color-primary-light-9) 25%, #0b0f19);
 }
 
-html.dark .login-center-backdrop__hero-wrap {
-  opacity: 0.14;
-}
-
-@media only screen and (width <= 1180px) {
-  .login-center-backdrop__hero-wrap {
-    top: 10%;
-    width: min(320px, 72vw);
-    height: min(240px, 28vh);
-  }
+html.dark .center-glow {
+  opacity: 0.22;
 }
 </style>

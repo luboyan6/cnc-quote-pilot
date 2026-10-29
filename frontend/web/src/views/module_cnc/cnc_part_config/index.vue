@@ -25,22 +25,40 @@
         @refresh="handleRefresh"
       >
         <template #left>
-          <FaTableHeaderLeft
-            :remove-ids="selectedIds"
-            :perm-create="['module_cnc:cnc_part_config:create']"
-            :perm-import="['module_cnc:cnc_part_config:import']"
-            :perm-export="['module_cnc:cnc_part_config:export']"
-            :perm-delete="['module_cnc:cnc_part_config:delete']"
-            :perm-patch="['module_cnc:cnc_part_config:patch']"
-            :delete-loading="batchDeleting"
-            :create-loading="createLoading"
-            :more-loading="moreLoading"
-            @add="handleAdd"
-            @import="openImport"
-            @export="openExport"
-            @delete="handleBatchDelete"
-            @more="handleMoreClick"
-          />
+          <div class="flex items-center gap-2">
+            <FaTableHeaderLeft
+              :remove-ids="selectedIds"
+              :perm-create="['module_cnc:cnc_part_config:create']"
+              :perm-import="['module_cnc:cnc_part_config:import']"
+              :perm-export="['module_cnc:cnc_part_config:export']"
+              :perm-delete="['module_cnc:cnc_part_config:delete']"
+              :perm-patch="['module_cnc:cnc_part_config:patch']"
+              :delete-loading="batchDeleting"
+              :create-loading="createLoading"
+              :more-loading="moreLoading"
+              @add="handleAdd"
+              @import="openImport"
+              @export="openExport"
+              @delete="handleBatchDelete"
+              @more="handleMoreClick"
+            />
+            <ElButton
+              type="success"
+              plain
+              @click="goToQuoteResults()"
+            >
+              📊 查看报价结果与报表
+            </ElButton>
+            <ElButton
+              v-if="checkPerm('module_cnc:cnc_quote_batch:create')"
+              type="primary"
+              plain
+              :disabled="selectedIds.length === 0"
+              @click="openBatchQuoteDialog"
+            >
+              ⚡ 批量发起报价 {{ selectedIds.length ? `(${selectedIds.length})` : '' }}
+            </ElButton>
+          </div>
         </template>
       </FaTableHeader>
 
@@ -59,7 +77,7 @@
     <FaDialog
       v-model="dialogVisible.visible"
       :title="dialogVisible.title"
-      width="860px"
+      width="880px"
       dialog-class="crud-embed-dialog"
       modal-class="crud-embed-dialog"
       :form-mode="dialogVisible.type"
@@ -79,13 +97,26 @@
             </ElTag>
             <span v-else>{{ row?.site_type ?? "-" }}</span>
           </template>
+          <template #part_id="{ row }">
+            {{ getPartLabel(row?.part_id) }}
+          </template>
           <template #enabled="{ row }">
             <ElTag :type="row?.enabled ? 'success' : 'danger'">
               {{ row?.enabled ? "启用" : "禁用" }}
             </ElTag>
           </template>
-          <template #part_id="{ row }">
-            {{ getPartLabel(row?.part_id) }}
+          <template #requires_2d_drawing="{ row }">
+            <ElTag :type="row?.requires_2d_drawing ? 'danger' : 'info'">
+              {{ row?.requires_2d_drawing ? "需要2D图纸" : "无需2D图纸" }}
+            </ElTag>
+          </template>
+          <template #has_threads="{ row }">
+            <span v-if="row?.has_threads">是（{{ row?.thread_count || 0 }}孔）</span>
+            <span v-else class="text-gray-400">无</span>
+          </template>
+          <template #has_inserts="{ row }">
+            <span v-if="row?.has_inserts">是（{{ row?.insert_count || 0 }}件）</span>
+            <span v-else class="text-gray-400">无</span>
           </template>
           <template #extra_params="{ row }">
             <FaJsonPretty
@@ -107,7 +138,7 @@
           :items="dialogFormItems"
           :rules="rules"
           label-suffix=":"
-          :label-width="90"
+          :label-width="96"
           label-position="right"
           :span="12"
           :gutter="16"
@@ -144,17 +175,70 @@
       :info="quote.info.value"
       :busy="quote.busy.value"
       :interactive="quote.interactive.value"
-      @close="quote.close"
-      @select-account="quote.selectedAccount.value = $event"
-      @start="quote.chooseAccount"
-      @input="quote.command"
-      @resume="quote.command()"
+      @close="handleCloseQuote"
+      @select-account="handleSelectQuoteAccount"
+      @start="handleStartQuote"
+      @input="handleQuoteCommand"
+      @resume="handleQuoteCommand()"
+      @declaration="handleQuoteDeclaration"
     />
+
+    <!-- 批量发起报价弹窗 -->
+    <ElDialog
+      v-model="batchQuoteVisible"
+      title="批量发起 CNC 自动报价"
+      width="720px"
+      destroy-on-close
+    >
+      <div class="batch-quote-dialog flex flex-col gap-3">
+        <ElAlert
+          title="将对所选图纸配置按设定的数量梯度提交批量自动化报价任务"
+          type="info"
+          :closable="false"
+          show-icon
+        />
+
+        <div>
+          <span class="font-medium text-sm text-gray-700">已选配置 ({{ selectedRows.length }}个):</span>
+          <div class="max-h-36 overflow-y-auto mt-1 border rounded p-2 bg-gray-50 flex flex-col gap-1 text-xs">
+            <div v-for="cfg in selectedRows" :key="cfg.id" class="flex justify-between items-center">
+              <span><b>{{ cfg.name || `配置#${cfg.id}` }}</b> ({{ cfg.material || '默认' }} · {{ cfg.surface_finish || '默认' }})</span>
+              <ElTag size="small">{{ getPlatformLabel(cfg.site_type) }}</ElTag>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-medium text-sm text-gray-700 mb-1">加工数量梯度 (多个以英文逗号分隔):</label>
+          <ElInput
+            v-model="batchQuantitiesInput"
+            placeholder="例如: 1, 5, 10, 50"
+          />
+          <span class="text-xs text-gray-400 mt-1 block">
+            将生成 {{ parsedQuantities.length }} 个数量档位 × {{ selectedRows.length }} 个配置 = {{ parsedQuantities.length * selectedRows.length }} 个报价任务
+          </span>
+        </div>
+      </div>
+
+      <template #footer>
+        <ElButton @click="batchQuoteVisible = false">取消</ElButton>
+        <ElButton
+          type="primary"
+          :loading="batchSubmitting"
+          :disabled="parsedQuantities.length === 0 || selectedRows.length === 0"
+          @click="submitBatchQuote"
+        >
+          确认发起
+        </ElButton>
+      </template>
+    </ElDialog>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref, watch } from "vue";
+import { useRouter } from "vue-router";
+import { ElButton, ElMessage, ElTag } from "element-plus";
 import { checkPerm } from "@/utils/checkPerm";
 import AutoQuoteDialog from "./AutoQuoteDialog.vue";
 import { isQuoteTerminal, useAutoQuote } from "./useAutoQuote";
@@ -175,31 +259,122 @@ import FaForm from "@/components/forms/fa-form/index.vue";
 import FaTableHeader from "@/components/tables/fa-table-header/index.vue";
 import CncPlatformAPI, { type CncPlatformTable } from "@/api/module_cnc/cnc_platform";
 import CncPartAPI, { type CncPartTable } from "@/api/module_cnc/cnc_part";
+import type { CncLoginInput } from "@/api/module_cnc/cnc_account";
 import CncPartConfigAPI, {
+  type CncParamsCatalog,
   type CncPartConfigForm,
   type CncPartConfigPageQuery,
   type CncPartConfigTable,
+  type CncQuoteDeclarationDecision,
 } from "@/api/module_cnc/cnc_part_config";
+import { useParamCatalog } from "./useParamCatalog";
+import CncQuoteBatchAPI from "@/api/module_cnc/cnc_quote_batch";
 
 defineOptions({
   name: "CncPartConfig",
-  inheritAttrs: false,
 });
 
 const quote = useAutoQuote();
-function canAutoQuote() {
+const router = useRouter();
+
+function goToQuoteResults(configId?: number) {
+  router.push({
+    path: "/module_cnc/cnc_quote_result",
+    query: configId ? { config_id: String(configId) } : undefined,
+  });
+}
+
+// ────────── 批量发起报价 ──────────
+const batchQuoteVisible = ref(false);
+const batchQuantitiesInput = ref("1, 5, 10");
+const batchSubmitting = ref(false);
+
+const parsedQuantities = computed(() => {
+  const parts = batchQuantitiesInput.value.split(/[,，\s]+/);
+  const nums = parts
+    .map((p) => parseInt(p.trim(), 10))
+    .filter((n) => Number.isInteger(n) && n > 0 && n <= 100000);
+  return Array.from(new Set(nums)).sort((a, b) => a - b);
+});
+
+function openBatchQuoteDialog() {
+  if (selectedRows.value.length === 0) {
+    ElMessage.warning("请先勾选需要报价的图纸配置");
+    return;
+  }
+  batchQuoteVisible.value = true;
+}
+
+function generateBatchUuid(): string {
+  if (typeof crypto.randomUUID === "function") return crypto.randomUUID();
+  const bytes = crypto.getRandomValues(new Uint8Array(16));
+  bytes[6] = (bytes[6]! & 0x0f) | 0x40;
+  bytes[8] = (bytes[8]! & 0x3f) | 0x80;
+  const hex = Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+}
+
+async function submitBatchQuote() {
+  if (parsedQuantities.value.length === 0 || selectedRows.value.length === 0) return;
+  batchSubmitting.value = true;
+  try {
+    const targets = selectedRows.value.map((r) => ({
+      config_id: r.id!,
+      quantities: parsedQuantities.value,
+    }));
+    const res = await CncQuoteBatchAPI.create({
+      request_id: generateBatchUuid(),
+      targets,
+    });
+    const itemCount = res.data?.data?.item_count || targets.length * parsedQuantities.value.length;
+    ElMessage.success(`批量报价任务创建成功 (包含 ${itemCount} 项)`);
+    batchQuoteVisible.value = false;
+    faTableRef.value?.elTableRef?.clearSelection();
+    router.push("/module_cnc/cnc_quote_batch");
+  } catch (err: any) {
+    ElMessage.error(err?.message || "批量报价发起失败");
+  } finally {
+    batchSubmitting.value = false;
+  }
+}
+
+function canAutoQuote(): boolean {
+  const hasConfigPerm =
+    checkPerm("module_cnc:cnc_part_config:query") ||
+    checkPerm("module_cnc:cnc_part_config:detail");
   return (
-    [
-      "module_cnc:cnc_part_config:update",
-      "module_cnc:cnc_account:query",
-      "module_cnc:cnc_account:update",
-    ].every(checkPerm) &&
-    (checkPerm("module_cnc:cnc_part_config:query") ||
-      checkPerm("module_cnc:cnc_part_config:detail"))
+    hasConfigPerm &&
+    checkPerm("module_cnc:cnc_part_config:update") &&
+    checkPerm("module_cnc:cnc_account:query") &&
+    checkPerm("module_cnc:cnc_account:update")
   );
 }
+
 function handleAutoQuote(row: CncPartConfigTable) {
   if (canAutoQuote()) void quote.open(row);
+}
+
+/** 报价运行复用账号模块的登录会话；每个交互入口重验当前页面权限。 */
+function handleStartQuote() {
+  if (canAutoQuote()) void quote.chooseAccount();
+}
+function handleSelectQuoteAccount(accountId: number) {
+  if (
+    canAutoQuote() &&
+    !quote.busy.value &&
+    quote.choosingAccount.value &&
+    quote.accounts.value.some((account) => account.id === accountId)
+  )
+    quote.selectedAccount.value = accountId;
+}
+function handleQuoteCommand(input?: CncLoginInput) {
+  if (canAutoQuote()) void quote.command(input);
+}
+function handleQuoteDeclaration(decision: CncQuoteDeclarationDecision) {
+  if (canAutoQuote()) void quote.confirmDeclaration(decision);
+}
+function handleCloseQuote() {
+  quote.close();
 }
 
 /** 报价平台下拉数据源 */
@@ -284,20 +459,195 @@ function handlePartDropdownVisible(visible: boolean) {
   if (visible) void fetchPartOptions();
 }
 
-onMounted(() => {
-  void fetchPartOptions();
-  void fetchPlatformOptions();
-});
+/** 参数字典与联动规则 */
+const { loadCatalog, catalogCache, JLC_DEFAULT_CATALOG, XOM_DEFAULT_CATALOG } = useParamCatalog();
 
 const createInitialFormData = (): CncPartConfigForm => ({
   name: undefined,
   site_type: undefined,
-  material: undefined,
+  part_id: undefined,
   quantity: 1,
+  material_category: undefined,
+  material_code: undefined,
+  material: undefined,
+  surface_finish_code: undefined,
   surface_finish: undefined,
+  tolerance: undefined,
+  roughness: undefined,
+  subprocess_code: undefined,
+  has_threads: false,
+  thread_count: 0,
+  has_inserts: false,
+  insert_count: 0,
+  inspection_code: undefined,
+  certification_code: undefined,
+  marking_code: undefined,
+  marking_text: undefined,
+  delivery_code: undefined,
+  requires_2d_drawing: false,
+  technical_notes: undefined,
   extra_params: undefined,
   enabled: true,
-  part_id: undefined,
+});
+
+const formData = ref<CncPartConfigForm>(createInitialFormData());
+
+const currentCatalog = computed<CncParamsCatalog | null>(() => {
+  const site = formData.value.site_type;
+  if (!site) return null;
+  if (catalogCache.value[site]) return catalogCache.value[site];
+  if (site === 2) return JLC_DEFAULT_CATALOG as unknown as CncParamsCatalog;
+  if (site === 1) return XOM_DEFAULT_CATALOG as unknown as CncParamsCatalog;
+  return null;
+});
+
+const materialCategoryOptions = computed(() => {
+  const cats = currentCatalog.value?.material_categories || [];
+  return cats.map((cat) => ({ label: cat, value: cat }));
+});
+
+const materialCodeOptions = computed(() => {
+  const mats = currentCatalog.value?.materials || [];
+  const selectedCat = formData.value.material_category;
+  const filtered = selectedCat ? mats.filter((m) => m.category === selectedCat) : mats;
+  return filtered.map((m) => ({
+    label: m.code ? `${m.name} (${m.code})` : m.name,
+    value: m.code || m.name,
+    name: m.name,
+    code: m.code,
+    category: m.category,
+    supported_finishes: m.supported_finishes,
+    supported_tolerances: m.supported_tolerances,
+    supported_roughnesses: m.supported_roughnesses,
+  }));
+});
+
+const currentMaterialItem = computed(() => {
+  const mats = currentCatalog.value?.materials || [];
+  const code = formData.value.material_code;
+  const name = formData.value.material;
+  return mats.find((m) => (code && m.code === code) || (name && m.name === name)) || null;
+});
+
+const surfaceFinishOptions = computed(() => {
+  const allFinishes = currentCatalog.value?.surface_finishes || [];
+  const supported = currentMaterialItem.value?.supported_finishes;
+  if (supported && supported.length > 0) {
+    return supported.map((s) => ({ label: s, value: s }));
+  }
+  return allFinishes.map((f) => ({ label: f.name, value: f.name }));
+});
+
+const toleranceOptions = computed(() => {
+  const allTolerances = currentCatalog.value?.tolerances || [];
+  const supported = currentMaterialItem.value?.supported_tolerances;
+  if (supported && supported.length > 0) {
+    return supported.map((t) => ({ label: t, value: t }));
+  }
+  return allTolerances.map((t) => ({ label: t.name, value: t.name }));
+});
+
+const roughnessOptions = computed(() => {
+  const allRoughnesses = currentCatalog.value?.roughnesses || [];
+  const supported = currentMaterialItem.value?.supported_roughnesses;
+  if (supported && supported.length > 0) {
+    return supported.map((r) => ({ label: r, value: r }));
+  }
+  return allRoughnesses.map((r) => ({ label: r.name, value: r.name }));
+});
+
+const subprocessOptions = computed(() => {
+  const subs = currentCatalog.value?.subprocesses || [];
+  return subs.map((s) => ({ label: s.name, value: s.code || s.name }));
+});
+
+const inspectionOptions = computed(() => {
+  const ins = currentCatalog.value?.inspections || [];
+  return ins.map((i) => ({ label: i.name, value: i.code || i.name }));
+});
+
+const certificationOptions = computed(() => {
+  const certs = currentCatalog.value?.certifications || [];
+  return certs.map((c) => ({ label: c.name, value: c.code || c.name }));
+});
+
+const markingOptions = computed(() => {
+  const marks = currentCatalog.value?.markings || [];
+  return marks.map((m) => ({ label: m.name, value: m.code || m.name }));
+});
+
+const deliveryOptions = computed(() => {
+  const delivs = currentCatalog.value?.delivery_tiers || [];
+  return delivs.map((d) => ({ label: d.name, value: d.code || d.name }));
+});
+
+function handleMaterialCodeSelect(val: string) {
+  const found = materialCodeOptions.value.find((opt) => opt.value === val);
+  if (found) {
+    formData.value.material = found.name;
+    formData.value.material_code = found.code || found.name;
+    if (found.category && !formData.value.material_category) {
+      formData.value.material_category = found.category;
+    }
+    if (
+      found.supported_finishes &&
+      found.supported_finishes.length > 0 &&
+      formData.value.surface_finish &&
+      !found.supported_finishes.includes(formData.value.surface_finish)
+    ) {
+      formData.value.surface_finish = undefined;
+    }
+  }
+}
+
+function check2dDrawingTrigger() {
+  let need2d = false;
+  const tol = formData.value.tolerance || "";
+  if (["±0.05", "±0.02", "±.001", "±.002"].some((t) => tol.includes(t))) {
+    need2d = true;
+  }
+  if (formData.value.has_threads && (formData.value.thread_count ?? 0) > 0) {
+    need2d = true;
+  }
+  if (formData.value.has_inserts && (formData.value.insert_count ?? 0) > 0) {
+    need2d = true;
+  }
+  const sf = formData.value.surface_finish;
+  const finishItem = currentCatalog.value?.surface_finishes?.find((f) => f.name === sf);
+  if (finishItem?.requires_2d_drawing) {
+    need2d = true;
+  }
+  if (need2d) {
+    formData.value.requires_2d_drawing = true;
+  }
+}
+
+watch(
+  () => formData.value.site_type,
+  async (newSite) => {
+    if (newSite) {
+      await loadCatalog(newSite);
+    }
+  }
+);
+
+watch(
+  () => [
+    formData.value.tolerance,
+    formData.value.has_threads,
+    formData.value.thread_count,
+    formData.value.has_inserts,
+    formData.value.insert_count,
+    formData.value.surface_finish,
+  ],
+  () => {
+    check2dDrawingTrigger();
+  }
+);
+
+onMounted(() => {
+  void fetchPartOptions();
+  void fetchPlatformOptions();
 });
 
 type CncPartConfigSearchFormParams = {
@@ -440,9 +790,30 @@ const {
         showOverflowTooltip: true,
         formatter: (row: CncPartConfigTable) => getPlatformLabel(row.site_type),
       },
-      { prop: "material", label: "加工材料", minWidth: 130, showOverflowTooltip: true },
+      {
+        prop: "part_id",
+        label: "关联图纸",
+        minWidth: 180,
+        showOverflowTooltip: true,
+        formatter: (row: CncPartConfigTable) => getPartLabel(row.part_id),
+      },
+      { prop: "material", label: "加工材料", minWidth: 140, showOverflowTooltip: true },
+      { prop: "surface_finish", label: "表面处理", minWidth: 120, showOverflowTooltip: true },
+      {
+        prop: "tolerance",
+        label: "公差精度",
+        minWidth: 120,
+        showOverflowTooltip: true,
+        formatter: (row: CncPartConfigTable) => row.tolerance || "-",
+      },
       { prop: "quantity", label: "加工数量", width: 90, align: "center" },
-      { prop: "surface_finish", label: "表面处理", minWidth: 130, showOverflowTooltip: true },
+      {
+        prop: "requires_2d_drawing",
+        label: "2D图纸",
+        width: 95,
+        align: "center",
+        formatter: (row: CncPartConfigTable) => (row.requires_2d_drawing ? "需要" : "无需"),
+      },
       {
         prop: "enabled",
         label: "启用状态",
@@ -452,13 +823,6 @@ const {
           true: { type: "success", text: "启用" },
           false: { type: "danger", text: "禁用" },
         },
-      },
-      {
-        prop: "part_id",
-        label: "关联图纸",
-        minWidth: 200,
-        showOverflowTooltip: true,
-        formatter: (row: CncPartConfigTable) => getPartLabel(row.part_id),
       },
       {
         prop: "created_time",
@@ -520,6 +884,9 @@ watch(
     if (visible) {
       void fetchPartOptions();
       void fetchPlatformOptions();
+      if (formData.value.site_type) {
+        void loadCatalog(formData.value.site_type);
+      }
     }
   }
 );
@@ -529,17 +896,26 @@ const detailFormData = ref<CncPartConfigTable>({});
 const detailItems: import("@/components/display/fa-descriptions/index.vue").DescriptionsItem[] = [
   { label: "配置名称", prop: "name" },
   { label: "报价平台", prop: "site_type", slot: "site_type" },
-  { label: "加工材料", prop: "material" },
-  { label: "加工数量", prop: "quantity" },
-  { label: "表面处理", prop: "surface_finish" },
-  { label: "启用状态", prop: "enabled", slot: "enabled" },
   { label: "关联图纸", prop: "part_id", slot: "part_id" },
+  { label: "加工数量", prop: "quantity" },
+  { label: "材料分类", prop: "material_category" },
+  { label: "加工材料", prop: "material" },
+  { label: "表面处理", prop: "surface_finish" },
+  { label: "选用公差", prop: "tolerance" },
+  { label: "粗糙度", prop: "roughness" },
+  { label: "加工工艺", prop: "subprocess_code" },
+  { label: "螺纹攻牙", prop: "has_threads", slot: "has_threads" },
+  { label: "压铆镶件", prop: "has_inserts", slot: "has_inserts" },
+  { label: "出货检验", prop: "inspection_code" },
+  { label: "质量认证", prop: "certification_code" },
+  { label: "发货时效", prop: "delivery_code" },
+  { label: "2D图纸需求", prop: "requires_2d_drawing", slot: "requires_2d_drawing" },
+  { label: "启用状态", prop: "enabled", slot: "enabled" },
   { label: "创建时间", prop: "created_time" },
   { label: "更新时间", prop: "updated_time" },
+  { label: "技术备注", prop: "technical_notes", span: 2 },
   { label: "差异化参数", prop: "extra_params", slot: "extra_params", span: 2 },
 ];
-
-const formData = ref<CncPartConfigForm>(createInitialFormData());
 
 /** 表单校验规则：名称最多限制到 6 个字，配置必填项 */
 const rules = reactive({
@@ -548,6 +924,7 @@ const rules = reactive({
     { max: 6, message: "配置名称最多不超过6个字", trigger: "blur" },
   ],
   site_type: [{ required: true, message: "请选择报价平台", trigger: "change" }],
+  part_id: [{ required: true, message: "请选择关联图纸", trigger: "change" }],
   material: [{ required: true, message: "请输入加工材料", trigger: "blur" }],
   quantity: [
     { required: true, message: "请输入加工数量", trigger: "blur" },
@@ -564,12 +941,11 @@ const rules = reactive({
       trigger: "blur",
     },
   ],
-  part_id: [{ required: true, message: "请选择关联图纸", trigger: "change" }],
   surface_finish: [{ required: false, trigger: "blur" }],
   enabled: [{ required: false, trigger: "change" }],
 });
 
-/** 弹窗表单配置：标签精炼（<=6字），名称输入限制6个字 */
+/** 弹窗表单配置：精确维护 ElSelect 顺序保证测试契约与实际联动效果 */
 const dialogFormItems = computed<FormItem[]>(() => [
   {
     key: "name",
@@ -606,37 +982,6 @@ const dialogFormItems = computed<FormItem[]>(() => [
     },
   },
   {
-    key: "material",
-    label: "加工材料",
-    type: "input",
-    props: {
-      placeholder: "请输入加工材料，例如：铝合金 6061",
-      clearable: true,
-    },
-  },
-  {
-    key: "quantity",
-    label: "加工数量",
-    type: "number",
-    props: {
-      min: 1,
-      step: 1,
-      precision: 0,
-      controlsPosition: "right",
-      placeholder: "请输入加工数量（默认1）",
-      style: { width: "100%" },
-    },
-  },
-  {
-    key: "surface_finish",
-    label: "表面处理",
-    type: "input",
-    props: {
-      placeholder: "请输入表面处理，例如：本色喷砂",
-      clearable: true,
-    },
-  },
-  {
     key: "part_id",
     label: "关联图纸",
     type: "select",
@@ -664,6 +1009,224 @@ const dialogFormItems = computed<FormItem[]>(() => [
     },
   },
   {
+    key: "quantity",
+    label: "加工数量",
+    type: "number",
+    props: {
+      min: 1,
+      step: 1,
+      precision: 0,
+      controlsPosition: "right",
+      placeholder: "请输入加工数量（默认1）",
+      style: { width: "100%" },
+    },
+  },
+  {
+    key: "material_category",
+    label: "材料分类",
+    type: "select",
+    props: {
+      options: materialCategoryOptions.value,
+      placeholder: "请选择材料分类",
+      filterable: true,
+      clearable: true,
+      style: { width: "100%" },
+    },
+  },
+  {
+    key: "material_code",
+    label: "标准材料",
+    type: "select",
+    props: {
+      options: materialCodeOptions.value,
+      placeholder: "请选择标准材料牌号",
+      filterable: true,
+      clearable: true,
+      onChange: handleMaterialCodeSelect,
+      style: { width: "100%" },
+    },
+  },
+  {
+    key: "material",
+    label: "加工材料",
+    type: "input",
+    props: {
+      placeholder: "请输入加工材料，例如：铝合金 6061",
+      clearable: true,
+    },
+  },
+  {
+    key: "surface_finish",
+    label: "表面处理",
+    type: "select",
+    props: {
+      options: surfaceFinishOptions.value,
+      placeholder: "请选择表面处理工艺",
+      filterable: true,
+      allowCreate: true,
+      defaultFirstOption: true,
+      clearable: true,
+      style: { width: "100%" },
+    },
+  },
+  {
+    key: "tolerance",
+    label: "选用公差",
+    type: "select",
+    props: {
+      options: toleranceOptions.value,
+      placeholder: "请选择精度公差等级",
+      filterable: true,
+      allowCreate: true,
+      defaultFirstOption: true,
+      clearable: true,
+      style: { width: "100%" },
+    },
+  },
+  {
+    key: "roughness",
+    label: "粗糙度",
+    type: "select",
+    props: {
+      options: roughnessOptions.value,
+      placeholder: "请选择表面粗糙度",
+      filterable: true,
+      allowCreate: true,
+      defaultFirstOption: true,
+      clearable: true,
+      style: { width: "100%" },
+    },
+  },
+  {
+    key: "subprocess_code",
+    label: "加工工艺",
+    type: "select",
+    props: {
+      options: subprocessOptions.value,
+      placeholder: "请选择加工子工艺",
+      filterable: true,
+      clearable: true,
+      style: { width: "100%" },
+    },
+  },
+  {
+    key: "delivery_code",
+    label: "发货时效",
+    type: "select",
+    props: {
+      options: deliveryOptions.value,
+      placeholder: "请选择发货时效偏好",
+      filterable: true,
+      clearable: true,
+      style: { width: "100%" },
+    },
+  },
+  {
+    key: "has_threads",
+    label: "螺纹攻牙",
+    type: "switch",
+    props: {
+      activeText: "有螺纹",
+      inactiveText: "无螺纹",
+      inlinePrompt: true,
+    },
+  },
+  {
+    key: "thread_count",
+    label: "攻牙孔数",
+    type: "number",
+    hidden: !formData.value.has_threads,
+    props: {
+      min: 1,
+      step: 1,
+      precision: 0,
+      controlsPosition: "right",
+      placeholder: "请输入攻牙孔数量",
+      style: { width: "100%" },
+    },
+  },
+  {
+    key: "has_inserts",
+    label: "压铆镶件",
+    type: "switch",
+    props: {
+      activeText: "有镶件",
+      inactiveText: "无镶件",
+      inlinePrompt: true,
+    },
+  },
+  {
+    key: "insert_count",
+    label: "镶件数量",
+    type: "number",
+    hidden: !formData.value.has_inserts,
+    props: {
+      min: 1,
+      step: 1,
+      precision: 0,
+      controlsPosition: "right",
+      placeholder: "请输入镶件数量",
+      style: { width: "100%" },
+    },
+  },
+  {
+    key: "inspection_code",
+    label: "出货检验",
+    type: "select",
+    props: {
+      options: inspectionOptions.value,
+      placeholder: "请选择出货检验要求",
+      filterable: true,
+      clearable: true,
+      style: { width: "100%" },
+    },
+  },
+  {
+    key: "certification_code",
+    label: "质量认证",
+    type: "select",
+    hidden: formData.value.site_type !== 1 && !formData.value.certification_code,
+    props: {
+      options: certificationOptions.value,
+      placeholder: "请选择质量认证/报告",
+      filterable: true,
+      clearable: true,
+      style: { width: "100%" },
+    },
+  },
+  {
+    key: "marking_code",
+    label: "零件打标",
+    type: "select",
+    props: {
+      options: markingOptions.value,
+      placeholder: "请选择零件打标方式",
+      filterable: true,
+      clearable: true,
+      style: { width: "100%" },
+    },
+  },
+  {
+    key: "marking_text",
+    label: "打标内容",
+    type: "input",
+    hidden: !formData.value.marking_code,
+    props: {
+      placeholder: "请输入打标文字内容",
+      clearable: true,
+    },
+  },
+  {
+    key: "requires_2d_drawing",
+    label: "需2D图纸",
+    type: "switch",
+    props: {
+      activeText: "必须",
+      inactiveText: "非必需",
+      inlinePrompt: true,
+    },
+  },
+  {
     key: "enabled",
     label: "启用状态",
     type: "switch",
@@ -671,6 +1234,18 @@ const dialogFormItems = computed<FormItem[]>(() => [
       activeText: "启用",
       inactiveText: "禁用",
       inlinePrompt: true,
+    },
+  },
+  {
+    key: "technical_notes",
+    label: "技术备注",
+    type: "input",
+    span: 24,
+    props: {
+      type: "textarea",
+      rows: 2,
+      placeholder: "请输入特殊工艺要求、关键公差面标注或加工说明",
+      clearable: true,
     },
   },
 ]);
@@ -770,6 +1345,15 @@ function buildRowActions(row: CncPartConfigTable): TableOperationAction[] {
     });
   }
 
+  all.push({
+    key: "quote_records",
+    label: "报价结果",
+    artType: "more",
+    icon: "ri:file-chart-line",
+    iconColor: "var(--el-color-success)",
+    run: () => goToQuoteResults(row.id),
+  });
+
   all.push(
     {
       key: "detail",
@@ -865,7 +1449,6 @@ async function handleMoreClick(value: "enable" | "disable") {
     moreLoading.value = true;
     const status = value === "enable" ? 0 : 1;
     await CncPartConfigAPI.batchCncPartConfig({ ids, status });
-    // 成功 / 失败提示由 axios 拦截器统一处理
     faTableRef.value?.elTableRef?.clearSelection();
     await refreshData();
   } catch {

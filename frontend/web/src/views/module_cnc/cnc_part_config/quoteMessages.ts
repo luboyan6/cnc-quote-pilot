@@ -14,6 +14,26 @@ const reasons: Record<string, string> = {
   QUOTE_PERMISSION_REVOKED: "自动报价权限已撤销，请重新登录或联系管理员。",
   FILE_INVALID: "图纸文件无法通过校验，请检查文件格式和内容。",
   PROVIDER_AUTOMATION_UNVERIFIED: "此平台的自动上传和报价尚未通过验证，无法继续自动操作。",
+  QUOTE_EXPORT_DECLARATION_REQUIRED: "请阅读当前平台声明，并为本次图纸明确选择出口声明选项。",
+  QUOTE_EXPORT_DECLARATION_STALE: "平台声明已变化，当前选择不再适用，请核对最新声明。",
+  QUOTE_EXPORT_DECLARATION_INVALID: "声明选择与本次图纸或当前选项不一致，无法继续报价。",
+  QUOTE_EXPORT_DECLARATION_UNCONFIRMED_NO_RETRY:
+    "声明操作回执尚未确认，未重复发送，请核对本次报价状态。",
+  QUOTE_PRIOR_UPLOAD_UNCONFIRMED_NO_RETRY:
+    "此账号先前的图纸上传尚未核对，已停止新上传，请先核对原运行。",
+  QUOTE_PRIOR_MUTATION_UNCONFIRMED_NO_RETRY:
+    "此账号先前的参数保存或报价操作尚未确认，未重复发送，请先核对原运行。",
+  QUOTE_CONFIGURATION_RECONCILING: "正在核对平台参数保存结果，未重复点击保存。",
+  QUOTE_CONFIGURATION_UNCONFIRMED_NO_RETRY:
+    "平台参数保存结果尚未确认，未重复保存，请核对本次报价状态。",
+  XOMETRY_BINDING_UNVERIFIED: "Xometry 正式报价流程尚未完成验证，当前无法继续自动上传。",
+  JLC_EFFECTIVE_PARAMETERS_UNVERIFIED:
+    "嘉立创加工参数回读尚未完成验证，当前无法自动上传并确认估价。",
+  XOMETRY_PAGE_UNSUPPORTED: "当前 Xometry 页面尚不支持自动报价，请核对平台入口和页面状态。",
+  XOMETRY_PARAMETER_UNSUPPORTED: "本次配置含 Xometry 暂不支持的参数，请核对加工配置。",
+  XOMETRY_PARAMETER_AMBIGUOUS: "Xometry 参数选项不能与本次配置唯一匹配，请填写精确材料或参数。",
+  XOMETRY_RECEIPT_UNCONFIRMED: "Xometry 操作回执尚未确认，未重复发送，请核对本次报价状态。",
+  XOMETRY_QUOTE_EVIDENCE_MISSING: "Xometry 尚未提供可核对的本次报价依据，无法确认报价。",
   FILE_EXCEEDS_PROVIDER_LIMIT: "图纸超过平台允许的文件大小，请更换文件。",
   QUOTE_WORKER_UNAVAILABLE_NO_RETRY: "本次报价执行服务已不可用，平台操作尚待核对，未重复发送。",
   QUOTE_WORKER_ACTIVE_CANNOT_CANCEL: "本次报价仍由其他执行服务占用，请等待服务释放后再核对状态。",

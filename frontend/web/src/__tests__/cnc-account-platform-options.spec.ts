@@ -264,3 +264,68 @@ describe("账号列表登录按钮", () => {
     }
   });
 });
+
+describe("账号列表与详情的平台页面展示", () => {
+  it("在启用状态后展示登录页面与报价页面，并隐藏更新时间列", async () => {
+    mocks.listPlatforms.mockResolvedValue(
+      page([
+        {
+          id: 5,
+          name: "平台A",
+          login_url: "https://login.a.com",
+          quote_entry_url: "https://quote.a.com",
+        } as any,
+      ])
+    );
+    const wrapper = mountPage();
+    try {
+      await flushPromises();
+      const table = wrapper.findComponent(Table);
+      expect(table.exists()).toBe(true);
+
+      const columns = table.props("columns") as Array<{
+        prop?: string;
+        label?: string;
+        visible?: boolean;
+        formatter?: (row: unknown) => unknown;
+      }>;
+
+      const enabledIdx = columns.findIndex((c) => c.prop === "enabled");
+      const loginUrlIdx = columns.findIndex((c) => c.prop === "platform_login_url");
+      const quoteUrlIdx = columns.findIndex((c) => c.prop === "platform_quote_entry_url");
+      const updatedTimeCol = columns.find((c) => c.prop === "updated_time");
+
+      expect(enabledIdx).toBeGreaterThan(-1);
+      expect(loginUrlIdx).toBe(enabledIdx + 1);
+      expect(quoteUrlIdx).toBe(enabledIdx + 2);
+
+      const loginCol = columns[loginUrlIdx]!;
+      const quoteCol = columns[quoteUrlIdx]!;
+
+      expect(loginCol.label).toBe("登录页面");
+      expect(quoteCol.label).toBe("报价页面");
+      expect(updatedTimeCol?.visible).toBe(false);
+
+      // 测试 formatter：优先使用 row 上的平台地址
+      const rowWithUrls = {
+        platform_id: 5,
+        platform_login_url: "https://override.login.com",
+        platform_quote_entry_url: "https://override.quote.com",
+      };
+      expect(loginCol.formatter!(rowWithUrls)).toBe("https://override.login.com");
+      expect(quoteCol.formatter!(rowWithUrls)).toBe("https://override.quote.com");
+
+      // 测试 formatter：row 缺少地址时，从已加载的平台数据源中回退获取
+      const rowFallback = { platform_id: 5 };
+      expect(loginCol.formatter!(rowFallback)).toBe("https://login.a.com");
+      expect(quoteCol.formatter!(rowFallback)).toBe("https://quote.a.com");
+
+      // 测试 formatter：无对应平台时兜底返回 "-"
+      const rowEmpty = { platform_id: 999 };
+      expect(loginCol.formatter!(rowEmpty)).toBe("-");
+      expect(quoteCol.formatter!(rowEmpty)).toBe("-");
+    } finally {
+      wrapper.unmount();
+    }
+  });
+});

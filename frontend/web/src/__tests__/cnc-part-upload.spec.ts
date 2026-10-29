@@ -113,8 +113,6 @@ beforeEach(() => {
         id: 7,
         file_name: "旧图纸.stp",
         file_path: "E:/uploads/old.stp",
-        validation_status: "HEADER_VALID",
-        upload_authorized: true,
         declared_unit: "mm",
         file_type: 1,
       },
@@ -180,13 +178,12 @@ describe("图纸新增和修改上传", () => {
       .findAll("button")
       .find((button) => button.text() === "移除")!
       .trigger("click");
-    expect(form(wrapper)).toMatchObject({ upload_authorized: false, declared_unit: "" });
+    expect(form(wrapper)).toMatchObject({ declared_unit: "" });
     for (const field of [
       "file_name",
       "file_path",
       "extension",
       "size_bytes",
-      "validation_status",
       "file_type",
     ] as const) {
       expect(form(wrapper)[field]).toBeUndefined();
@@ -250,8 +247,6 @@ describe("图纸新增和修改上传", () => {
       file_path: "E:/uploads/part.step",
       extension: "step",
       size_bytes: 9,
-      validation_status: "PENDING",
-      upload_authorized: false,
     });
     expect(form(wrapper).declared_unit).toBe("");
     await wrapper.get(".confirm").trigger("click");
@@ -271,8 +266,6 @@ describe("图纸新增和修改上传", () => {
     await flushPromises();
     expect(form(wrapper)).toMatchObject({
       extension: "setp",
-      validation_status: "PENDING",
-      upload_authorized: false,
     });
     expect(form(wrapper).declared_unit).toBe("");
     expect(form(wrapper).file_type).toBeUndefined();
@@ -283,7 +276,6 @@ describe("图纸新增和修改上传", () => {
       expect.objectContaining({
         file_path: "E:/uploads/part.step",
         declared_unit: "",
-        upload_authorized: false,
       })
     );
   });
@@ -310,7 +302,6 @@ describe("图纸新增和修改上传", () => {
     await flushPromises();
     expect(form(wrapper).file_path).toBe("E:/uploads/old.stp");
     expect(form(wrapper).file_name).toBe("旧图纸.stp");
-    expect(form(wrapper).upload_authorized).toBe(true);
     expect(form(wrapper).declared_unit).toBe("mm");
     expect(ElMessage.error).toHaveBeenCalled();
   });

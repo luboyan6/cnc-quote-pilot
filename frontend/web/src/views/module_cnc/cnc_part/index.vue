@@ -274,8 +274,6 @@ const createInitialFormData = (): CncPartForm => ({
   extension: undefined,
   size_bytes: undefined,
   declared_unit: undefined,
-  validation_status: undefined,
-  upload_authorized: false,
   file_path: undefined,
   file_name: undefined,
   file_type: undefined,
@@ -285,8 +283,6 @@ type CncPartSearchFormParams = {
   extension?: string;
   size_bytes?: string;
   declared_unit?: string;
-  validation_status?: string;
-  upload_authorized?: string;
   file_path?: string;
   file_name?: string;
   file_type?: string;
@@ -296,8 +292,6 @@ const searchForm = ref<CncPartSearchFormParams>({
   extension: undefined,
   size_bytes: undefined,
   declared_unit: undefined,
-  validation_status: undefined,
-  upload_authorized: undefined,
   file_path: undefined,
   file_name: undefined,
   file_type: undefined,
@@ -356,14 +350,6 @@ const businessSearchItems = computed(() => [
   //   clearable: true,
   //   span: 6,
   // },
-  // {
-  //   label: "上传授权",
-  //   key: "upload_authorized",
-  //   type: "input",
-  //   placeholder: "请输入上传授权",
-  //   clearable: true,
-  //   span: 6,
-  // },
 ]);
 
 const faTableRef = ref<{ elTableRef?: { clearSelection: () => void } } | null>(null);
@@ -407,16 +393,6 @@ const {
       // { prop: "extension", label: "文件扩展名", minWidth: 120, showOverflowTooltip: true },
       // { prop: "size_bytes", label: "文件大小", minWidth: 120, showOverflowTooltip: true },
       // { prop: "declared_unit", label: "声明单位", minWidth: 120, showOverflowTooltip: true },
-      // { prop: "validation_status", label: "校验状态", minWidth: 120, showOverflowTooltip: true },
-      // {
-      //   prop: "upload_authorized",
-      //   label: "上传授权",
-      //   width: 80,
-      //   status: {
-      //     true: { type: "success", text: "是" },
-      //     false: { type: "danger", text: "否" },
-      //   },
-      // },
       // {
       //   prop: "created_time",
       //   label: "创建时间",
@@ -481,8 +457,6 @@ const detailItems: import("@/components/display/fa-descriptions/index.vue").Desc
   // { label: "文件扩展名", prop: "extension" },
   // { label: "文件大小", prop: "size_bytes" },
   // { label: "声明单位", prop: "declared_unit" },
-  // { label: "校验状态", prop: "validation_status" },
-  // { label: "上传授权", prop: "upload_authorized" },
   // { label: "创建时间", prop: "created_time" },
   // { label: "更新时间", prop: "updated_time" },
   // { label: "文件类型", prop: "file_type" },
@@ -497,8 +471,6 @@ const rules = reactive({
   extension: [{ required: false, trigger: "blur" }],
   size_bytes: [{ required: false, trigger: "blur" }],
   declared_unit: [{ required: false, trigger: "blur" }],
-  validation_status: [{ required: false, trigger: "change" }],
-  upload_authorized: [{ required: false, trigger: "change" }],
   file_type: [{ required: false, trigger: "blur" }],
 });
 
@@ -548,27 +520,6 @@ const dialogFormItems: FormItem[] = [
   //   type: "input",
   //   span: 12,
   //   props: { placeholder: "请输入声明单位（如 mm）", clearable: true },
-  // },
-  // {
-  //   key: "validation_status",
-  //   label: "校验状态",
-  //   type: "select",
-  //   span: 12,
-  //   placeholder: "请选择校验状态",
-  //   props: {
-  //     clearable: true,
-  //     options: [
-  //       { label: "待校验 (PENDING)", value: "PENDING" },
-  //       { label: "基础检查通过 (HEADER_VALID)", value: "HEADER_VALID" },
-  //       { label: "已拒绝 (REJECTED)", value: "REJECTED" },
-  //     ],
-  //   },
-  // },
-  // {
-  //   key: "upload_authorized",
-  //   label: "上传授权",
-  //   type: "switch",
-  //   span: 12,
   // },
   // {
   //   key: "file_type",
@@ -626,11 +577,9 @@ function handleClearUploadedFile() {
   formData.value.file_path = undefined;
   formData.value.extension = undefined;
   formData.value.size_bytes = undefined;
-  formData.value.validation_status = undefined;
   // CRUD ignores null/omitted values; an empty declaration clears the saved unit.
   formData.value.declared_unit = "";
   formData.value.file_type = undefined;
-  formData.value.upload_authorized = false;
   if (stepFileInputRef.value) {
     stepFileInputRef.value.value = "";
   }
@@ -691,12 +640,9 @@ async function handleStepFileSelected(event: Event) {
     formData.value.file_path = safePath;
     formData.value.extension = ext;
     formData.value.size_bytes = file.size;
-    formData.value.validation_status = "PENDING";
-    // Prior declarations and third-party consent belong to the replaced file.
     // CRUD ignores null/omitted values; an empty declaration clears the saved unit.
     formData.value.declared_unit = "";
     formData.value.file_type = undefined;
-    formData.value.upload_authorized = false;
 
     // 清除由于之前可能未填写产生的表单校验提示
     dataFormRef.value?.clearValidate?.(["file_name", "file_path"]);
@@ -751,8 +697,6 @@ const handleSearch = async (params: CncPartSearchFormParams) => {
     extension: params.extension,
     size_bytes: params.size_bytes,
     declared_unit: params.declared_unit,
-    validation_status: params.validation_status,
-    upload_authorized: params.upload_authorized,
     file_path: params.file_path,
     file_name: params.file_name,
     file_type: params.file_type,
@@ -775,8 +719,6 @@ const onResetSearch = async () => {
     extension: undefined,
     size_bytes: undefined,
     declared_unit: undefined,
-    validation_status: undefined,
-    upload_authorized: undefined,
     file_path: undefined,
     file_name: undefined,
     file_type: undefined,

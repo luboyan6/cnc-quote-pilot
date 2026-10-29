@@ -1,4 +1,4 @@
-<!-- 注册表单 -->
+<!-- 注册表单组件 -->
 <template>
   <div>
     <ElForm
@@ -9,18 +9,22 @@
       class="login-page-form"
       @keyup.enter="$emit('submit')"
     >
+      <!-- 用户名 -->
       <ElFormItem prop="username">
         <ElInput
           class="custom-height"
           v-model.trim="registerForm.username"
+          autocomplete="username"
           clearable
           :placeholder="$t('login.placeholder.username')"
         >
           <template #prefix>
-            <ElIcon><User /></ElIcon>
+            <FaSvgIcon icon="ri:user-line" class="text-base text-(--el-text-color-placeholder)" />
           </template>
         </ElInput>
       </ElFormItem>
+
+      <!-- 姓名 / 昵称 -->
       <ElFormItem prop="name">
         <ElInput
           class="custom-height"
@@ -29,55 +33,67 @@
           :placeholder="$t('register.placeholder.name')"
         >
           <template #prefix>
-            <ElIcon><User /></ElIcon>
+            <FaSvgIcon icon="ri:badge-line" class="text-base text-(--el-text-color-placeholder)" />
           </template>
         </ElInput>
       </ElFormItem>
+
+      <!-- 登录密码 -->
       <ElTooltip :visible="isCapsLock" :content="$t('login.capsLock')" placement="right">
         <ElFormItem prop="password">
           <ElInput
             class="custom-height"
             v-model.trim="registerForm.password"
             type="password"
-            autocomplete="off"
+            autocomplete="new-password"
             show-password
             clearable
             :placeholder="$t('login.placeholder.password')"
             @keyup="checkCapsLock"
           >
             <template #prefix>
-              <ElIcon><Lock /></ElIcon>
+              <FaSvgIcon
+                icon="ri:lock-password-line"
+                class="text-base text-(--el-text-color-placeholder)"
+              />
             </template>
           </ElInput>
         </ElFormItem>
       </ElTooltip>
+
+      <!-- 确认密码 -->
       <ElTooltip :visible="isCapsLock" :content="$t('login.capsLock')" placement="right">
         <ElFormItem prop="confirmPassword">
           <ElInput
             class="custom-height"
             v-model.trim="registerForm.confirmPassword"
             type="password"
-            autocomplete="off"
+            autocomplete="new-password"
             show-password
             clearable
             :placeholder="$t('login.message.password.confirm')"
             @keyup="checkCapsLock"
           >
             <template #prefix>
-              <ElIcon><Lock /></ElIcon>
+              <FaSvgIcon
+                icon="ri:lock-check-line"
+                class="text-base text-(--el-text-color-placeholder)"
+              />
             </template>
           </ElInput>
         </ElFormItem>
       </ElTooltip>
-      <ElFormItem>
-        <div class="flex flex-wrap items-center gap-2">
-          <ElCheckbox v-model="registerAgreementReadModel">
+
+      <!-- 用户服务与隐私条款 -->
+      <ElFormItem class="!mb-3">
+        <div class="flex flex-wrap items-center gap-1.5 text-sm pt-0.5">
+          <ElCheckbox v-model="registerAgreementReadModel" class="login-remember">
             {{ $t("login.agree") }}
           </ElCheckbox>
           <ElLink
             type="primary"
             underline="never"
-            class="text-sm font-medium"
+            class="text-sm font-medium transition-opacity hover:opacity-85"
             :href="userAgreementHref"
             target="_blank"
             rel="noopener noreferrer"
@@ -86,15 +102,20 @@
           </ElLink>
         </div>
       </ElFormItem>
-      <div class="mt-6">
+
+      <!-- 注册提交按钮 -->
+      <div class="mt-4">
         <ElButton
-          class="h-11 w-full rounded-lg! text-base font-medium"
+          class="login-submit-btn h-11 w-full rounded-xl! text-base font-semibold shadow-sm transition-all duration-200"
           type="primary"
           :loading="registerLoading"
           v-ripple
           @click="$emit('submit')"
         >
-          {{ $t("login.register") }}
+          <span class="flex items-center justify-center gap-2">
+            <span>{{ $t("login.register") }}</span>
+            <FaSvgIcon icon="ri:user-add-line" class="text-base" />
+          </span>
         </ElButton>
       </div>
     </ElForm>
@@ -108,7 +129,6 @@
 </template>
 
 <script setup lang="ts">
-import { Lock, User } from "@element-plus/icons-vue";
 import type { RegisterForm } from "@/api/module_system/user";
 import type { FormRules } from "element-plus";
 

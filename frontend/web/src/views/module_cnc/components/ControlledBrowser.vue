@@ -4,10 +4,13 @@
       <img
         v-if="frameUrl"
         :src="frameUrl"
-        alt="当前账号的平台浏览器画面，点击可操作平台页面"
+        alt="当前账号的平台浏览器画面，可点击或拖动操作平台页面"
         tabindex="0"
         draggable="false"
         :aria-disabled="!interactive"
+        @pointerdown="startPointer"
+        @pointerup="finishPointer"
+        @pointercancel="cancelPointer"
         @click="clickFrame"
         @wheel.prevent="scrollFrame"
         @keydown="pressKey"
@@ -69,8 +72,45 @@ const keys: { label: string; value: CncLoginKey }[] = [
   { label: "Esc", value: "Escape" },
 ];
 
+function remotePoint(event: PointerEvent, image: HTMLImageElement) {
+  const rect = image.getBoundingClientRect();
+  const { width, height } = props.viewport;
+  return {
+    x: Math.max(0, Math.min(width - 1, Math.floor(((event.clientX - rect.left) * width) / rect.width))),
+    y: Math.max(0, Math.min(height - 1, Math.floor(((event.clientY - rect.top) * height) / rect.height))),
+  };
+}
+/** A press that never leaves the origin is a click; anything further is a drag. */
+const DRAG_THRESHOLD = 4;
+let pressed: { x: number; y: number } | null = null;
+
+function startPointer(event: PointerEvent) {
+  if (!props.interactive) return;
+  const image = event.currentTarget as HTMLImageElement;
+  if (!image.getBoundingClientRect().width) return;
+  image.focus();
+  image.setPointerCapture?.(event.pointerId);
+  pressed = remotePoint(event, image);
+}
+function finishPointer(event: PointerEvent) {
+  if (!props.interactive || !pressed) return;
+  lastPointerTime = Date.now();
+  const image = event.currentTarget as HTMLImageElement;
+  const origin = pressed;
+  pressed = null;
+  const release = remotePoint(event, image);
+  const moved = Math.abs(release.x - origin.x) > DRAG_THRESHOLD || Math.abs(release.y - origin.y) > DRAG_THRESHOLD;
+  emit("input", moved ? { kind: "drag", x: origin.x, y: origin.y, x2: release.x, y2: release.y } : { kind: "click", x: origin.x, y: origin.y });
+}
+let lastPointerTime = 0;
+
+function cancelPointer() {
+  pressed = null;
+}
+
 function clickFrame(event: MouseEvent) {
   if (!props.interactive) return;
+  if (Date.now() - lastPointerTime < 300) return;
   const image = event.currentTarget as HTMLImageElement;
   const rect = image.getBoundingClientRect();
   if (!rect.width || !rect.height) return;
@@ -78,14 +118,8 @@ function clickFrame(event: MouseEvent) {
   const { width, height } = props.viewport;
   emit("input", {
     kind: "click",
-    x: Math.max(
-      0,
-      Math.min(width - 1, Math.floor(((event.clientX - rect.left) * width) / rect.width))
-    ),
-    y: Math.max(
-      0,
-      Math.min(height - 1, Math.floor(((event.clientY - rect.top) * height) / rect.height))
-    ),
+    x: Math.max(0, Math.min(width - 1, Math.floor(((event.clientX - rect.left) * width) / rect.width))),
+    y: Math.max(0, Math.min(height - 1, Math.floor(((event.clientY - rect.top) * height) / rect.height))),
   });
 }
 function scroll(delta: number) {
@@ -143,6 +177,7 @@ function sendText() {
   width: 100%;
   aspect-ratio: 16 / 9;
   cursor: pointer;
+  touch-action: none;
 }
 
 .browser-frame img:focus-visible {

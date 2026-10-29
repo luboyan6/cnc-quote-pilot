@@ -1,0 +1,2658 @@
+{
+  "metadata": {
+    "platform": "嘉立创CNC中国站 (JLC CNC China)",
+    "website_url": "https://www.jlc-cnc.com",
+    "quote_url": "https://www.jlc-cnc.com/cncOrder/#/placeOrder",
+    "currency": "CNY (RMB)",
+    "version": "1.0.0",
+    "extracted_at": "2026-10-25 15:00:35",
+    "description": "嘉立创CNC在线报价平台全量加工参数及参数联动关联约束规则库"
+  },
+  "parameter_definitions": {
+    "material_categories": [
+      "铝合金",
+      "合金钢",
+      "不锈钢",
+      "铜合金",
+      "塑料"
+    ],
+    "materials": [
+      {
+        "material_id": "7e0580c26539457c923088041d6f3202",
+        "name": "不锈钢-304",
+        "category": "不锈钢",
+        "code": "SUS304",
+        "is_default": false,
+        "sort_order": 1,
+        "thickness_limit": {
+          "min_mm": 0.01,
+          "max_mm": 150
+        },
+        "guidance_remark": "",
+        "default_craft_ids": [],
+        "default_craft_names": [],
+        "supported_craft_ids": [
+          "89299458999a41dfb0f6ca7b794916a0",
+          "4a5b2e2e5f494934b1d88b599a89b7ac",
+          "e06e82a809064b43b8c01a0c000e8a88",
+          "0a5f5fa0aad34973bf6a15b95d2aaf7c",
+          "27c1749bbeea46ff9cfe320d059778b2"
+        ],
+        "supported_craft_names": [
+          "钝化",
+          "镀镍",
+          "激光打标",
+          "拉丝",
+          "仅喷砂"
+        ],
+        "supported_tolerances": [
+          "GB/T 1804-2000 m级",
+          "±0.10mm",
+          "±0.05mm"
+        ],
+        "supported_roughnesses": [
+          "严格外观",
+          "常规外观"
+        ]
+      },
+      {
+        "material_id": "c2296071641042b4b0a5c979c7b5f62e",
+        "name": "45#钢",
+        "category": "合金钢",
+        "code": "G45",
+        "is_default": false,
+        "sort_order": 1,
+        "thickness_limit": {
+          "min_mm": 4,
+          "max_mm": 220
+        },
+        "guidance_remark": "",
+        "default_craft_ids": [],
+        "default_craft_names": [],
+        "supported_craft_ids": [
+          "89299458999a41dfb0f6ca7b794916a0",
+          "4a5b2e2e5f494934b1d88b599a89b7ac",
+          "3cedd1efb25c498282df180c885123cd",
+          "e06e82a809064b43b8c01a0c000e8a88",
+          "0a5f5fa0aad34973bf6a15b95d2aaf7c",
+          "27c1749bbeea46ff9cfe320d059778b2"
+        ],
+        "supported_craft_names": [
+          "钝化",
+          "镀镍",
+          "发黑",
+          "激光打标",
+          "拉丝",
+          "仅喷砂"
+        ],
+        "supported_tolerances": [
+          "GB/T 1804-2000 m级",
+          "±0.10mm",
+          "±0.05mm"
+        ],
+        "supported_roughnesses": [
+          "严格外观",
+          "常规外观"
+        ]
+      },
+      {
+        "material_id": "c836f0f5a1fe457eb870d52d5d866441",
+        "name": "Q235钢（A3钢）",
+        "category": "合金钢",
+        "code": "Q235",
+        "is_default": false,
+        "sort_order": 3,
+        "thickness_limit": {
+          "min_mm": 4,
+          "max_mm": 220
+        },
+        "guidance_remark": "",
+        "default_craft_ids": [],
+        "default_craft_names": [],
+        "supported_craft_ids": [
+          "89299458999a41dfb0f6ca7b794916a0",
+          "4a5b2e2e5f494934b1d88b599a89b7ac",
+          "3cedd1efb25c498282df180c885123cd",
+          "e06e82a809064b43b8c01a0c000e8a88",
+          "0a5f5fa0aad34973bf6a15b95d2aaf7c",
+          "27c1749bbeea46ff9cfe320d059778b2"
+        ],
+        "supported_craft_names": [
+          "钝化",
+          "镀镍",
+          "发黑",
+          "激光打标",
+          "拉丝",
+          "仅喷砂"
+        ],
+        "supported_tolerances": [
+          "GB/T 1804-2000 m级",
+          "±0.10mm",
+          "±0.05mm"
+        ],
+        "supported_roughnesses": [
+          "严格外观",
+          "常规外观"
+        ]
+      },
+      {
+        "material_id": "ba7d04eb738b4b0a98a63a99b877ea14",
+        "name": "工程塑料-ABS（白色）",
+        "category": "塑料",
+        "code": "P111",
+        "is_default": false,
+        "sort_order": 2,
+        "thickness_limit": {
+          "min_mm": 1,
+          "max_mm": 9999
+        },
+        "guidance_remark": "ABS不喷油表面容易有磨损划痕，喷油后表面更光滑、美观。",
+        "default_craft_ids": [],
+        "default_craft_names": [],
+        "supported_craft_ids": [
+          "2f60174c026743d8b866e6780fd6eca5",
+          "a8945693f44445368266046b6934c660"
+        ],
+        "supported_craft_names": [
+          "喷油",
+          "UV打印"
+        ],
+        "supported_tolerances": [
+          "GB/T 1804-2000 m级",
+          "±0.10mm",
+          "±0.05mm"
+        ],
+        "supported_roughnesses": [
+          "严格外观",
+          "常规外观"
+        ]
+      },
+      {
+        "material_id": "0b43053f92c94f32b37b8a37cf711439",
+        "name": "工程塑料-ABS（黑色）",
+        "category": "塑料",
+        "code": "P29",
+        "is_default": false,
+        "sort_order": 2,
+        "thickness_limit": {
+          "min_mm": 1,
+          "max_mm": 9999
+        },
+        "guidance_remark": "黑色ABS不喷油表面容易有磨损划痕、泛白，喷油后表面更光滑、美观。",
+        "default_craft_ids": [
+          "2f60174c026743d8b866e6780fd6eca5"
+        ],
+        "default_craft_names": [
+          "喷油"
+        ],
+        "supported_craft_ids": [
+          "2f60174c026743d8b866e6780fd6eca5",
+          "a8945693f44445368266046b6934c660"
+        ],
+        "supported_craft_names": [
+          "喷油",
+          "UV打印"
+        ],
+        "supported_tolerances": [
+          "GB/T 1804-2000 m级",
+          "±0.10mm",
+          "±0.05mm"
+        ],
+        "supported_roughnesses": [
+          "严格外观",
+          "常规外观"
+        ]
+      },
+      {
+        "material_id": "7d4b9c3dc404446d83d3293535dd1441",
+        "name": "赛钢-POM（白色）",
+        "category": "塑料",
+        "code": "P31",
+        "is_default": false,
+        "sort_order": 3,
+        "thickness_limit": {
+          "min_mm": 1,
+          "max_mm": 9999
+        },
+        "guidance_remark": "",
+        "default_craft_ids": [],
+        "default_craft_names": [],
+        "supported_craft_ids": [
+          "a8945693f44445368266046b6934c660"
+        ],
+        "supported_craft_names": [
+          "UV打印"
+        ],
+        "supported_tolerances": [
+          "GB/T 1804-2000 m级",
+          "±0.10mm",
+          "±0.05mm"
+        ],
+        "supported_roughnesses": [
+          "常规外观",
+          "严格外观"
+        ]
+      },
+      {
+        "material_id": "d6af2ec2074b425683a1c9087a6cfb5e",
+        "name": "赛钢-POM（黑色）",
+        "category": "塑料",
+        "code": "P13",
+        "is_default": false,
+        "sort_order": 3,
+        "thickness_limit": {
+          "min_mm": 1,
+          "max_mm": 9999
+        },
+        "guidance_remark": "",
+        "default_craft_ids": [],
+        "default_craft_names": [],
+        "supported_craft_ids": [
+          "a8945693f44445368266046b6934c660"
+        ],
+        "supported_craft_names": [
+          "UV打印"
+        ],
+        "supported_tolerances": [
+          "GB/T 1804-2000 m级",
+          "±0.10mm",
+          "±0.05mm"
+        ],
+        "supported_roughnesses": [
+          "常规外观",
+          "严格外观"
+        ]
+      },
+      {
+        "material_id": "e6e7ada957dc42f398854887d7e839a4",
+        "name": "电木（橘黄色）",
+        "category": "塑料",
+        "code": "P11",
+        "is_default": false,
+        "sort_order": 4,
+        "thickness_limit": {
+          "min_mm": 1,
+          "max_mm": 999
+        },
+        "guidance_remark": "电木不喷油，表面容易有划痕，材料表面泛白，喷油后表面光滑更美观。",
+        "default_craft_ids": [],
+        "default_craft_names": [],
+        "supported_craft_ids": [
+          "2f60174c026743d8b866e6780fd6eca5",
+          "a8945693f44445368266046b6934c660"
+        ],
+        "supported_craft_names": [
+          "喷油",
+          "UV打印"
+        ],
+        "supported_tolerances": [
+          "GB/T 1804-2000 m级",
+          "±0.10mm",
+          "±0.05mm"
+        ],
+        "supported_roughnesses": [
+          "严格外观",
+          "常规外观"
+        ]
+      },
+      {
+        "material_id": "f29c2c75c3b144008c636817acd8dcfa",
+        "name": "电木（黑色）",
+        "category": "塑料",
+        "code": "P10",
+        "is_default": false,
+        "sort_order": 4,
+        "thickness_limit": {
+          "min_mm": 1,
+          "max_mm": 60
+        },
+        "guidance_remark": "电木不喷油，表面容易有划痕，材料表面泛白，喷油后表面光滑更美观。",
+        "default_craft_ids": [
+          "2f60174c026743d8b866e6780fd6eca5"
+        ],
+        "default_craft_names": [
+          "喷油"
+        ],
+        "supported_craft_ids": [
+          "2f60174c026743d8b866e6780fd6eca5",
+          "a8945693f44445368266046b6934c660"
+        ],
+        "supported_craft_names": [
+          "喷油",
+          "UV打印"
+        ],
+        "supported_tolerances": [
+          "GB/T 1804-2000 m级",
+          "±0.10mm",
+          "±0.05mm"
+        ],
+        "supported_roughnesses": [
+          "严格外观",
+          "常规外观"
+        ]
+      },
+      {
+        "material_id": "e4030af7d0f24d79b8056e0c0327c865",
+        "name": "亚克力",
+        "category": "塑料",
+        "code": "P17",
+        "is_default": false,
+        "sort_order": 5,
+        "thickness_limit": {
+          "min_mm": 1,
+          "max_mm": 9999
+        },
+        "guidance_remark": "",
+        "default_craft_ids": [],
+        "default_craft_names": [],
+        "supported_craft_ids": [
+          "a8945693f44445368266046b6934c660",
+          "27c1749bbeea46ff9cfe320d059778b2",
+          "c123652432014f27b4016f5db1bbbc43"
+        ],
+        "supported_craft_names": [
+          "UV打印",
+          "仅喷砂",
+          "透明抛光"
+        ],
+        "supported_tolerances": [
+          "GB/T 1804-2000 m级",
+          "±0.10mm",
+          "±0.05mm"
+        ],
+        "supported_roughnesses": [
+          "常规外观",
+          "严格外观"
+        ]
+      },
+      {
+        "material_id": "c79d8298a2704bbb8c25389d85a151e6",
+        "name": "环氧板-FR4（绿色）",
+        "category": "塑料",
+        "code": "P63",
+        "is_default": false,
+        "sort_order": 10,
+        "thickness_limit": {
+          "min_mm": 1,
+          "max_mm": 9999
+        },
+        "guidance_remark": "",
+        "default_craft_ids": [],
+        "default_craft_names": [],
+        "supported_craft_ids": [
+          "a8945693f44445368266046b6934c660"
+        ],
+        "supported_craft_names": [
+          "UV打印"
+        ],
+        "supported_tolerances": [
+          "GB/T 1804-2000 m级",
+          "±0.10mm",
+          "±0.05mm"
+        ],
+        "supported_roughnesses": [
+          "常规外观",
+          "严格外观"
+        ]
+      },
+      {
+        "material_id": "d513b8e2862d487ab34b4e4f988e8bd7",
+        "name": "尼龙-PA6（白色）",
+        "category": "塑料",
+        "code": "P24",
+        "is_default": false,
+        "sort_order": 13,
+        "thickness_limit": {
+          "min_mm": 1,
+          "max_mm": 9999
+        },
+        "guidance_remark": "",
+        "default_craft_ids": [],
+        "default_craft_names": [],
+        "supported_craft_ids": [
+          "a8945693f44445368266046b6934c660"
+        ],
+        "supported_craft_names": [
+          "UV打印"
+        ],
+        "supported_tolerances": [
+          "GB/T 1804-2000 m级",
+          "±0.10mm",
+          "±0.05mm"
+        ],
+        "supported_roughnesses": [
+          "常规外观",
+          "严格外观"
+        ]
+      },
+      {
+        "material_id": "db5198a0e589474eb42075c93bf88c95",
+        "name": "聚碳酸酯-PC",
+        "category": "塑料",
+        "code": "P23",
+        "is_default": false,
+        "sort_order": 15,
+        "thickness_limit": {
+          "min_mm": 1,
+          "max_mm": 9999
+        },
+        "guidance_remark": "",
+        "default_craft_ids": [],
+        "default_craft_names": [],
+        "supported_craft_ids": [
+          "a8945693f44445368266046b6934c660",
+          "27c1749bbeea46ff9cfe320d059778b2",
+          "8647a400f5fe49499c93156bb90f8120"
+        ],
+        "supported_craft_names": [
+          "UV打印",
+          "仅喷砂",
+          "透明处理(蓝色)"
+        ],
+        "supported_tolerances": [
+          "GB/T 1804-2000 m级",
+          "±0.10mm",
+          "±0.05mm"
+        ],
+        "supported_roughnesses": [
+          "常规外观",
+          "严格外观"
+        ]
+      },
+      {
+        "material_id": "71ff6fd7ce8448d5a3776fad45dd5b59",
+        "name": "黄铜-H59",
+        "category": "铜合金",
+        "code": "U3",
+        "is_default": false,
+        "sort_order": 1,
+        "thickness_limit": {
+          "min_mm": 0.7,
+          "max_mm": 9999.99
+        },
+        "guidance_remark": "备注：铜件表面极易氧化，如未做钝化，收货后及时处理。",
+        "default_craft_ids": [
+          "89299458999a41dfb0f6ca7b794916a0"
+        ],
+        "default_craft_names": [
+          "钝化"
+        ],
+        "supported_craft_ids": [
+          "89299458999a41dfb0f6ca7b794916a0",
+          "e06e82a809064b43b8c01a0c000e8a88",
+          "27c1749bbeea46ff9cfe320d059778b2",
+          "80929ab9245a485d969ff659dd5a2ae1"
+        ],
+        "supported_craft_names": [
+          "钝化",
+          "激光打标",
+          "仅喷砂",
+          "镜面抛光"
+        ],
+        "supported_tolerances": [
+          "GB/T 1804-2000 m级",
+          "±0.10mm",
+          "±0.05mm"
+        ],
+        "supported_roughnesses": [
+          "严格外观",
+          "常规外观"
+        ]
+      },
+      {
+        "material_id": "10884b9bf07b47caa6c625a0fa87da1e",
+        "name": "紫铜-T2",
+        "category": "铜合金",
+        "code": "U2",
+        "is_default": false,
+        "sort_order": 3,
+        "thickness_limit": {
+          "min_mm": 0.7,
+          "max_mm": 9999.99
+        },
+        "guidance_remark": "备注：铜件表面极易氧化，如未做钝化，收货后及时处理。",
+        "default_craft_ids": [
+          "89299458999a41dfb0f6ca7b794916a0"
+        ],
+        "default_craft_names": [
+          "钝化"
+        ],
+        "supported_craft_ids": [
+          "89299458999a41dfb0f6ca7b794916a0",
+          "e06e82a809064b43b8c01a0c000e8a88",
+          "27c1749bbeea46ff9cfe320d059778b2",
+          "80929ab9245a485d969ff659dd5a2ae1"
+        ],
+        "supported_craft_names": [
+          "钝化",
+          "激光打标",
+          "仅喷砂",
+          "镜面抛光"
+        ],
+        "supported_tolerances": [
+          "GB/T 1804-2000 m级",
+          "±0.10mm",
+          "±0.05mm"
+        ],
+        "supported_roughnesses": [
+          "严格外观",
+          "常规外观"
+        ]
+      },
+      {
+        "material_id": "0d8a7a799a574b02822e67c48b57bee0",
+        "name": "铝合金-6061",
+        "category": "铝合金",
+        "code": "A7",
+        "is_default": true,
+        "sort_order": 1,
+        "thickness_limit": {
+          "min_mm": 0.5,
+          "max_mm": 9999.99
+        },
+        "guidance_remark": "铝合金不喷砂有刀痕，同时选择阳极氧化处理能得到光饰效果，且耐磨，还可以选择需要的颜色，建议根据实际情况选择喷砂、氧化处理。",
+        "default_craft_ids": [
+          "9890b57215cf45e7b37deeeda231f5f1"
+        ],
+        "default_craft_names": [
+          "喷砂+普通阳极氧化"
+        ],
+        "supported_craft_ids": [
+          "9890b57215cf45e7b37deeeda231f5f1",
+          "74fda0c520b2472195b590a6232d1396",
+          "8bad1543502e4fd9a7986f1de5551d6b",
+          "e06e82a809064b43b8c01a0c000e8a88",
+          "0a5f5fa0aad34973bf6a15b95d2aaf7c",
+          "a8945693f44445368266046b6934c660",
+          "27c1749bbeea46ff9cfe320d059778b2",
+          "a7cfb86bee8948bd916ff1be61db5bc0",
+          "20000fbb63cc476b80b58c0e0c208156",
+          "d06d2109ca1b4defb8fe818e31cc6d57",
+          "9ed795628bee4e5f950113e93aeefce5"
+        ],
+        "supported_craft_names": [
+          "喷砂+普通阳极氧化",
+          "喷砂+导电氧化",
+          "喷砂+硬质阳极氧化",
+          "激光打标",
+          "拉丝",
+          "UV打印",
+          "仅喷砂",
+          "普通阳极氧化(不喷砂)",
+          "导电氧化(不喷砂)",
+          "硬质阳极氧化(不喷砂)",
+          "拉丝+普通阳极氧化"
+        ],
+        "supported_tolerances": [
+          "±0.02mm",
+          "GB/T 1804-2000 m级",
+          "±0.10mm",
+          "±0.05mm"
+        ],
+        "supported_roughnesses": [
+          "严格外观",
+          "常规外观",
+          "极致外观"
+        ]
+      },
+      {
+        "material_id": "adb54094f48645a0a85432adb3164bbd",
+        "name": "铝合金-7075",
+        "category": "铝合金",
+        "code": "A8",
+        "is_default": false,
+        "sort_order": 3,
+        "thickness_limit": {
+          "min_mm": 0.5,
+          "max_mm": 9999.99
+        },
+        "guidance_remark": "1.铝合金不喷砂有刀痕，同时选择阳极氧化处理能得到光饰效果，且耐磨，还可以选择需要的颜色，建议根据实际情况选择喷砂、氧化处理；2.铝合金-7075厚度超过50mm时，表面氧化除了黑色，其他颜色会有材料纹。",
+        "default_craft_ids": [
+          "9890b57215cf45e7b37deeeda231f5f1"
+        ],
+        "default_craft_names": [
+          "喷砂+普通阳极氧化"
+        ],
+        "supported_craft_ids": [
+          "9890b57215cf45e7b37deeeda231f5f1",
+          "74fda0c520b2472195b590a6232d1396",
+          "8bad1543502e4fd9a7986f1de5551d6b",
+          "e06e82a809064b43b8c01a0c000e8a88",
+          "0a5f5fa0aad34973bf6a15b95d2aaf7c",
+          "a8945693f44445368266046b6934c660",
+          "27c1749bbeea46ff9cfe320d059778b2",
+          "a7cfb86bee8948bd916ff1be61db5bc0",
+          "20000fbb63cc476b80b58c0e0c208156",
+          "d06d2109ca1b4defb8fe818e31cc6d57",
+          "9ed795628bee4e5f950113e93aeefce5"
+        ],
+        "supported_craft_names": [
+          "喷砂+普通阳极氧化",
+          "喷砂+导电氧化",
+          "喷砂+硬质阳极氧化",
+          "激光打标",
+          "拉丝",
+          "UV打印",
+          "仅喷砂",
+          "普通阳极氧化(不喷砂)",
+          "导电氧化(不喷砂)",
+          "硬质阳极氧化(不喷砂)",
+          "拉丝+普通阳极氧化"
+        ],
+        "supported_tolerances": [
+          "±0.02mm",
+          "GB/T 1804-2000 m级",
+          "±0.10mm",
+          "±0.05mm"
+        ],
+        "supported_roughnesses": [
+          "严格外观",
+          "常规外观",
+          "极致外观"
+        ]
+      }
+    ],
+    "surface_treatment_modes": [
+      {
+        "mode_code": 1,
+        "name": "表面不做处理",
+        "description": "会有轻微刀痕，表面略有刮花",
+        "is_default_for_materials_without_craft": true
+      },
+      {
+        "mode_code": 2,
+        "name": "需要表面处理",
+        "description": "支持选择并组合多个表面处理工艺（最多5个）",
+        "max_simultaneous_crafts": 5
+      }
+    ],
+    "surface_treatments": [
+      {
+        "craft_id": "e06e82a809064b43b8c01a0c000e8a88",
+        "name": "激光打标",
+        "code": "JGDB1",
+        "category": "类别三",
+        "remark": "备注：1.激光打标需上传2D图纸，格式支持DWG/DXF；备注：2.打标后会露出材料本色，成本低且牢固不易掉，但不支持选颜色。",
+        "mutually_exclusive_craft_ids": [],
+        "requires_2d_drawing": true,
+        "options": {
+          "option_name": "图纸",
+          "show_type": 0,
+          "visible_flag": false,
+          "items": [
+            {
+              "attribute_id": "14c6d2acf12f4aee91514a3ff0601a0d",
+              "name": "请上传图纸",
+              "code": "U1",
+              "is_default": false,
+              "gloss_options": [],
+              "requires_drawing": true
+            }
+          ]
+        },
+        "allowed_roughness_types": [
+          "严格外观",
+          "常规外观"
+        ],
+        "supported_material_ids": [
+          "0d8a7a799a574b02822e67c48b57bee0",
+          "c2296071641042b4b0a5c979c7b5f62e",
+          "7e0580c26539457c923088041d6f3202",
+          "71ff6fd7ce8448d5a3776fad45dd5b59",
+          "c836f0f5a1fe457eb870d52d5d866441",
+          "adb54094f48645a0a85432adb3164bbd",
+          "10884b9bf07b47caa6c625a0fa87da1e"
+        ],
+        "supported_material_names": [
+          "铝合金-6061",
+          "45#钢",
+          "不锈钢-304",
+          "黄铜-H59",
+          "Q235钢（A3钢）",
+          "铝合金-7075",
+          "紫铜-T2"
+        ]
+      },
+      {
+        "craft_id": "80929ab9245a485d969ff659dd5a2ae1",
+        "name": "镜面抛光",
+        "code": "JMPG1",
+        "category": "类别三",
+        "remark": "",
+        "mutually_exclusive_craft_ids": [
+          "27c1749bbeea46ff9cfe320d059778b2"
+        ],
+        "requires_2d_drawing": false,
+        "options": null,
+        "allowed_roughness_types": [
+          "严格外观",
+          "常规外观"
+        ],
+        "supported_material_ids": [
+          "71ff6fd7ce8448d5a3776fad45dd5b59",
+          "10884b9bf07b47caa6c625a0fa87da1e"
+        ],
+        "supported_material_names": [
+          "黄铜-H59",
+          "紫铜-T2"
+        ]
+      },
+      {
+        "craft_id": "a8945693f44445368266046b6934c660",
+        "name": "UV打印",
+        "code": "SY1",
+        "category": "类别三",
+        "remark": "备注：1.UV打印需上传2D图纸，格式支持DWG/DXF，图案会凸起约等0.3mm，金属材料建议选用激光打标；备注：2.请按1:1的比例设计或把尺寸在图中标注，并注明颜色（不支持非平面印刷，支持单色、多彩色），示例如下：",
+        "mutually_exclusive_craft_ids": [],
+        "requires_2d_drawing": false,
+        "options": {
+          "option_name": "颜色",
+          "show_type": 1,
+          "visible_flag": true,
+          "items": [
+            {
+              "attribute_id": "7d73e3f7e871491cadca118008fccc18",
+              "name": "黑色",
+              "code": "HS001",
+              "is_default": true,
+              "gloss_options": [
+                "请上传图纸"
+              ],
+              "requires_drawing": false
+            },
+            {
+              "attribute_id": "0b47fa84a5b4458cbc458a7b964f0400",
+              "name": "白色",
+              "code": "BS001",
+              "is_default": false,
+              "gloss_options": [
+                "请上传图纸"
+              ],
+              "requires_drawing": false
+            },
+            {
+              "attribute_id": "62a0d64827b94404bec467bd0fb9a86a",
+              "name": "红色",
+              "code": "2347C",
+              "is_default": false,
+              "gloss_options": [
+                "请上传图纸"
+              ],
+              "requires_drawing": false
+            },
+            {
+              "attribute_id": "101e59759a754259aecec8fe4a9cbf17",
+              "name": "橙色",
+              "code": "C19",
+              "is_default": false,
+              "gloss_options": [
+                "请上传图纸"
+              ],
+              "requires_drawing": false
+            },
+            {
+              "attribute_id": "ff98cbbaa1ca4582afd3ae661a175d25",
+              "name": "黄色",
+              "code": "3945C",
+              "is_default": false,
+              "gloss_options": [
+                "请上传图纸"
+              ],
+              "requires_drawing": false
+            },
+            {
+              "attribute_id": "21a6396f95c842bcb0b8fa62be28ea97",
+              "name": "绿色",
+              "code": "802C",
+              "is_default": false,
+              "gloss_options": [
+                "请上传图纸"
+              ],
+              "requires_drawing": false
+            },
+            {
+              "attribute_id": "97ac279a69214a4bb0ac68000bf569e9",
+              "name": "青色",
+              "code": "C20",
+              "is_default": false,
+              "gloss_options": [
+                "请上传图纸"
+              ],
+              "requires_drawing": false
+            },
+            {
+              "attribute_id": "47d5a4ced095426f83d99ec53f12a45c",
+              "name": "紫色",
+              "code": "513C",
+              "is_default": false,
+              "gloss_options": [
+                "请上传图纸"
+              ],
+              "requires_drawing": false
+            },
+            {
+              "attribute_id": "5430c1b24f1047e4b0c873c8c8228854",
+              "name": "多色",
+              "code": "DC2",
+              "is_default": false,
+              "gloss_options": [
+                "请上传图纸"
+              ],
+              "requires_drawing": false
+            }
+          ]
+        },
+        "allowed_roughness_types": [
+          "严格外观",
+          "常规外观"
+        ],
+        "supported_material_ids": [
+          "0d8a7a799a574b02822e67c48b57bee0",
+          "ba7d04eb738b4b0a98a63a99b877ea14",
+          "0b43053f92c94f32b37b8a37cf711439",
+          "7d4b9c3dc404446d83d3293535dd1441",
+          "d6af2ec2074b425683a1c9087a6cfb5e",
+          "adb54094f48645a0a85432adb3164bbd",
+          "e6e7ada957dc42f398854887d7e839a4",
+          "f29c2c75c3b144008c636817acd8dcfa",
+          "e4030af7d0f24d79b8056e0c0327c865",
+          "c79d8298a2704bbb8c25389d85a151e6",
+          "d513b8e2862d487ab34b4e4f988e8bd7",
+          "db5198a0e589474eb42075c93bf88c95"
+        ],
+        "supported_material_names": [
+          "铝合金-6061",
+          "工程塑料-ABS（白色）",
+          "工程塑料-ABS（黑色）",
+          "赛钢-POM（白色）",
+          "赛钢-POM（黑色）",
+          "铝合金-7075",
+          "电木（橘黄色）",
+          "电木（黑色）",
+          "亚克力",
+          "环氧板-FR4（绿色）",
+          "尼龙-PA6（白色）",
+          "聚碳酸酯-PC"
+        ]
+      },
+      {
+        "craft_id": "8647a400f5fe49499c93156bb90f8120",
+        "name": "透明处理(蓝色)",
+        "code": "34",
+        "category": "类别二",
+        "remark": "",
+        "mutually_exclusive_craft_ids": [
+          "27c1749bbeea46ff9cfe320d059778b2"
+        ],
+        "requires_2d_drawing": false,
+        "options": null,
+        "allowed_roughness_types": [
+          "严格外观",
+          "常规外观"
+        ],
+        "supported_material_ids": [
+          "db5198a0e589474eb42075c93bf88c95"
+        ],
+        "supported_material_names": [
+          "聚碳酸酯-PC"
+        ]
+      },
+      {
+        "craft_id": "89299458999a41dfb0f6ca7b794916a0",
+        "name": "钝化",
+        "code": "DH1",
+        "category": "类别二",
+        "remark": "",
+        "mutually_exclusive_craft_ids": [
+          "27c1749bbeea46ff9cfe320d059778b2",
+          "9ed795628bee4e5f950113e93aeefce5"
+        ],
+        "requires_2d_drawing": false,
+        "options": null,
+        "allowed_roughness_types": [
+          "严格外观",
+          "常规外观"
+        ],
+        "supported_material_ids": [
+          "c2296071641042b4b0a5c979c7b5f62e",
+          "7e0580c26539457c923088041d6f3202",
+          "71ff6fd7ce8448d5a3776fad45dd5b59",
+          "c836f0f5a1fe457eb870d52d5d866441",
+          "10884b9bf07b47caa6c625a0fa87da1e"
+        ],
+        "supported_material_names": [
+          "45#钢",
+          "不锈钢-304",
+          "黄铜-H59",
+          "Q235钢（A3钢）",
+          "紫铜-T2"
+        ]
+      },
+      {
+        "craft_id": "a7cfb86bee8948bd916ff1be61db5bc0",
+        "name": "普通阳极氧化(不喷砂)",
+        "code": "H1",
+        "category": "类别二",
+        "remark": "备注：1.不喷砂表面有刀痕，不美观，建议选择喷砂+普通阳极氧化；备注：2.哑光，表面反光率低，光线模糊不明显，光感柔和，不刺眼；亮光，表面反光效果好，反光度高，光线清晰明亮。",
+        "mutually_exclusive_craft_ids": [],
+        "requires_2d_drawing": false,
+        "options": {
+          "option_name": "颜色",
+          "show_type": 1,
+          "visible_flag": true,
+          "items": [
+            {
+              "attribute_id": "5aeb31a407ff48a181eaf7bb713f0e05",
+              "name": "本色",
+              "code": "C1",
+              "is_default": true,
+              "gloss_options": [
+                "哑光",
+                "亮光"
+              ],
+              "requires_drawing": false
+            },
+            {
+              "attribute_id": "1927f86e2f09419e8cee90cbeffde9ad",
+              "name": "黑色",
+              "code": "C2",
+              "is_default": false,
+              "gloss_options": [
+                "哑光",
+                "亮光"
+              ],
+              "requires_drawing": false
+            },
+            {
+              "attribute_id": "ca81cfae3ce6455384a35f97a4eae25f",
+              "name": "深空灰",
+              "code": "C4",
+              "is_default": false,
+              "gloss_options": [
+                "哑光",
+                "亮光"
+              ],
+              "requires_drawing": false
+            },
+            {
+              "attribute_id": "f0bd6492905f4bfe9a6c0803a90e2bd2",
+              "name": "红色",
+              "code": "C5",
+              "is_default": false,
+              "gloss_options": [
+                "哑光"
+              ],
+              "requires_drawing": false
+            },
+            {
+              "attribute_id": "f07bd17e21d341fbb0eb82d9c85095bb",
+              "name": "粉红色",
+              "code": "C6",
+              "is_default": false,
+              "gloss_options": [
+                "哑光"
+              ],
+              "requires_drawing": false
+            },
+            {
+              "attribute_id": "b937dd2eb61d42279b6ef1a0aecf29b5",
+              "name": "天蓝色",
+              "code": "C7",
+              "is_default": false,
+              "gloss_options": [
+                "哑光"
+              ],
+              "requires_drawing": false
+            },
+            {
+              "attribute_id": "47f508c41e564261abf78228aeb29634",
+              "name": "深绿色",
+              "code": "C8",
+              "is_default": false,
+              "gloss_options": [
+                "哑光"
+              ],
+              "requires_drawing": false
+            },
+            {
+              "attribute_id": "7cbac157b69d49ddbfd22b293a2f5199",
+              "name": "沙金",
+              "code": "C9",
+              "is_default": false,
+              "gloss_options": [
+                "哑光"
+              ],
+              "requires_drawing": false
+            },
+            {
+              "attribute_id": "835feec0ef574f3fa964feda90395f61",
+              "name": "宝蓝色",
+              "code": "C18",
+              "is_default": false,
+              "gloss_options": [
+                "哑光"
+              ],
+              "requires_drawing": false
+            }
+          ]
+        },
+        "allowed_roughness_types": [
+          "严格外观",
+          "常规外观"
+        ],
+        "supported_material_ids": [
+          "0d8a7a799a574b02822e67c48b57bee0",
+          "adb54094f48645a0a85432adb3164bbd"
+        ],
+        "supported_material_names": [
+          "铝合金-6061",
+          "铝合金-7075"
+        ]
+      },
+      {
+        "craft_id": "20000fbb63cc476b80b58c0e0c208156",
+        "name": "导电氧化(不喷砂)",
+        "code": "H15",
+        "category": "类别二",
+        "remark": "备注：1.不喷砂表面有刀痕，不美观，建议选择喷砂+导电氧化。",
+        "mutually_exclusive_craft_ids": [],
+        "requires_2d_drawing": false,
+        "options": {
+          "option_name": "颜色",
+          "show_type": 1,
+          "visible_flag": true,
+          "items": [
+            {
+              "attribute_id": "296b70389021402aa984657bc2ab66c1",
+              "name": "本色",
+              "code": "C1",
+              "is_default": true,
+              "gloss_options": [],
+              "requires_drawing": false
+            }
+          ]
+        },
+        "allowed_roughness_types": [
+          "严格外观",
+          "常规外观"
+        ],
+        "supported_material_ids": [
+          "0d8a7a799a574b02822e67c48b57bee0",
+          "adb54094f48645a0a85432adb3164bbd"
+        ],
+        "supported_material_names": [
+          "铝合金-6061",
+          "铝合金-7075"
+        ]
+      },
+      {
+        "craft_id": "9890b57215cf45e7b37deeeda231f5f1",
+        "name": "喷砂+普通阳极氧化",
+        "code": "H21",
+        "category": "类别二",
+        "remark": "备注：1.哑光，表面反光率低，光线模糊不明显，光感柔和，不刺眼；亮光，表面反光效果好，反光度高；备注：2.喷砂默认统一按100目进行处理。",
+        "mutually_exclusive_craft_ids": [
+          "4a5b2e2e5f494934b1d88b599a89b7ac"
+        ],
+        "requires_2d_drawing": false,
+        "options": {
+          "option_name": "颜色",
+          "show_type": 1,
+          "visible_flag": true,
+          "items": [
+            {
+              "attribute_id": "0e29e74b4f8c42ca984a0f76eb8a2792",
+              "name": "本色",
+              "code": "C1",
+              "is_default": true,
+              "gloss_options": [
+                "哑光",
+                "亮光"
+              ],
+              "requires_drawing": false
+            },
+            {
+              "attribute_id": "e02eb2fc38ae4d1e978308959c4bfc8d",
+              "name": "黑色",
+              "code": "C2",
+              "is_default": false,
+              "gloss_options": [
+                "哑光",
+                "亮光"
+              ],
+              "requires_drawing": false
+            },
+            {
+              "attribute_id": "401fbaae3fd04ca6b7380812dee17524",
+              "name": "深空灰",
+              "code": "C4",
+              "is_default": false,
+              "gloss_options": [
+                "哑光",
+                "亮光"
+              ],
+              "requires_drawing": false
+            },
+            {
+              "attribute_id": "b8b7236b2e794302815fe9f374039859",
+              "name": "红色",
+              "code": "C5",
+              "is_default": false,
+              "gloss_options": [
+                "哑光"
+              ],
+              "requires_drawing": false
+            },
+            {
+              "attribute_id": "c3d175972fbe4693bc8b5708c5bd8a58",
+              "name": "粉红色",
+              "code": "C6",
+              "is_default": false,
+              "gloss_options": [
+                "哑光"
+              ],
+              "requires_drawing": false
+            },
+            {
+              "attribute_id": "91ea7339e4b147e4956feabefbb91df2",
+              "name": "天蓝色",
+              "code": "C7",
+              "is_default": false,
+              "gloss_options": [
+                "哑光"
+              ],
+              "requires_drawing": false
+            },
+            {
+              "attribute_id": "6f42b04b4300458d81aa64d641ddbbdc",
+              "name": "深绿色",
+              "code": "C8",
+              "is_default": false,
+              "gloss_options": [
+                "哑光"
+              ],
+              "requires_drawing": false
+            },
+            {
+              "attribute_id": "a5e67a907f6c47769bb84d757794255d",
+              "name": "沙金",
+              "code": "C9",
+              "is_default": false,
+              "gloss_options": [
+                "哑光"
+              ],
+              "requires_drawing": false
+            },
+            {
+              "attribute_id": "9d69522ceb2449bca68696eabd06dfbb",
+              "name": "宝蓝色",
+              "code": "C18",
+              "is_default": false,
+              "gloss_options": [
+                "哑光"
+              ],
+              "requires_drawing": false
+            }
+          ]
+        },
+        "allowed_roughness_types": [
+          "严格外观",
+          "常规外观",
+          "极致外观"
+        ],
+        "supported_material_ids": [
+          "0d8a7a799a574b02822e67c48b57bee0",
+          "adb54094f48645a0a85432adb3164bbd"
+        ],
+        "supported_material_names": [
+          "铝合金-6061",
+          "铝合金-7075"
+        ]
+      },
+      {
+        "craft_id": "8bad1543502e4fd9a7986f1de5551d6b",
+        "name": "喷砂+硬质阳极氧化",
+        "code": "H22",
+        "category": "类别二",
+        "remark": "备注：喷砂默认统一按100目进行处理，硬质氧化 - 本色偏暗金色。",
+        "mutually_exclusive_craft_ids": [],
+        "requires_2d_drawing": false,
+        "options": {
+          "option_name": "颜色",
+          "show_type": 1,
+          "visible_flag": true,
+          "items": [
+            {
+              "attribute_id": "1e6f6ab6dda64927b182103b3675e38d",
+              "name": "本色",
+              "code": "C1",
+              "is_default": true,
+              "gloss_options": [],
+              "requires_drawing": false
+            },
+            {
+              "attribute_id": "2a57938df28a44c1b1eca22dcea04540",
+              "name": "黑色",
+              "code": "C2",
+              "is_default": false,
+              "gloss_options": [],
+              "requires_drawing": false
+            }
+          ]
+        },
+        "allowed_roughness_types": [
+          "严格外观",
+          "常规外观",
+          "极致外观"
+        ],
+        "supported_material_ids": [
+          "0d8a7a799a574b02822e67c48b57bee0",
+          "adb54094f48645a0a85432adb3164bbd"
+        ],
+        "supported_material_names": [
+          "铝合金-6061",
+          "铝合金-7075"
+        ]
+      },
+      {
+        "craft_id": "74fda0c520b2472195b590a6232d1396",
+        "name": "喷砂+导电氧化",
+        "code": "H23",
+        "category": "类别二",
+        "remark": "备注：喷砂默认统一按100目进行处理。",
+        "mutually_exclusive_craft_ids": [],
+        "requires_2d_drawing": false,
+        "options": {
+          "option_name": "颜色",
+          "show_type": 1,
+          "visible_flag": true,
+          "items": [
+            {
+              "attribute_id": "5ab30ac549f948bd82b3913bc8fa87e4",
+              "name": "本色",
+              "code": "C1",
+              "is_default": false,
+              "gloss_options": [],
+              "requires_drawing": false
+            }
+          ]
+        },
+        "allowed_roughness_types": [
+          "严格外观",
+          "常规外观",
+          "极致外观"
+        ],
+        "supported_material_ids": [
+          "0d8a7a799a574b02822e67c48b57bee0",
+          "adb54094f48645a0a85432adb3164bbd"
+        ],
+        "supported_material_names": [
+          "铝合金-6061",
+          "铝合金-7075"
+        ]
+      },
+      {
+        "craft_id": "9ed795628bee4e5f950113e93aeefce5",
+        "name": "拉丝+普通阳极氧化",
+        "code": "H24",
+        "category": "类别二",
+        "remark": "备注：1.哑光，表面反光率低，光线模糊不明显，光感柔和，不刺眼；亮光，表面反光效果好，反光度高；备注：2.只支持板类平面件（限1000*360mm），异型件圆弧面或台阶面无法进行拉丝处理。",
+        "mutually_exclusive_craft_ids": [
+          "89299458999a41dfb0f6ca7b794916a0"
+        ],
+        "requires_2d_drawing": false,
+        "options": {
+          "option_name": "颜色",
+          "show_type": 1,
+          "visible_flag": true,
+          "items": [
+            {
+              "attribute_id": "5847809316eb4c65a066d8ba4bc8fd05",
+              "name": "本色",
+              "code": "C1",
+              "is_default": true,
+              "gloss_options": [
+                "哑光",
+                "亮光"
+              ],
+              "requires_drawing": false
+            },
+            {
+              "attribute_id": "7e9020e9c14b4b88aebd23dc6461190f",
+              "name": "黑色",
+              "code": "C2",
+              "is_default": false,
+              "gloss_options": [
+                "哑光",
+                "亮光"
+              ],
+              "requires_drawing": false
+            },
+            {
+              "attribute_id": "892f6e431d6e4bb4b412438a94a136f1",
+              "name": "深空灰",
+              "code": "C4",
+              "is_default": false,
+              "gloss_options": [
+                "哑光",
+                "亮光"
+              ],
+              "requires_drawing": false
+            },
+            {
+              "attribute_id": "59f671c3cf5e4b8e8614b41f9e1bebcd",
+              "name": "红色",
+              "code": "C5",
+              "is_default": false,
+              "gloss_options": [
+                "哑光"
+              ],
+              "requires_drawing": false
+            },
+            {
+              "attribute_id": "bdb9a73da0084fb28b968ce77ffe4581",
+              "name": "粉红色",
+              "code": "C6",
+              "is_default": false,
+              "gloss_options": [
+                "哑光"
+              ],
+              "requires_drawing": false
+            },
+            {
+              "attribute_id": "d327a7fbd6294a288f488a051c6d9520",
+              "name": "天蓝色",
+              "code": "C7",
+              "is_default": false,
+              "gloss_options": [
+                "哑光"
+              ],
+              "requires_drawing": false
+            },
+            {
+              "attribute_id": "eaffd84a859a44539521a6aaff664b4c",
+              "name": "深绿色",
+              "code": "C8",
+              "is_default": false,
+              "gloss_options": [
+                "哑光"
+              ],
+              "requires_drawing": false
+            },
+            {
+              "attribute_id": "39031d2278a0461b86e34c64070dc86d",
+              "name": "沙金",
+              "code": "C9",
+              "is_default": false,
+              "gloss_options": [
+                "哑光"
+              ],
+              "requires_drawing": false
+            },
+            {
+              "attribute_id": "64025f193bb240ea9a13cea4b49b1d47",
+              "name": "宝蓝色",
+              "code": "C18",
+              "is_default": false,
+              "gloss_options": [
+                "哑光"
+              ],
+              "requires_drawing": false
+            }
+          ]
+        },
+        "allowed_roughness_types": [
+          "严格外观",
+          "常规外观"
+        ],
+        "supported_material_ids": [
+          "0d8a7a799a574b02822e67c48b57bee0",
+          "adb54094f48645a0a85432adb3164bbd"
+        ],
+        "supported_material_names": [
+          "铝合金-6061",
+          "铝合金-7075"
+        ]
+      },
+      {
+        "craft_id": "d06d2109ca1b4defb8fe818e31cc6d57",
+        "name": "硬质阳极氧化(不喷砂)",
+        "code": "H3",
+        "category": "类别二",
+        "remark": "备注：不喷砂表面有刀痕，不美观，建议选择喷砂+硬质阳极氧化。",
+        "mutually_exclusive_craft_ids": [],
+        "requires_2d_drawing": false,
+        "options": {
+          "option_name": "颜色",
+          "show_type": 1,
+          "visible_flag": true,
+          "items": [
+            {
+              "attribute_id": "f89a6125ae394565a37c2d6b6a37a084",
+              "name": "本色",
+              "code": "C1",
+              "is_default": true,
+              "gloss_options": [],
+              "requires_drawing": false
+            },
+            {
+              "attribute_id": "d02b0efa67fe404ea41cbb087aab4a39",
+              "name": "黑色",
+              "code": "C2",
+              "is_default": false,
+              "gloss_options": [],
+              "requires_drawing": false
+            }
+          ]
+        },
+        "allowed_roughness_types": [
+          "严格外观",
+          "常规外观"
+        ],
+        "supported_material_ids": [
+          "0d8a7a799a574b02822e67c48b57bee0",
+          "adb54094f48645a0a85432adb3164bbd"
+        ],
+        "supported_material_names": [
+          "铝合金-6061",
+          "铝合金-7075"
+        ]
+      },
+      {
+        "craft_id": "2f60174c026743d8b866e6780fd6eca5",
+        "name": "喷油",
+        "code": "PY1",
+        "category": "类别二",
+        "remark": "",
+        "mutually_exclusive_craft_ids": [],
+        "requires_2d_drawing": false,
+        "options": {
+          "option_name": "颜色",
+          "show_type": 1,
+          "visible_flag": true,
+          "items": [
+            {
+              "attribute_id": "53adf10118b047c1ad2b4b3952c56aba",
+              "name": "黑色",
+              "code": "HS001",
+              "is_default": true,
+              "gloss_options": [
+                "哑光"
+              ],
+              "requires_drawing": false
+            },
+            {
+              "attribute_id": "d4d84ded80794f14b1eb035a605d9ad6",
+              "name": "白色",
+              "code": "BS001",
+              "is_default": false,
+              "gloss_options": [
+                "哑光"
+              ],
+              "requires_drawing": false
+            }
+          ]
+        },
+        "allowed_roughness_types": [
+          "严格外观",
+          "常规外观"
+        ],
+        "supported_material_ids": [
+          "ba7d04eb738b4b0a98a63a99b877ea14",
+          "0b43053f92c94f32b37b8a37cf711439",
+          "e6e7ada957dc42f398854887d7e839a4",
+          "f29c2c75c3b144008c636817acd8dcfa"
+        ],
+        "supported_material_names": [
+          "工程塑料-ABS（白色）",
+          "工程塑料-ABS（黑色）",
+          "电木（橘黄色）",
+          "电木（黑色）"
+        ]
+      },
+      {
+        "craft_id": "c123652432014f27b4016f5db1bbbc43",
+        "name": "透明抛光",
+        "code": "TMPG1",
+        "category": "类别二",
+        "remark": "",
+        "mutually_exclusive_craft_ids": [],
+        "requires_2d_drawing": false,
+        "options": null,
+        "allowed_roughness_types": [
+          "严格外观",
+          "常规外观"
+        ],
+        "supported_material_ids": [
+          "e4030af7d0f24d79b8056e0c0327c865"
+        ],
+        "supported_material_names": [
+          "亚克力"
+        ]
+      },
+      {
+        "craft_id": "0a5f5fa0aad34973bf6a15b95d2aaf7c",
+        "name": "拉丝",
+        "code": "X3",
+        "category": "类别二",
+        "remark": "备注：只支持板类平面件（限1000*360mm），异型件圆弧面或台阶面无法进行拉丝处理。",
+        "mutually_exclusive_craft_ids": [],
+        "requires_2d_drawing": false,
+        "options": null,
+        "allowed_roughness_types": [
+          "严格外观",
+          "常规外观"
+        ],
+        "supported_material_ids": [
+          "0d8a7a799a574b02822e67c48b57bee0",
+          "c2296071641042b4b0a5c979c7b5f62e",
+          "7e0580c26539457c923088041d6f3202",
+          "c836f0f5a1fe457eb870d52d5d866441",
+          "adb54094f48645a0a85432adb3164bbd"
+        ],
+        "supported_material_names": [
+          "铝合金-6061",
+          "45#钢",
+          "不锈钢-304",
+          "Q235钢（A3钢）",
+          "铝合金-7075"
+        ]
+      },
+      {
+        "craft_id": "27c1749bbeea46ff9cfe320d059778b2",
+        "name": "仅喷砂",
+        "code": "X7",
+        "category": "类别二",
+        "remark": "备注：铝合金不喷砂有刀痕，默认统一按100目进行喷砂。",
+        "mutually_exclusive_craft_ids": [
+          "8647a400f5fe49499c93156bb90f8120",
+          "89299458999a41dfb0f6ca7b794916a0",
+          "80929ab9245a485d969ff659dd5a2ae1"
+        ],
+        "requires_2d_drawing": false,
+        "options": null,
+        "allowed_roughness_types": [
+          "严格外观",
+          "常规外观"
+        ],
+        "supported_material_ids": [
+          "0d8a7a799a574b02822e67c48b57bee0",
+          "c2296071641042b4b0a5c979c7b5f62e",
+          "7e0580c26539457c923088041d6f3202",
+          "71ff6fd7ce8448d5a3776fad45dd5b59",
+          "c836f0f5a1fe457eb870d52d5d866441",
+          "adb54094f48645a0a85432adb3164bbd",
+          "10884b9bf07b47caa6c625a0fa87da1e",
+          "e4030af7d0f24d79b8056e0c0327c865",
+          "db5198a0e589474eb42075c93bf88c95"
+        ],
+        "supported_material_names": [
+          "铝合金-6061",
+          "45#钢",
+          "不锈钢-304",
+          "黄铜-H59",
+          "Q235钢（A3钢）",
+          "铝合金-7075",
+          "紫铜-T2",
+          "亚克力",
+          "聚碳酸酯-PC"
+        ]
+      },
+      {
+        "craft_id": "4a5b2e2e5f494934b1d88b599a89b7ac",
+        "name": "镀镍",
+        "code": "DL1",
+        "category": "类别四",
+        "remark": "",
+        "mutually_exclusive_craft_ids": [
+          "9890b57215cf45e7b37deeeda231f5f1"
+        ],
+        "requires_2d_drawing": false,
+        "options": null,
+        "allowed_roughness_types": [
+          "严格外观",
+          "常规外观"
+        ],
+        "supported_material_ids": [
+          "c2296071641042b4b0a5c979c7b5f62e",
+          "7e0580c26539457c923088041d6f3202",
+          "c836f0f5a1fe457eb870d52d5d866441"
+        ],
+        "supported_material_names": [
+          "45#钢",
+          "不锈钢-304",
+          "Q235钢（A3钢）"
+        ]
+      },
+      {
+        "craft_id": "3cedd1efb25c498282df180c885123cd",
+        "name": "发黑",
+        "code": "FH1",
+        "category": "类别四",
+        "remark": "",
+        "mutually_exclusive_craft_ids": [],
+        "requires_2d_drawing": false,
+        "options": null,
+        "allowed_roughness_types": [
+          "严格外观",
+          "常规外观"
+        ],
+        "supported_material_ids": [
+          "c2296071641042b4b0a5c979c7b5f62e",
+          "c836f0f5a1fe457eb870d52d5d866441"
+        ],
+        "supported_material_names": [
+          "45#钢",
+          "Q235钢（A3钢）"
+        ]
+      }
+    ],
+    "tolerances": [
+      {
+        "tolerance_id": "4c5b4f8543b34dd2b4c861a270f36ea7",
+        "value": "GB/T 1804-2000 m级",
+        "is_default": true,
+        "requires_2d_drawing": false,
+        "supported_materials": [
+          "铝合金-6061",
+          "45#钢",
+          "不锈钢-304",
+          "黄铜-H59",
+          "工程塑料-ABS（白色）",
+          "工程塑料-ABS（黑色）",
+          "Q235钢（A3钢）",
+          "赛钢-POM（白色）",
+          "赛钢-POM（黑色）",
+          "铝合金-7075",
+          "紫铜-T2",
+          "电木（橘黄色）",
+          "电木（黑色）",
+          "亚克力",
+          "环氧板-FR4（绿色）",
+          "尼龙-PA6（白色）",
+          "聚碳酸酯-PC"
+        ]
+      },
+      {
+        "tolerance_id": "b235b653578b4277943a72a1e30111e4",
+        "value": "±0.10mm",
+        "is_default": false,
+        "requires_2d_drawing": false,
+        "supported_materials": [
+          "铝合金-6061",
+          "45#钢",
+          "不锈钢-304",
+          "黄铜-H59",
+          "工程塑料-ABS（白色）",
+          "工程塑料-ABS（黑色）",
+          "Q235钢（A3钢）",
+          "赛钢-POM（白色）",
+          "赛钢-POM（黑色）",
+          "铝合金-7075",
+          "紫铜-T2",
+          "电木（橘黄色）",
+          "电木（黑色）",
+          "亚克力",
+          "环氧板-FR4（绿色）",
+          "尼龙-PA6（白色）",
+          "聚碳酸酯-PC"
+        ]
+      },
+      {
+        "tolerance_id": "c639b8550c86497f93976257127b7984",
+        "value": "±0.05mm",
+        "is_default": false,
+        "requires_2d_drawing": true,
+        "supported_materials": [
+          "铝合金-6061",
+          "45#钢",
+          "不锈钢-304",
+          "黄铜-H59",
+          "工程塑料-ABS（白色）",
+          "工程塑料-ABS（黑色）",
+          "Q235钢（A3钢）",
+          "赛钢-POM（白色）",
+          "赛钢-POM（黑色）",
+          "铝合金-7075",
+          "紫铜-T2",
+          "电木（橘黄色）",
+          "电木（黑色）",
+          "亚克力",
+          "环氧板-FR4（绿色）",
+          "尼龙-PA6（白色）",
+          "聚碳酸酯-PC"
+        ]
+      },
+      {
+        "tolerance_id": "1bad0a99611b4b2dbe87b65b9e14249b",
+        "value": "±0.02mm",
+        "is_default": false,
+        "requires_2d_drawing": true,
+        "supported_materials": [
+          "铝合金-6061",
+          "铝合金-7075"
+        ]
+      }
+    ],
+    "inspection_report": {
+      "name": "是否需要质检报告",
+      "options": [
+        "不需要",
+        "需要"
+      ],
+      "default": "不需要",
+      "description": "最严公差配套质检报告服务"
+    },
+    "appearance_roughness": [
+      {
+        "roughness_id": "4e6158ff486640ab9c82196c64196fe9",
+        "type": "常规外观",
+        "is_default": true,
+        "requires_2d_drawing": false,
+        "supported_materials": [
+          "铝合金-6061",
+          "45#钢",
+          "不锈钢-304",
+          "黄铜-H59",
+          "工程塑料-ABS（白色）",
+          "工程塑料-ABS（黑色）",
+          "Q235钢（A3钢）",
+          "赛钢-POM（白色）",
+          "赛钢-POM（黑色）",
+          "铝合金-7075",
+          "紫铜-T2",
+          "电木（橘黄色）",
+          "电木（黑色）",
+          "亚克力",
+          "环氧板-FR4（绿色）",
+          "尼龙-PA6（白色）",
+          "聚碳酸酯-PC"
+        ]
+      },
+      {
+        "roughness_id": "3440240be18e4d0fa92399b12fb37e8c",
+        "type": "严格外观",
+        "is_default": false,
+        "requires_2d_drawing": true,
+        "supported_materials": [
+          "铝合金-6061",
+          "45#钢",
+          "不锈钢-304",
+          "黄铜-H59",
+          "工程塑料-ABS（白色）",
+          "工程塑料-ABS（黑色）",
+          "Q235钢（A3钢）",
+          "赛钢-POM（白色）",
+          "赛钢-POM（黑色）",
+          "铝合金-7075",
+          "紫铜-T2",
+          "电木（橘黄色）",
+          "电木（黑色）",
+          "亚克力",
+          "环氧板-FR4（绿色）",
+          "尼龙-PA6（白色）",
+          "聚碳酸酯-PC"
+        ]
+      },
+      {
+        "roughness_id": "f5e10ae9ca364497972bf4ffbafd4df9",
+        "type": "极致外观",
+        "is_default": false,
+        "requires_2d_drawing": true,
+        "supported_materials": [
+          "铝合金-6061",
+          "铝合金-7075"
+        ]
+      }
+    ],
+    "threads": {
+      "name": "是否有螺纹",
+      "options": [
+        "否",
+        "是"
+      ],
+      "default": "否",
+      "constraint": "若选择'是'，必须上传标注有螺纹规格与深度的2D工程图纸（DWG/DXF/PDF）"
+    },
+    "assembly": {
+      "name": "是否有装配关系",
+      "options": [
+        "否",
+        "是"
+      ],
+      "default": "否",
+      "constraint": "若选择'是'，必须上传装配关系图纸或配合公差说明文件"
+    },
+    "quantity": {
+      "name": "加工数量",
+      "type": "integer",
+      "min": 1,
+      "step": 1,
+      "description": "支持数量阶梯折扣"
+    },
+    "delivery": [
+      {
+        "delivery_type_code": "UD",
+        "name": "加急交期",
+        "delivery_hours": 72,
+        "work_days": 3,
+        "is_default": false,
+        "sort_order": 3
+      },
+      {
+        "delivery_type_code": "BD",
+        "name": "标准交期",
+        "delivery_hours": 144,
+        "work_days": 6,
+        "is_default": true,
+        "sort_order": 4
+      },
+      {
+        "delivery_type_code": "ED",
+        "name": "经济交期",
+        "delivery_hours": 264,
+        "work_days": 11,
+        "is_default": false,
+        "sort_order": 5
+      }
+    ],
+    "remarks": {
+      "name": "备注",
+      "max_length": 200,
+      "description": "特殊加工工艺要求文本说明"
+    }
+  },
+  "correlation_rules": {
+    "material_constraints": {
+      "description": "每个材质决定了可选的表面处理工艺、最严公差等级、外观粗糙度等级及工件厚度极限",
+      "material_to_supported_crafts": {
+        "不锈钢-304": [
+          "钝化",
+          "镀镍",
+          "激光打标",
+          "拉丝",
+          "仅喷砂"
+        ],
+        "45#钢": [
+          "钝化",
+          "镀镍",
+          "发黑",
+          "激光打标",
+          "拉丝",
+          "仅喷砂"
+        ],
+        "Q235钢（A3钢）": [
+          "钝化",
+          "镀镍",
+          "发黑",
+          "激光打标",
+          "拉丝",
+          "仅喷砂"
+        ],
+        "工程塑料-ABS（白色）": [
+          "喷油",
+          "UV打印"
+        ],
+        "工程塑料-ABS（黑色）": [
+          "喷油",
+          "UV打印"
+        ],
+        "赛钢-POM（白色）": [
+          "UV打印"
+        ],
+        "赛钢-POM（黑色）": [
+          "UV打印"
+        ],
+        "电木（橘黄色）": [
+          "喷油",
+          "UV打印"
+        ],
+        "电木（黑色）": [
+          "喷油",
+          "UV打印"
+        ],
+        "亚克力": [
+          "UV打印",
+          "仅喷砂",
+          "透明抛光"
+        ],
+        "环氧板-FR4（绿色）": [
+          "UV打印"
+        ],
+        "尼龙-PA6（白色）": [
+          "UV打印"
+        ],
+        "聚碳酸酯-PC": [
+          "UV打印",
+          "仅喷砂",
+          "透明处理(蓝色)"
+        ],
+        "黄铜-H59": [
+          "钝化",
+          "激光打标",
+          "仅喷砂",
+          "镜面抛光"
+        ],
+        "紫铜-T2": [
+          "钝化",
+          "激光打标",
+          "仅喷砂",
+          "镜面抛光"
+        ],
+        "铝合金-6061": [
+          "喷砂+普通阳极氧化",
+          "喷砂+导电氧化",
+          "喷砂+硬质阳极氧化",
+          "激光打标",
+          "拉丝",
+          "UV打印",
+          "仅喷砂",
+          "普通阳极氧化(不喷砂)",
+          "导电氧化(不喷砂)",
+          "硬质阳极氧化(不喷砂)",
+          "拉丝+普通阳极氧化"
+        ],
+        "铝合金-7075": [
+          "喷砂+普通阳极氧化",
+          "喷砂+导电氧化",
+          "喷砂+硬质阳极氧化",
+          "激光打标",
+          "拉丝",
+          "UV打印",
+          "仅喷砂",
+          "普通阳极氧化(不喷砂)",
+          "导电氧化(不喷砂)",
+          "硬质阳极氧化(不喷砂)",
+          "拉丝+普通阳极氧化"
+        ]
+      },
+      "material_to_supported_tolerances": {
+        "不锈钢-304": [
+          "GB/T 1804-2000 m级",
+          "±0.10mm",
+          "±0.05mm"
+        ],
+        "45#钢": [
+          "GB/T 1804-2000 m级",
+          "±0.10mm",
+          "±0.05mm"
+        ],
+        "Q235钢（A3钢）": [
+          "GB/T 1804-2000 m级",
+          "±0.10mm",
+          "±0.05mm"
+        ],
+        "工程塑料-ABS（白色）": [
+          "GB/T 1804-2000 m级",
+          "±0.10mm",
+          "±0.05mm"
+        ],
+        "工程塑料-ABS（黑色）": [
+          "GB/T 1804-2000 m级",
+          "±0.10mm",
+          "±0.05mm"
+        ],
+        "赛钢-POM（白色）": [
+          "GB/T 1804-2000 m级",
+          "±0.10mm",
+          "±0.05mm"
+        ],
+        "赛钢-POM（黑色）": [
+          "GB/T 1804-2000 m级",
+          "±0.10mm",
+          "±0.05mm"
+        ],
+        "电木（橘黄色）": [
+          "GB/T 1804-2000 m级",
+          "±0.10mm",
+          "±0.05mm"
+        ],
+        "电木（黑色）": [
+          "GB/T 1804-2000 m级",
+          "±0.10mm",
+          "±0.05mm"
+        ],
+        "亚克力": [
+          "GB/T 1804-2000 m级",
+          "±0.10mm",
+          "±0.05mm"
+        ],
+        "环氧板-FR4（绿色）": [
+          "GB/T 1804-2000 m级",
+          "±0.10mm",
+          "±0.05mm"
+        ],
+        "尼龙-PA6（白色）": [
+          "GB/T 1804-2000 m级",
+          "±0.10mm",
+          "±0.05mm"
+        ],
+        "聚碳酸酯-PC": [
+          "GB/T 1804-2000 m级",
+          "±0.10mm",
+          "±0.05mm"
+        ],
+        "黄铜-H59": [
+          "GB/T 1804-2000 m级",
+          "±0.10mm",
+          "±0.05mm"
+        ],
+        "紫铜-T2": [
+          "GB/T 1804-2000 m级",
+          "±0.10mm",
+          "±0.05mm"
+        ],
+        "铝合金-6061": [
+          "±0.02mm",
+          "GB/T 1804-2000 m级",
+          "±0.10mm",
+          "±0.05mm"
+        ],
+        "铝合金-7075": [
+          "±0.02mm",
+          "GB/T 1804-2000 m级",
+          "±0.10mm",
+          "±0.05mm"
+        ]
+      },
+      "material_to_supported_roughness": {
+        "不锈钢-304": [
+          "严格外观",
+          "常规外观"
+        ],
+        "45#钢": [
+          "严格外观",
+          "常规外观"
+        ],
+        "Q235钢（A3钢）": [
+          "严格外观",
+          "常规外观"
+        ],
+        "工程塑料-ABS（白色）": [
+          "严格外观",
+          "常规外观"
+        ],
+        "工程塑料-ABS（黑色）": [
+          "严格外观",
+          "常规外观"
+        ],
+        "赛钢-POM（白色）": [
+          "常规外观",
+          "严格外观"
+        ],
+        "赛钢-POM（黑色）": [
+          "常规外观",
+          "严格外观"
+        ],
+        "电木（橘黄色）": [
+          "严格外观",
+          "常规外观"
+        ],
+        "电木（黑色）": [
+          "严格外观",
+          "常规外观"
+        ],
+        "亚克力": [
+          "常规外观",
+          "严格外观"
+        ],
+        "环氧板-FR4（绿色）": [
+          "常规外观",
+          "严格外观"
+        ],
+        "尼龙-PA6（白色）": [
+          "常规外观",
+          "严格外观"
+        ],
+        "聚碳酸酯-PC": [
+          "常规外观",
+          "严格外观"
+        ],
+        "黄铜-H59": [
+          "严格外观",
+          "常规外观"
+        ],
+        "紫铜-T2": [
+          "严格外观",
+          "常规外观"
+        ],
+        "铝合金-6061": [
+          "严格外观",
+          "常规外观",
+          "极致外观"
+        ],
+        "铝合金-7075": [
+          "严格外观",
+          "常规外观",
+          "极致外观"
+        ]
+      }
+    },
+    "surface_treatment_constraints": {
+      "description": "表面处理工艺的多选组合上限、互斥约束规则、颜色与光泽度级联配置",
+      "max_combined_crafts": 5,
+      "mutual_exclusions": {
+        "镜面抛光": [
+          "仅喷砂"
+        ],
+        "透明处理(蓝色)": [
+          "仅喷砂"
+        ],
+        "钝化": [
+          "仅喷砂",
+          "拉丝+普通阳极氧化"
+        ],
+        "喷砂+普通阳极氧化": [
+          "镀镍"
+        ],
+        "拉丝+普通阳极氧化": [
+          "钝化"
+        ],
+        "仅喷砂": [
+          "透明处理(蓝色)",
+          "钝化",
+          "镜面抛光"
+        ],
+        "镀镍": [
+          "喷砂+普通阳极氧化"
+        ]
+      },
+      "craft_to_allowed_roughness": {
+        "激光打标": [
+          "严格外观",
+          "常规外观"
+        ],
+        "镜面抛光": [
+          "严格外观",
+          "常规外观"
+        ],
+        "UV打印": [
+          "严格外观",
+          "常规外观"
+        ],
+        "透明处理(蓝色)": [
+          "严格外观",
+          "常规外观"
+        ],
+        "钝化": [
+          "严格外观",
+          "常规外观"
+        ],
+        "普通阳极氧化(不喷砂)": [
+          "严格外观",
+          "常规外观"
+        ],
+        "导电氧化(不喷砂)": [
+          "严格外观",
+          "常规外观"
+        ],
+        "喷砂+普通阳极氧化": [
+          "严格外观",
+          "常规外观",
+          "极致外观"
+        ],
+        "喷砂+硬质阳极氧化": [
+          "严格外观",
+          "常规外观",
+          "极致外观"
+        ],
+        "喷砂+导电氧化": [
+          "严格外观",
+          "常规外观",
+          "极致外观"
+        ],
+        "拉丝+普通阳极氧化": [
+          "严格外观",
+          "常规外观"
+        ],
+        "硬质阳极氧化(不喷砂)": [
+          "严格外观",
+          "常规外观"
+        ],
+        "喷油": [
+          "严格外观",
+          "常规外观"
+        ],
+        "透明抛光": [
+          "严格外观",
+          "常规外观"
+        ],
+        "拉丝": [
+          "严格外观",
+          "常规外观"
+        ],
+        "仅喷砂": [
+          "严格外观",
+          "常规外观"
+        ],
+        "镀镍": [
+          "严格外观",
+          "常规外观"
+        ],
+        "发黑": [
+          "严格外观",
+          "常规外观"
+        ]
+      },
+      "craft_color_gloss_hierarchy": {
+        "激光打标": {
+          "请上传图纸": {
+            "code": "U1",
+            "gloss": [],
+            "requires_drawing": true
+          }
+        },
+        "UV打印": {
+          "黑色": {
+            "code": "HS001",
+            "gloss": [
+              "请上传图纸"
+            ],
+            "requires_drawing": false
+          },
+          "白色": {
+            "code": "BS001",
+            "gloss": [
+              "请上传图纸"
+            ],
+            "requires_drawing": false
+          },
+          "红色": {
+            "code": "2347C",
+            "gloss": [
+              "请上传图纸"
+            ],
+            "requires_drawing": false
+          },
+          "橙色": {
+            "code": "C19",
+            "gloss": [
+              "请上传图纸"
+            ],
+            "requires_drawing": false
+          },
+          "黄色": {
+            "code": "3945C",
+            "gloss": [
+              "请上传图纸"
+            ],
+            "requires_drawing": false
+          },
+          "绿色": {
+            "code": "802C",
+            "gloss": [
+              "请上传图纸"
+            ],
+            "requires_drawing": false
+          },
+          "青色": {
+            "code": "C20",
+            "gloss": [
+              "请上传图纸"
+            ],
+            "requires_drawing": false
+          },
+          "紫色": {
+            "code": "513C",
+            "gloss": [
+              "请上传图纸"
+            ],
+            "requires_drawing": false
+          },
+          "多色": {
+            "code": "DC2",
+            "gloss": [
+              "请上传图纸"
+            ],
+            "requires_drawing": false
+          }
+        },
+        "普通阳极氧化(不喷砂)": {
+          "本色": {
+            "code": "C1",
+            "gloss": [
+              "哑光",
+              "亮光"
+            ],
+            "requires_drawing": false
+          },
+          "黑色": {
+            "code": "C2",
+            "gloss": [
+              "哑光",
+              "亮光"
+            ],
+            "requires_drawing": false
+          },
+          "深空灰": {
+            "code": "C4",
+            "gloss": [
+              "哑光",
+              "亮光"
+            ],
+            "requires_drawing": false
+          },
+          "红色": {
+            "code": "C5",
+            "gloss": [
+              "哑光"
+            ],
+            "requires_drawing": false
+          },
+          "粉红色": {
+            "code": "C6",
+            "gloss": [
+              "哑光"
+            ],
+            "requires_drawing": false
+          },
+          "天蓝色": {
+            "code": "C7",
+            "gloss": [
+              "哑光"
+            ],
+            "requires_drawing": false
+          },
+          "深绿色": {
+            "code": "C8",
+            "gloss": [
+              "哑光"
+            ],
+            "requires_drawing": false
+          },
+          "沙金": {
+            "code": "C9",
+            "gloss": [
+              "哑光"
+            ],
+            "requires_drawing": false
+          },
+          "宝蓝色": {
+            "code": "C18",
+            "gloss": [
+              "哑光"
+            ],
+            "requires_drawing": false
+          }
+        },
+        "导电氧化(不喷砂)": {
+          "本色": {
+            "code": "C1",
+            "gloss": [],
+            "requires_drawing": false
+          }
+        },
+        "喷砂+普通阳极氧化": {
+          "本色": {
+            "code": "C1",
+            "gloss": [
+              "哑光",
+              "亮光"
+            ],
+            "requires_drawing": false
+          },
+          "黑色": {
+            "code": "C2",
+            "gloss": [
+              "哑光",
+              "亮光"
+            ],
+            "requires_drawing": false
+          },
+          "深空灰": {
+            "code": "C4",
+            "gloss": [
+              "哑光",
+              "亮光"
+            ],
+            "requires_drawing": false
+          },
+          "红色": {
+            "code": "C5",
+            "gloss": [
+              "哑光"
+            ],
+            "requires_drawing": false
+          },
+          "粉红色": {
+            "code": "C6",
+            "gloss": [
+              "哑光"
+            ],
+            "requires_drawing": false
+          },
+          "天蓝色": {
+            "code": "C7",
+            "gloss": [
+              "哑光"
+            ],
+            "requires_drawing": false
+          },
+          "深绿色": {
+            "code": "C8",
+            "gloss": [
+              "哑光"
+            ],
+            "requires_drawing": false
+          },
+          "沙金": {
+            "code": "C9",
+            "gloss": [
+              "哑光"
+            ],
+            "requires_drawing": false
+          },
+          "宝蓝色": {
+            "code": "C18",
+            "gloss": [
+              "哑光"
+            ],
+            "requires_drawing": false
+          }
+        },
+        "喷砂+硬质阳极氧化": {
+          "本色": {
+            "code": "C1",
+            "gloss": [],
+            "requires_drawing": false
+          },
+          "黑色": {
+            "code": "C2",
+            "gloss": [],
+            "requires_drawing": false
+          }
+        },
+        "喷砂+导电氧化": {
+          "本色": {
+            "code": "C1",
+            "gloss": [],
+            "requires_drawing": false
+          }
+        },
+        "拉丝+普通阳极氧化": {
+          "本色": {
+            "code": "C1",
+            "gloss": [
+              "哑光",
+              "亮光"
+            ],
+            "requires_drawing": false
+          },
+          "黑色": {
+            "code": "C2",
+            "gloss": [
+              "哑光",
+              "亮光"
+            ],
+            "requires_drawing": false
+          },
+          "深空灰": {
+            "code": "C4",
+            "gloss": [
+              "哑光",
+              "亮光"
+            ],
+            "requires_drawing": false
+          },
+          "红色": {
+            "code": "C5",
+            "gloss": [
+              "哑光"
+            ],
+            "requires_drawing": false
+          },
+          "粉红色": {
+            "code": "C6",
+            "gloss": [
+              "哑光"
+            ],
+            "requires_drawing": false
+          },
+          "天蓝色": {
+            "code": "C7",
+            "gloss": [
+              "哑光"
+            ],
+            "requires_drawing": false
+          },
+          "深绿色": {
+            "code": "C8",
+            "gloss": [
+              "哑光"
+            ],
+            "requires_drawing": false
+          },
+          "沙金": {
+            "code": "C9",
+            "gloss": [
+              "哑光"
+            ],
+            "requires_drawing": false
+          },
+          "宝蓝色": {
+            "code": "C18",
+            "gloss": [
+              "哑光"
+            ],
+            "requires_drawing": false
+          }
+        },
+        "硬质阳极氧化(不喷砂)": {
+          "本色": {
+            "code": "C1",
+            "gloss": [],
+            "requires_drawing": false
+          },
+          "黑色": {
+            "code": "C2",
+            "gloss": [],
+            "requires_drawing": false
+          }
+        },
+        "喷油": {
+          "黑色": {
+            "code": "HS001",
+            "gloss": [
+              "哑光"
+            ],
+            "requires_drawing": false
+          },
+          "白色": {
+            "code": "BS001",
+            "gloss": [
+              "哑光"
+            ],
+            "requires_drawing": false
+          }
+        }
+      }
+    },
+    "drawing_2d_triggers": {
+      "description": "以下任一条件触发时，必须上传2D工程图纸（DWG / DXF / PDF）",
+      "mandatory_2d_conditions": [
+        {
+          "parameter": "最严公差",
+          "values_triggering_2d": [
+            "±0.05mm",
+            "±0.02mm"
+          ],
+          "reason": "精密及超精密公差需要2D图纸指定基准面和关键尺寸"
+        },
+        {
+          "parameter": "外观要求",
+          "values_triggering_2d": [
+            "严格外观",
+            "极致外观"
+          ],
+          "reason": "严格和极致外观需要2D图纸明确外观检测面与关键面要求"
+        },
+        {
+          "parameter": "表面处理工艺",
+          "values_triggering_2d": [
+            "激光打标",
+            "UV打印"
+          ],
+          "reason": "图文打标和丝印需要2D图纸提供矢量位置、字体或排版内容"
+        },
+        {
+          "parameter": "螺纹加工",
+          "values_triggering_2d": [
+            "是"
+          ],
+          "reason": "螺纹孔位需要2D图纸指定螺纹牙型、螺距、螺纹深与底孔深"
+        },
+        {
+          "parameter": "装配关系",
+          "values_triggering_2d": [
+            "是"
+          ],
+          "reason": "配合装配需要2D图纸明确配合公差与基准"
+        }
+      ]
+    },
+    "special_parameter_rules": [
+      {
+        "rule_id": "RULE_TOLERANCE_002",
+        "parameter": "最严公差 ±0.02mm",
+        "allowed_materials": [
+          "铝合金-6061",
+          "铝合金-7075"
+        ],
+        "description": "±0.02mm超精密公差仅限铝合金6061与7075，其余钢材、铜合金、塑料不支持此公差"
+      },
+      {
+        "rule_id": "RULE_ROUGHNESS_EXTREME",
+        "parameter": "外观要求 极致外观",
+        "allowed_materials": [
+          "铝合金-6061",
+          "铝合金-7075"
+        ],
+        "allowed_crafts": [
+          "表面不做处理",
+          "喷砂+普通阳极氧化",
+          "喷砂+导电氧化",
+          "喷砂+硬质阳极氧化"
+        ],
+        "description": "极致外观仅支持铝合金材质，且在选择表面处理时仅兼容喷砂阳极氧化类工艺，其它工艺（如激光打标、拉丝、仅喷砂等）不兼容极致外观"
+      },
+      {
+        "rule_id": "RULE_ANODIZE_GLOSS",
+        "parameter": "阳极氧化光泽度",
+        "bright_colors": [
+          "本色",
+          "黑色",
+          "深空灰"
+        ],
+        "matte_only_colors": [
+          "红色",
+          "粉红色",
+          "天蓝色",
+          "深绿色",
+          "沙金",
+          "宝蓝色"
+        ],
+        "description": "普通阳极氧化和拉丝普通阳极氧化中，仅本色、黑色、深空灰支持'亮光'与'哑光'单选，其余颜色仅支持'哑光'"
+      }
+    ]
+  }
+}

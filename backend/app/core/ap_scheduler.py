@@ -293,6 +293,10 @@ class SchedulerUtil:
             return
         scheduler.start()
         scheduler.add_listener(cls._dispatch_job_event, EVENT_ALL)
+        if settings.CNC_BATCH_ENABLED:
+            from app.modules.task.cronjob.node.handlers.cnc_monitor import scan_due_async
+
+            scheduler.add_job(scan_due_async, "interval", seconds=60, id="cnc-monitor-scan", jobstore="memory", replace_existing=True, max_instances=1, coalesce=True)
         scheduler.resume()
 
     @classmethod

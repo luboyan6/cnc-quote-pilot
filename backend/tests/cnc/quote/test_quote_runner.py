@@ -83,10 +83,21 @@ class Adapter:
         session.check_active()
         now = datetime.now(UTC)
         quote = QuoteObservation(
-            session.scope, self.run_id, "1", upload.reference, submission.reference,
-            upload.sha256, self.effective, self.geometry, Decimal("12.30"), "USD", PriceScope.UNIT,
+            session.scope,
+            self.run_id,
+            "1",
+            upload.reference,
+            submission.reference,
+            upload.sha256,
+            self.effective,
+            self.geometry,
+            Decimal("12.30"),
+            "USD",
+            PriceScope.UNIT,
             LeadTime("3 business days", 3, 3, DayBasis.BUSINESS),
-            QuoteFreshness.CACHE_UNVERIFIED if self.cache else QuoteFreshness.CURRENT_CONFIRMED, now, now,
+            QuoteFreshness.CACHE_UNVERIFIED if self.cache else QuoteFreshness.CURRENT_CONFIRMED,
+            now,
+            now,
         )
         if self.stale_recalculation:
             quote = replace(quote, freshness=QuoteFreshness.RECALCULATED, priced_at=now - timedelta(seconds=60))
@@ -214,13 +225,17 @@ class RunnerTests(QuoteDatabase):
             await self.service.command(self.auth, 5, view.run_id, "input", LoginInput(kind="key", key="Enter"))
         self.assertEqual((await self.finish()).status, "QUOTED")
 
-    async def test_effective_mismatch_and_cached_quote_cannot_succeed(self):
+    async def test_effective_mismatch_cannot_succeed(self):
         self.modify_adapter = lambda adapter: setattr(adapter, "mismatch", True)
         await self.start()
         result = await self.finish()
         self.assertEqual(result.status, "FAILED")
         self.assertEqual(result.reason, "parameters_mismatch")
         self.assertEqual(self.adapter.submissions, 0)
+
+    async def test_cached_quote_cannot_succeed(self):
+        # An earlier mismatching Save correctly leaves an unresolved operation;
+        # exercise this independent price case in its own account/database.
         self.modify_adapter = lambda adapter: setattr(adapter, "cache", True)
         await self.start()
         result = await self.finish()

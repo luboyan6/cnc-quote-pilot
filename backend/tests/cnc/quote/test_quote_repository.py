@@ -7,7 +7,7 @@ from decimal import Decimal
 from types import SimpleNamespace
 from uuid import uuid4
 
-from _quote_support import ACCOUNT, STEP, Account, CncQuoteIntentModel, CncQuoteRunModel, Config, Menu, Part, QuoteDatabase, Role, User
+from _quote_support import ACCOUNT, STEP, Account, CncQuoteIntentModel, CncQuoteRunModel, Config, Menu, Part, Platform, QuoteDatabase, Role, User
 from sqlalchemy import func, select, update
 
 from app.core.base_schema import AuthSchema, CoreUserSchema
@@ -61,13 +61,34 @@ class RepositoryTests(QuoteDatabase):
         with self.assertRaisesRegex(QuoteError, "PART_UNAVAILABLE"):
             await self.repo.snapshot(self.auth, 5, 31)
 
-    async def test_upload_authorization_and_changed_file_rejected(self):
+    async def test_xometry_test_column_does_not_block_or_invalidate_but_file_changes_stop(self):
         snapshot = await self.repo.snapshot(self.auth, 5, 31)
+        async with self.sessions() as db, db.begin():
+            await db.execute(update(Part).values(upload_authorized=False))
+        await self.repo.validate(self.auth, snapshot)
+        current = await self.repo.snapshot(self.auth, 5, 31)
+        self.assertEqual(current.config_revision, snapshot.config_revision)
+        self.assertEqual(current.payload.buffer, STEP)
+        async with self.sessions() as db:
+            self.assertFalse((await db.get(Part, 9)).upload_authorized)
         self.file.write_bytes(STEP.replace(b"HEADER", b"CHANGED"))
         with self.assertRaises(BrowserStop):
             await self.repo.validate(self.auth, snapshot)
+        with self.assertRaisesRegex(QuoteError, "FILE_INVALID"):
+            await self.repo.snapshot(self.auth, 5, 31)
+
+    async def test_other_provider_retains_upload_column_policy_and_revision(self):
+        login_url = "https://www.jlc-cnc.com/"
+        quote_url = "https://www.jlc-cnc.com/cncOrder/#/placeOrder"
+        async with self.sessions() as db, db.begin():
+            await db.execute(update(Platform).values(login_url=login_url, quote_entry_url=quote_url))
+        self.login.load.return_value = replace(ACCOUNT, login_url=login_url, quote_url=quote_url)
+        snapshot = await self.repo.snapshot(self.auth, 5, 31)
+        self.assertEqual(snapshot.provider_code, "jlc_cnc_cn")
         async with self.sessions() as db, db.begin():
             await db.execute(update(Part).values(upload_authorized=False))
+        with self.assertRaisesRegex(QuoteError, "QUOTE_INPUT_CHANGED"):
+            await self.repo.validate(self.auth, snapshot)
         with self.assertRaisesRegex(QuoteError, "THIRD_PARTY_UPLOAD_NOT_AUTHORIZED"):
             await self.repo.snapshot(self.auth, 5, 31)
 
@@ -161,7 +182,14 @@ class RepositoryTests(QuoteDatabase):
 
     async def test_fresh_actor_disable_delete_and_role_menu_revocation(self):
         snapshot = await self.repo.snapshot(self.auth, 5, 31)
-        for model, field, value, reason in [(User, "status", 1, "QUOTE_ACTOR_UNAVAILABLE"), (User, "is_deleted", True, "QUOTE_ACTOR_UNAVAILABLE"), (Role, "status", 1, "QUOTE_PERMISSION_REVOKED"), (Role, "is_deleted", True, "QUOTE_PERMISSION_REVOKED"), (Menu, "status", 1, "QUOTE_PERMISSION_REVOKED"), (Menu, "is_deleted", True, "QUOTE_PERMISSION_REVOKED")]:
+        for model, field, value, reason in [
+            (User, "status", 1, "QUOTE_ACTOR_UNAVAILABLE"),
+            (User, "is_deleted", True, "QUOTE_ACTOR_UNAVAILABLE"),
+            (Role, "status", 1, "QUOTE_PERMISSION_REVOKED"),
+            (Role, "is_deleted", True, "QUOTE_PERMISSION_REVOKED"),
+            (Menu, "status", 1, "QUOTE_PERMISSION_REVOKED"),
+            (Menu, "is_deleted", True, "QUOTE_PERMISSION_REVOKED"),
+        ]:
             async with self.sessions() as db, db.begin():
                 await db.execute(update(model).values(**{field: value}))
             with self.assertRaisesRegex(QuoteError, reason):

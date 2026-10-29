@@ -32,6 +32,7 @@ class Settings(BaseSettings):
     SERVER_HOST: str = "0.0.0.0"  # 允许访问的IP地址
     SERVER_PORT: int = 8001  # 服务端口
     WORKERS: int = 1  # uvicorn worker 进程数（prod 环境可调大；>1 时确保 Redis 共享 jobstore 不重复调度）
+    CNC_BATCH_ENABLED: bool = False  # Enable only after the reviewed batch migration is applied.
     TRUSTED_PROXY_HOPS: int = 1  # 前置可信反向代理跳数（docker 部署默认单层 nginx；直连公网部署填 0）
 
     # ================================================= #
@@ -74,6 +75,11 @@ class Settings(BaseSettings):
     SESSION_MAX_LIFETIME_SECONDS: int = 60 * 60 * 24 * 7  # 会话绝对存活上限(秒)，滑动续期不得超过该上限
     LOGIN_RATE_LIMIT_WINDOW_SECONDS: int = 60  # 登录限流窗口(秒)
     LOGIN_RATE_LIMIT_MAX_ATTEMPTS: int = 10  # 限流窗口内单 IP 最大登录尝试次数
+
+    # Query-only CNC MCP Server, authenticated with existing user access tokens.
+    MCP_ENABLED: bool = False
+    MCP_ALLOWED_HOSTS: list[str] = ["localhost", "localhost:*", "127.0.0.1", "127.0.0.1:*", "[::1]", "[::1]:*"]
+    MCP_ALLOWED_ORIGINS: list[str] = ["http://localhost", "http://localhost:*", "http://127.0.0.1", "http://127.0.0.1:*", "http://[::1]", "http://[::1]:*"]
 
     # ================================================= #
     #  ****************** 数据加密配置 ***************** #
@@ -382,7 +388,7 @@ class Settings(BaseSettings):
                 404: {"description": "资源不存在"},
                 422: {"description": "请求参数验证错误"},
                 500: {"description": "服务器内部错误"},
-            }
+            },
         }
 
 

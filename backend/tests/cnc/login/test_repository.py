@@ -48,6 +48,7 @@ class Account(Base):
     lease_owner: Mapped[str | None] = mapped_column(String, nullable=True)
     lease_until: Mapped[object | None] = mapped_column(DateTime, nullable=True)
     lease_token: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    account_fingerprint: Mapped[str | None] = mapped_column(String, nullable=True)
 
     @property
     def platform(self):
@@ -87,6 +88,23 @@ class RepositoryTests(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(row.credential_ciphertext)
         self.assertEqual(read_credentials(row), ("synthetic", "legacy-synthetic"))
         self.assertEqual(self.snapshot.password, "legacy-synthetic")
+
+    async def test_load_clears_residual_plaintext_and_preserves_authoritative_ciphertext(self):
+        previous = (await self.row()).credential_ciphertext
+        async with self.sessions() as db, db.begin():
+            await db.execute(update(Account).where(Account.id == 31).values(password="stale-plaintext"))
+        snapshot = await self.repo.load(self.auth, 31)
+        row = await self.row()
+        self.assertEqual(row.password, "")
+        self.assertEqual(row.credential_ciphertext, previous)
+        self.assertEqual(snapshot.password, "legacy-synthetic")
+
+    async def test_load_rejects_corrupt_ciphertext_without_falling_back_to_plaintext(self):
+        async with self.sessions() as db, db.begin():
+            await db.execute(update(Account).where(Account.id == 31).values(password="stale-plaintext", credential_ciphertext=b"invalid-ciphertext"))
+        with self.assertRaisesRegex(LoginError, "CREDENTIALS_UNAVAILABLE"):
+            await self.repo.load(self.auth, 31)
+        self.assertEqual((await self.row()).password, "stale-plaintext")
 
     async def test_concurrent_claims_have_one_winner(self):
         results = await asyncio.gather(self.repo.claim(self.snapshot, "worker-one"), self.repo.claim(self.snapshot, "worker-two"), return_exceptions=True)

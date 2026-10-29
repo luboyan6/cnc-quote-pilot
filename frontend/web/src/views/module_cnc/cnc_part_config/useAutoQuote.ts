@@ -4,6 +4,7 @@ import API, {
   type CncQuoteAccount,
   type CncQuoteRun,
   type CncQuoteStatus,
+  type CncQuoteDeclarationDecision,
 } from "@/api/module_cnc/cnc_part_config";
 import type { CncLoginInput } from "@/api/module_cnc/cnc_account";
 import { ResultEnum } from "@/enums/api/result.enum";
@@ -46,7 +47,11 @@ export function useAutoQuote() {
   const busy = ref(false);
   const interactive = computed(
     () =>
-      !error.value && !busy.value && run.value?.status === "WAITING_HUMAN" && run.value.can_input
+      !error.value &&
+      !busy.value &&
+      run.value?.status === "WAITING_HUMAN" &&
+      run.value.can_input &&
+      !run.value.export_declaration
   );
   let epoch = 0;
   let disposed = false;
@@ -55,6 +60,7 @@ export function useAutoQuote() {
   let nextInputAt = 0;
   const closing = new Map<number, Promise<void>>();
   const starting = new Set<Promise<void>>();
+  const declaring = new Set<Promise<void>>();
 
   function clearFrame() {
     if (frameUrl.value) URL.revokeObjectURL(frameUrl.value);
@@ -134,7 +140,11 @@ export function useAutoQuote() {
       if (generation !== epoch) return;
       if (response.data.code !== ResultEnum.SUCCESS) throw new Error("Status unavailable");
       accept(response.data.data, current);
-      if (response.data.data.status === "WAITING_HUMAN" && response.data.data.can_input) {
+      if (
+        response.data.data.status === "WAITING_HUMAN" &&
+        response.data.data.can_input &&
+        !response.data.data.export_declaration
+      ) {
         const frame = await API.quoteFrame(current.config_id, current.run_id, request.signal);
         if (generation !== epoch) return;
         if (frame.data.type !== "image/jpeg" || !frame.data.size) throw new Error("Invalid frame");
@@ -206,7 +216,7 @@ export function useAutoQuote() {
     try {
       // A different configuration may use the same account. Finish the prior
       // close before admitting another run, so its owner can release the lease.
-      await Promise.all([...starting, ...closing.values()]);
+      await Promise.all([...starting, ...declaring, ...closing.values()]);
       if (generation !== epoch || disposed) return;
       const response = await API.quoteAccounts(id, request.signal);
       if (generation !== epoch || disposed) return;
@@ -278,6 +288,53 @@ export function useAutoQuote() {
       }
     }
   }
+
+  function confirmDeclaration(decision: CncQuoteDeclarationDecision) {
+    const current = run.value;
+    const declaration = current?.export_declaration;
+    if (
+      disposed ||
+      !visible.value ||
+      busy.value ||
+      error.value ||
+      current?.status !== "WAITING_HUMAN" ||
+      !declaration ||
+      declaration.declaration_id !== decision.declaration_id ||
+      !declaration.options.some((option) => option.value === decision.choice)
+    )
+      return Promise.resolve();
+    const pending = sendDeclaration(current, decision).finally(() => declaring.delete(pending));
+    declaring.add(pending);
+    return pending;
+  }
+
+  async function sendDeclaration(current: CncQuoteRun, decision: CncQuoteDeclarationDecision) {
+    const generation = ++epoch;
+    busy.value = true;
+    stopPolling();
+    clearFrame();
+    try {
+      const response = await API.confirmQuoteDeclaration(
+        current.config_id,
+        current.run_id,
+        decision
+      );
+      if (generation !== epoch || disposed) return;
+      if (response.data.code !== ResultEnum.SUCCESS) throw response;
+      accept(response.data.data, current);
+    } catch (failure) {
+      if (generation === epoch && !disposed)
+        error.value = quoteErrorMessage(
+          failure,
+          "声明操作结果未能确认，未重复发送。请关闭窗口后检查本次报价状态。"
+        );
+    } finally {
+      if (generation === epoch) {
+        busy.value = false;
+        schedule(generation);
+      }
+    }
+  }
   onDeactivated(close);
   onBeforeUnmount(() => {
     disposed = true;
@@ -300,5 +357,6 @@ export function useAutoQuote() {
     close,
     chooseAccount,
     command,
+    confirmDeclaration,
   };
 }

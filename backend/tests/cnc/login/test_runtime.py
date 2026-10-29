@@ -25,6 +25,7 @@ class FakeRepository:
         self.claims = 0
         self.releases = []
         self.states = []
+        self.bindings = []
         self.lost = False
 
     async def claim(self, account, owner):
@@ -36,6 +37,11 @@ class FakeRepository:
             raise LoginError("ACCOUNT_CHANGED_OR_LEASE_LOST")
         if state:
             self.states.append(state)
+
+    async def bind_identity(self, account, owner, token, code):
+        if self.lost:
+            raise LoginError("ACCOUNT_CHANGED_OR_LEASE_LOST")
+        self.bindings.append((account.id, code))
 
     async def release(self, account, owner, token):
         self.releases.append((account.id, owner, token))
@@ -106,8 +112,13 @@ class FakeProvider:
         self.challenge = challenge
         self.submissions = 0
         self.verifications = 0
+        self.identified = ""
 
-    async def verify(self, session, username):
+    async def identify(self, session):
+        session.check_active()
+        return self.identified
+
+    async def verify(self, session, username, identity_code=None):
         session.check_active()
         self.verifications += 1
         return self.authenticated
@@ -234,6 +245,56 @@ class RuntimeTests(unittest.IsolatedAsyncioTestCase):
         await asyncio.sleep(0.01)
         await self.manager.close_all()
         self.assertEqual(self.executor.active, 0)
+        self.assertFalse(self.manager.accounts)
+        self.assertEqual(len(self.repo.releases), 1)
+
+    async def test_shutdown_waits_for_quote_persistence_before_unregistering_owner(self):
+        finishing = asyncio.Event()
+        complete = asyncio.Event()
+
+        async def finish(reason):
+            finishing.set()
+            await complete.wait()
+
+        activity = SimpleNamespace(
+            terminal=False,
+            check_inputs=AsyncMock(side_effect=LoginError("QUOTE_INPUT_CHANGED")),
+            finish=AsyncMock(side_effect=finish),
+        )
+        await self.manager.start(ACCOUNT, quote_activity=activity)
+        await asyncio.wait_for(finishing.wait(), timeout=1)
+        self.assertIn(ACCOUNT.id, self.manager.accounts)
+        closing = asyncio.create_task(self.manager.close_all())
+        await asyncio.sleep(0)
+        self.assertFalse(closing.done())
+        complete.set()
+        await asyncio.wait_for(closing, timeout=1)
+        self.assertFalse(self.manager.accounts)
+        self.assertEqual(len(self.repo.releases), 1)
+        activity.finish.assert_awaited_once_with("QUOTE_INPUT_CHANGED")
+
+    async def test_shutdown_waits_for_shared_prestart_cleanup(self):
+        releasing = asyncio.Event()
+        complete = asyncio.Event()
+        original_release = self.repo.release
+
+        async def release(account, owner, token):
+            releasing.set()
+            await complete.wait()
+            await original_release(account, owner, token)
+
+        self.repo.release = release
+        view = await self.manager.start(ACCOUNT)
+        owned = self.manager.sessions[view.session_id]
+        owned.task.cancel()  # The owner has not yet had an event-loop turn.
+        closing = asyncio.create_task(self.manager.command(ACCOUNT, view.session_id, "close"))
+        await asyncio.wait_for(releasing.wait(), timeout=1)
+        self.assertIn(ACCOUNT.id, self.manager.accounts)
+        shutdown = asyncio.create_task(self.manager.close_all())
+        await asyncio.sleep(0)
+        self.assertFalse(shutdown.done())
+        complete.set()
+        await asyncio.wait_for(asyncio.gather(closing, shutdown), timeout=1)
         self.assertFalse(self.manager.accounts)
         self.assertEqual(len(self.repo.releases), 1)
 

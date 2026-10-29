@@ -69,7 +69,37 @@
       @confirm="handleSubmit()"
     >
       <template v-if="dialogVisible.type === 'detail'">
-        <FaDescriptions :column="2" :data="detailFormData" :items="detailItems" max-height="70vh" />
+        <FaDescriptions :column="2" :data="detailFormData" :items="detailItems" max-height="70vh">
+          <template #enabled="{ row }">
+            <ElTag :type="row?.enabled ? 'success' : 'danger'">
+              {{ row?.enabled ? "是" : "否" }}
+            </ElTag>
+          </template>
+          <template #platform_login_url="{ row }">
+            <a
+              v-if="getPlatformLoginUrl(row) !== '-'"
+              :href="getPlatformLoginUrl(row)"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-primary hover:underline break-all"
+            >
+              {{ getPlatformLoginUrl(row) }}
+            </a>
+            <span v-else>-</span>
+          </template>
+          <template #platform_quote_entry_url="{ row }">
+            <a
+              v-if="getPlatformQuoteUrl(row) !== '-'"
+              :href="getPlatformQuoteUrl(row)"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-primary hover:underline break-all"
+            >
+              {{ getPlatformQuoteUrl(row) }}
+            </a>
+            <span v-else>-</span>
+          </template>
+        </FaDescriptions>
       </template>
       <template v-else>
         <FaForm
@@ -124,7 +154,7 @@
 
 <script setup lang="ts">
 import { computed, h, onMounted, ref, watch } from "vue";
-import { ElButton } from "element-plus";
+import { ElButton, ElTag } from "element-plus";
 import { checkPerm } from "@/utils/checkPerm";
 import AccountLoginDialog from "./AccountLoginDialog.vue";
 import { useAccountLogin } from "./useAccountLogin";
@@ -157,8 +187,9 @@ defineOptions({
 
 const login = useAccountLogin();
 
-/** 平台下拉数据源 */
+/** 平台下拉数据源与平台配置缓存 */
 const platformOptions = ref<{ label: string; value: number }[]>([]);
+const platformMap = ref<Record<number, CncPlatformTable>>({});
 const platformOptionsLoading = ref(false);
 
 async function fetchPlatformOptions() {
@@ -174,6 +205,13 @@ async function fetchPlatformOptions() {
       if (!page.has_next || page.items.length === 0) break;
       pageNo += 1;
     }
+    const map: Record<number, CncPlatformTable> = {};
+    for (const p of items) {
+      if (p.id != null) {
+        map[p.id] = p;
+      }
+    }
+    platformMap.value = map;
     platformOptions.value = items.flatMap((p) =>
       p.id == null ? [] : [{ label: p.name || `平台#${p.id}`, value: p.id }]
     );
@@ -182,6 +220,26 @@ async function fetchPlatformOptions() {
   } finally {
     platformOptionsLoading.value = false;
   }
+}
+
+function getPlatformLoginUrl(row: CncAccountTable | null | undefined): string {
+  if (!row) return "-";
+  if (row.platform_login_url) return row.platform_login_url;
+  const platformId = Number(row.platform_id);
+  if (platformId && platformMap.value[platformId]?.login_url) {
+    return platformMap.value[platformId].login_url!;
+  }
+  return row.login_url || "-";
+}
+
+function getPlatformQuoteUrl(row: CncAccountTable | null | undefined): string {
+  if (!row) return "-";
+  if (row.platform_quote_entry_url) return row.platform_quote_entry_url;
+  const platformId = Number(row.platform_id);
+  if (platformId && platformMap.value[platformId]?.quote_entry_url) {
+    return platformMap.value[platformId].quote_entry_url!;
+  }
+  return "-";
 }
 
 onMounted(() => {
@@ -304,6 +362,20 @@ const {
         },
       },
       {
+        prop: "platform_login_url",
+        label: "登录页面",
+        minWidth: 160,
+        showOverflowTooltip: true,
+        formatter: (row: CncAccountTable) => getPlatformLoginUrl(row),
+      },
+      {
+        prop: "platform_quote_entry_url",
+        label: "报价页面",
+        minWidth: 160,
+        showOverflowTooltip: true,
+        formatter: (row: CncAccountTable) => getPlatformQuoteUrl(row),
+      },
+      {
         prop: "created_time",
         label: "创建时间",
         width: 168,
@@ -316,6 +388,7 @@ const {
         width: 168,
         sortable: true,
         showOverflowTooltip: true,
+        visible: false,
       },
       {
         prop: "operation",
@@ -371,7 +444,18 @@ const detailFormData = ref<CncAccountTable>({});
 const detailItems: import("@/components/display/fa-descriptions/index.vue").DescriptionsItem[] = [
   { label: "平台名称", prop: "platform_name" },
   { label: "账号", prop: "username" },
-  { label: "启用状态", prop: "enabled" },
+  {
+    label: "启用状态",
+    prop: "enabled",
+    tag: {
+      map: {
+        true: { type: "success", text: "是" },
+        false: { type: "danger", text: "否" },
+      },
+    },
+  },
+  { label: "登录页面", prop: "platform_login_url", slot: "platform_login_url", span: 2 },
+  { label: "报价页面", prop: "platform_quote_entry_url", slot: "platform_quote_entry_url", span: 2 },
   { label: "创建时间", prop: "created_time" },
   { label: "更新时间", prop: "updated_time" },
 ];

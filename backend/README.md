@@ -132,6 +132,7 @@ uv run ruff check --watch
 
 ## 相关链接
 
+- **CNC MCP Server**: [Setup, tools, and client configuration](../docs/cnc-mcp-server.md), [WeKnora source analysis](../docs/weknora-mcp-analysis.md).
 - **FastAPI 官方文档**: [https://fastapi.tiangolo.com/](https://fastapi.tiangolo.com/)
 - **SQLAlchemy 文档**: [https://docs.sqlalchemy.org/](https://docs.sqlalchemy.org/)
 - **Pydantic 文档**: [https://pydantic-docs.helpmanual.io/](https://pydantic-docs.helpmanual.io/)

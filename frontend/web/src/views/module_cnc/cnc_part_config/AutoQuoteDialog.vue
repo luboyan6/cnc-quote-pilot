@@ -79,7 +79,14 @@
         <span v-else>平台尚未返回金额</span>
       </p>
       <ElDescriptions :column="2" border>
-        <ElDescriptionsItem label="交期" :span="2">{{ leadTimeLabel }}</ElDescriptionsItem>
+        <ElDescriptionsItem label="当前选定交期" :span="2">{{ leadTimeLabel }}</ElDescriptionsItem>
+        <ElDescriptionsItem v-if="run.result.tax_amount" label="税费">
+          <span>¥{{ run.result.tax_amount }}</span>
+        </ElDescriptionsItem>
+        <ElDescriptionsItem v-if="run.result.total_amount" label="总计（含税）">
+          <strong style="color: var(--el-color-primary); font-size: 15px;">¥{{ run.result.total_amount }}</strong>
+          <span v-if="run.result.discount_amount" style="margin-left: 8px; color: var(--el-color-danger); font-size: 12px;">(券后约 ¥{{ run.result.discount_amount }})</span>
+        </ElDescriptionsItem>
         <ElDescriptionsItem label="含税">{{
           includedLabel(run.result.tax_included)
         }}</ElDescriptionsItem>
@@ -93,6 +100,40 @@
           run.result.observed_at
         }}</ElDescriptionsItem>
       </ElDescriptions>
+
+      <div v-if="leadTimeTiers.length" class="lead-time-tiers" style="margin-top: 16px;">
+        <h4 style="margin: 0 0 8px; font-size: 14px; font-weight: 600;">各交期阶梯报价明细</h4>
+        <ElTable :data="leadTimeTiers" size="small" border style="width: 100%;">
+          <ElTableColumn prop="tier" label="交期类型" min-width="100">
+            <template #default="{ row }">
+              <ElTag :type="row.tier.includes('加急') ? 'danger' : row.tier.includes('经济') ? 'info' : 'primary'" size="small">
+                {{ row.tier }}
+              </ElTag>
+            </template>
+          </ElTableColumn>
+          <ElTableColumn prop="days" label="交期时长" min-width="100" />
+          <ElTableColumn label="零件金额" min-width="100">
+            <template #default="{ row }">
+              <span>¥{{ row.part_amount || '-' }}</span>
+            </template>
+          </ElTableColumn>
+          <ElTableColumn label="税费" min-width="85">
+            <template #default="{ row }">
+              <span>¥{{ row.tax_amount || '-' }}</span>
+            </template>
+          </ElTableColumn>
+          <ElTableColumn label="含税总计" min-width="110">
+            <template #default="{ row }">
+              <strong style="color: var(--el-color-primary);">¥{{ row.total_amount || '-' }}</strong>
+            </template>
+          </ElTableColumn>
+          <ElTableColumn prop="estimated_ship_date" label="预计发货时间" min-width="180">
+            <template #default="{ row }">
+              <span style="font-size: 12px; color: var(--el-text-color-secondary);">{{ row.estimated_ship_date || '-' }}</span>
+            </template>
+          </ElTableColumn>
+        </ElTable>
+      </div>
     </div>
     <details v-if="parameterRows.length" class="quote-parameters" :open="!!run?.result">
       <summary>报价参数{{ run?.result ? "与平台回读" : "" }}</summary>
@@ -102,8 +143,24 @@
         <ElTableColumn v-if="run?.result" prop="effective" label="平台回读" min-width="150" />
       </ElTable>
     </details>
-    <template v-if="run?.status === 'WAITING_HUMAN'">
-      <p class="quote-help">在下方平台页面完成登录或验证，再点击“验证并继续”。</p>
+    <fieldset v-if="declaration" class="quote-declaration" :disabled="busy || !!error">
+      <legend>本次图纸的出口声明</legend>
+      <p class="declaration-file">{{ run?.file_name }}</p>
+      <p class="declaration-statement">{{ declaration.statement }}</p>
+      <p>请阅读平台声明，为本次图纸明确选择一项，确认后继续报价。</p>
+      <ElRadioGroup
+        v-model="declarationChoice"
+        class="declaration-options"
+        aria-label="本次图纸的出口声明选项"
+        :disabled="busy || !!error"
+      >
+        <ElRadio v-for="option in declaration.options" :key="option.value" :value="option.value">
+          {{ option.label }}
+        </ElRadio>
+      </ElRadioGroup>
+    </fieldset>
+    <template v-else-if="run?.status === 'WAITING_HUMAN'">
+      <p class="quote-help">{{ humanHelp }}</p>
       <ControlledBrowser
         :frame-url="frameUrl"
         :viewport="run.viewport"
@@ -122,6 +179,14 @@
         terminal || choosingAccount || !run ? "关闭" : "停止并关闭"
       }}</ElButton>
       <ElButton
+        v-if="terminal && run?.result"
+        type="success"
+        plain
+        @click="goToResults"
+      >
+        查看报价结果报表
+      </ElButton>
+      <ElButton
         v-if="choosingAccount"
         type="primary"
         :loading="busy"
@@ -130,7 +195,15 @@
         >开始报价</ElButton
       >
       <ElButton
-        v-if="run?.status === 'WAITING_HUMAN'"
+        v-if="declaration"
+        type="primary"
+        :loading="busy"
+        :disabled="!canConfirmDeclaration"
+        @click="confirmDeclaration"
+        >确认声明并继续</ElButton
+      >
+      <ElButton
+        v-else-if="run?.status === 'WAITING_HUMAN'"
         type="primary"
         :loading="busy"
         :disabled="!interactive"
@@ -142,7 +215,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref, watch } from "vue";
+import { useRouter } from "vue-router";
 import {
   ElAlert,
   ElButton,
@@ -150,6 +224,8 @@ import {
   ElDescriptionsItem,
   ElDialog,
   ElOption,
+  ElRadio,
+  ElRadioGroup,
   ElSelect,
   ElTable,
   ElTableColumn,
@@ -157,7 +233,10 @@ import {
 } from "element-plus";
 import type { CncLoginInput } from "@/api/module_cnc/cnc_account";
 import type {
+  CncLeadTimeTier,
   CncQuoteAccount,
+  CncQuoteDeclarationChoice,
+  CncQuoteDeclarationDecision,
   CncQuoteRun,
   CncQuoteStage,
   CncQuoteStatus,
@@ -165,6 +244,13 @@ import type {
 import ControlledBrowser from "../components/ControlledBrowser.vue";
 import { isQuoteTerminal } from "./useAutoQuote";
 import { quoteReasonMessage } from "./quoteMessages";
+
+const router = useRouter();
+
+function goToResults() {
+  emit("close");
+  router.push("/module_cnc/cnc_quote_result");
+}
 
 const props = defineProps<{
   visible: boolean;
@@ -185,7 +271,38 @@ const emit = defineEmits<{
   start: [];
   input: [input: CncLoginInput];
   resume: [];
+  declaration: [decision: CncQuoteDeclarationDecision];
 }>();
+const declarationChoice = ref<CncQuoteDeclarationChoice>();
+const declaration = computed(() =>
+  props.run?.status === "WAITING_HUMAN" ? props.run.export_declaration : null
+);
+watch(
+  [() => props.visible, () => props.run?.run_id, () => declaration.value?.declaration_id],
+  () => {
+    declarationChoice.value = undefined;
+  },
+  { flush: "sync" }
+);
+const canConfirmDeclaration = computed(
+  () =>
+    props.visible &&
+    !props.busy &&
+    !props.error &&
+    !!declaration.value?.options.some((option) => option.value === declarationChoice.value)
+);
+function confirmDeclaration() {
+  if (!canConfirmDeclaration.value || !declaration.value || !declarationChoice.value) return;
+  emit("declaration", {
+    declaration_id: declaration.value.declaration_id,
+    choice: declarationChoice.value,
+  });
+}
+const humanHelp = computed(() => {
+  if (!props.run?.can_input) return "本阶段暂不接受人工操作，请根据提示核对平台状态。";
+  if (props.run.stage === "login") return "在下方平台页面完成登录或验证，再点击“验证并继续”。";
+  return "在下方平台页面完成当前阶段的处理，再点击“验证并继续”。";
+});
 const resultLabels = {
   QUOTED: "平台报价",
   REFERENCE_ESTIMATE: "系统参考估价",
@@ -262,16 +379,29 @@ const parameterRows = computed(() =>
     effective: props.run?.result?.effective[key] ?? "未回读",
   }))
 );
+const leadTimeTiers = computed<CncLeadTimeTier[]>(() => {
+  const result = props.run?.result;
+  if (!result) return [];
+  if (Array.isArray(result.lead_time_tiers) && result.lead_time_tiers.length) {
+    return result.lead_time_tiers;
+  }
+  const lead = result.lead_time;
+  if (lead && Array.isArray(lead.tiers) && lead.tiers.length) {
+    return lead.tiers as CncLeadTimeTier[];
+  }
+  return [];
+});
+
 const leadTimeLabel = computed(() => {
   const lead = props.run?.result?.lead_time;
   if (!lead) return "平台未提供";
-  return typeof lead.text === "string"
-    ? lead.text
-    : typeof lead.raw_text === "string"
-      ? lead.raw_text
-      : typeof lead.raw === "string"
-        ? lead.raw
-        : "平台未提供可确认的交期原文";
+  if (typeof lead.text === "string" && lead.text) return lead.text;
+  if (typeof lead.raw_text === "string" && lead.raw_text) return lead.raw_text;
+  if (typeof lead.tier === "string" && typeof lead.days === "string") {
+    return `${lead.tier} (${lead.days})`;
+  }
+  if (typeof lead.raw === "string") return lead.raw;
+  return "平台未提供可确认的交期原文";
 });
 function includedLabel(value: boolean | null) {
   return value === null ? "平台未明确" : value ? "是" : "否";
@@ -289,7 +419,8 @@ function includedLabel(value: boolean | null) {
 .quote-notice,
 .quote-summary,
 .quote-result,
-.quote-parameters {
+.quote-parameters,
+.quote-declaration {
   margin-top: 16px;
 }
 
@@ -331,5 +462,37 @@ function includedLabel(value: boolean | null) {
 .quote-help {
   margin: 16px 0;
   color: var(--el-text-color-secondary);
+}
+
+.quote-declaration {
+  padding: 16px;
+  border: 1px solid var(--el-border-color);
+  border-radius: 8px;
+}
+
+.declaration-file {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.declaration-statement {
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.declaration-options {
+  display: grid;
+  gap: 12px;
+
+  :deep(.el-radio) {
+    height: auto;
+    margin-right: 0;
+  }
+
+  :deep(.el-radio__label) {
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+  }
 }
 </style>

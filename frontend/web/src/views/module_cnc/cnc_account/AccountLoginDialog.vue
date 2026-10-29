@@ -23,7 +23,7 @@
       class="login-notice"
     />
     <p class="login-help">
-      在下方平台页面操作；完成验证码或登录后点击“验证登录”。关闭窗口会释放浏览器。
+      在下方平台页面操作（支持点击与拖动）；完成验证码或登录后点击“验证登录”。关闭窗口会释放浏览器。
     </p>
     <ControlledBrowser
       :frame-url="frameUrl"

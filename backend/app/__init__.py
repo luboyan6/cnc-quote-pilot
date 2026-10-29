@@ -1,6 +1,7 @@
 """FastapiAdmin 应用工厂：唯一的应用构建与生命周期定义点。"""
 
 from collections.abc import AsyncGenerator
+from contextlib import AsyncExitStack
 from typing import Any
 
 from fastapi import FastAPI
@@ -13,6 +14,7 @@ from .config import path_conf
 from .config.setting import settings
 from .core.exceptions import handle_exception
 from .core.logger import logger
+from .modules.cnc.mcp import mcp_lifespan, register_mcp
 from .utils.common_util import import_module
 from .utils.console import console_end, console_start
 
@@ -26,6 +28,9 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
     from app.modules.system.dict.service import DictDataService
     from app.modules.system.params.service import ParamsService
     from app.scripts.initialize import InitializeData
+
+    if settings.CNC_BATCH_ENABLED and settings.WORKERS != 1:
+        raise RuntimeError("CNC_BATCH_REQUIRES_SINGLE_WORKER")
 
     await InitializeData().init_db()
     logger.info(f"✅ {settings.DATABASE_TYPE} 连接初始化完成")
@@ -50,23 +55,29 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
         scheduler_ready=SchedulerUtil.is_scheduler_ready(),
     )
 
-    yield
+    from app.modules.cnc.login.runtime import close_login_sessions
 
-    try:
-        from app.modules.cnc.login.runtime import close_login_sessions
+    # Every acquired resource must close even if startup, MCP, request serving,
+    # or an earlier cleanup raises. Callbacks run in reverse registration order.
+    async with AsyncExitStack() as cleanup:
+        cleanup.callback(console_end)
+        cleanup.push_async_callback(async_engine.dispose)
+        cleanup.push_async_callback(redis_connect, app, status=False)
+        cleanup.push_async_callback(SchedulerUtil.shutdown, wait=True)
+        cleanup.push_async_callback(close_login_sessions)
+        if settings.CNC_BATCH_ENABLED:
+            from app.modules.cnc.batch.dispatcher import QuoteDispatcher
 
-        await close_login_sessions()
-        await SchedulerUtil.shutdown(wait=True)
-        logger.info("✅ 定时任务调度器已关闭")
-        await redis_connect(app, status=False)
-        logger.info("✅ redis 连接已关闭")
-        await async_engine.dispose()
-        logger.info(f"✅ {settings.DATABASE_TYPE} 连接已关闭")
-    except Exception as e:
-        logger.error("❌ 应用关闭过程中发生错误: {}", e)
-        raise SystemExit(1)
-    finally:
-        console_end()
+            dispatcher = QuoteDispatcher()
+            cleanup.push_async_callback(dispatcher.stop)
+            await dispatcher.start()
+            from app.modules.cnc.recovery.scanner import RecoveryScanner
+
+            recovery = RecoveryScanner(dispatcher.batches.repository.sessions, dispatcher.batches.quotes)
+            cleanup.push_async_callback(recovery.stop)
+            await recovery.start()
+        async with mcp_lifespan(app):
+            yield
 
 
 def register_middlewares(app: FastAPI) -> None:
@@ -83,9 +94,11 @@ def register_exceptions(app: FastAPI) -> None:
 
 def register_routers(app: FastAPI) -> None:
     from app.api.v1.routers import api_v1
+
     app.include_router(api_v1)
 
     from app.core.discover import dynamic_router
+
     dynamic_router.init_app(app)
 
 
@@ -147,6 +160,7 @@ def create_app() -> FastAPI:
     register_middlewares(app)
     # 注册路由
     register_routers(app)
+    register_mcp(app)
     # 注册静态文件
     register_static(app)
     # 注册API文档（豁免限流）

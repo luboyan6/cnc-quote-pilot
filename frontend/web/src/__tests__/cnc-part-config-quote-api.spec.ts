@@ -46,4 +46,20 @@ describe("报价私有接口", () => {
       method: "delete",
     });
   });
+
+  it("声明确认只发送当前声明ID和选项，不接受客户端文件或身份依据", () => {
+    const decision = {
+      declaration_id: "current-statement",
+      choice: "not_controlled" as const,
+      file_hash: "client-hash",
+      actor_id: 999,
+      statement: "replacement",
+    };
+    API.confirmQuoteDeclaration(42, "run/1", decision);
+    expect(request).toHaveBeenCalledWith({
+      url: "/cnc/cnc_part_config/42/quote/runs/run%2F1/declaration",
+      method: "post",
+      data: { declaration_id: "current-statement", choice: "not_controlled" },
+    });
+  });
 });

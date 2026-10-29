@@ -12,6 +12,7 @@ const api = vi.hoisted(() => ({
   quoteFrame: vi.fn(),
   quoteInput: vi.fn(),
   resumeQuote: vi.fn(),
+  confirmQuoteDeclaration: vi.fn(),
   cancelQuote: vi.fn(),
 }));
 vi.mock("@/api/module_cnc/cnc_part_config", () => ({ default: api }));
@@ -37,6 +38,16 @@ function run(overrides: Partial<CncQuoteRun> = {}): CncQuoteRun {
 }
 function response<T>(data: T) {
   return { data: { code: 0, data } };
+}
+function declaration() {
+  return {
+    declaration_id: "statement-v1",
+    statement: "Current platform declaration\nRead the full statement before choosing.",
+    options: [
+      { value: "not_controlled" as const, label: "No — this file is not controlled" },
+      { value: "controlled" as const, label: "Yes — this file is controlled" },
+    ],
+  };
 }
 function deferred<T>() {
   let resolve!: (value: T) => void;
@@ -71,6 +82,7 @@ beforeEach(() => {
   api.quoteFrame.mockResolvedValue({ data: new Blob(["frame"], { type: "image/jpeg" }) });
   api.quoteInput.mockResolvedValue(response(run({ status: "WAITING_HUMAN", can_input: true })));
   api.resumeQuote.mockResolvedValue(response(run()));
+  api.confirmQuoteDeclaration.mockResolvedValue(response(run()));
   api.cancelQuote.mockResolvedValue(response(run({ status: "CANCELLED" })));
   vi.stubGlobal("URL", {
     createObjectURL: vi.fn(() => "blob:private-quote"),
@@ -372,6 +384,89 @@ describe("产品配置自动报价生命周期", () => {
     expect(api.resumeQuote).not.toHaveBeenCalled();
   });
 
+  it("出口声明只接受当前声明的可选值，确认期间不重复发送且不能以通用输入绕过", async () => {
+    const quote = mountQuote();
+    const snapshot = run({
+      status: "WAITING_HUMAN",
+      can_input: true,
+      export_declaration: { ...declaration(), options: [declaration().options[0]!] },
+    });
+    api.startQuote.mockResolvedValueOnce(response(snapshot));
+    api.quoteStatus.mockResolvedValue(response(snapshot));
+    await quote.open(row);
+    await vi.advanceTimersByTimeAsync(1500);
+    expect(api.quoteFrame).not.toHaveBeenCalled();
+    expect(quote.interactive.value).toBe(false);
+    await quote.command();
+    await quote.command({ kind: "key", key: "Enter" });
+    expect(api.resumeQuote).not.toHaveBeenCalled();
+    expect(api.quoteInput).not.toHaveBeenCalled();
+    await quote.confirmDeclaration({ declaration_id: "old-statement", choice: "not_controlled" });
+    await quote.confirmDeclaration({ declaration_id: "statement-v1", choice: "controlled" });
+    expect(api.confirmQuoteDeclaration).not.toHaveBeenCalled();
+
+    const pending = deferred<ReturnType<typeof response<CncQuoteRun>>>();
+    api.confirmQuoteDeclaration.mockReturnValueOnce(pending.promise);
+    const decision = { declaration_id: "statement-v1", choice: "not_controlled" as const };
+    const confirming = quote.confirmDeclaration(decision);
+    await quote.confirmDeclaration(decision);
+    expect(quote.busy.value).toBe(true);
+    expect(api.confirmQuoteDeclaration).toHaveBeenCalledTimes(1);
+    expect(api.confirmQuoteDeclaration).toHaveBeenCalledWith(42, "run-1", decision);
+    pending.resolve(response(run()));
+    await confirming;
+    expect(quote.run.value?.status).toBe("RUNNING");
+    expect(quote.busy.value).toBe(false);
+  });
+
+  it("声明确认使旧轮询失效，关闭后等待确认请求结算再启动下一配置", async () => {
+    const quote = mountQuote();
+    api.startQuote.mockResolvedValueOnce(
+      response(run({ status: "WAITING_HUMAN", export_declaration: declaration() }))
+    );
+    await quote.open(row);
+    const oldRead = deferred<ReturnType<typeof response<CncQuoteRun>>>();
+    api.quoteStatus.mockReturnValueOnce(oldRead.promise);
+    await vi.advanceTimersByTimeAsync(1500);
+    const pending = deferred<ReturnType<typeof response<CncQuoteRun>>>();
+    api.confirmQuoteDeclaration.mockReturnValueOnce(pending.promise);
+    const confirming = quote.confirmDeclaration({
+      declaration_id: "statement-v1",
+      choice: "not_controlled",
+    });
+    oldRead.resolve(response(run({ status: "FAILED" })));
+    await flushPromises();
+    expect(quote.run.value?.status).toBe("WAITING_HUMAN");
+    api.startQuote.mockResolvedValueOnce(response(run({ run_id: "run-2", config_id: 99 })));
+    const switching = quote.open({ ...row, id: 99 });
+    await flushPromises();
+    expect(api.cancelQuote).toHaveBeenCalledWith(42, "run-1");
+    expect(api.startQuote).toHaveBeenCalledTimes(1);
+    pending.resolve(response(run()));
+    await Promise.all([confirming, switching]);
+    expect(quote.run.value?.run_id).toBe("run-2");
+    expect(quote.run.value?.config_id).toBe(99);
+    expect(quote.error.value).toBe("");
+  });
+
+  it("声明操作结果不明确时停止且不自动重试，不显示未知服务端内容", async () => {
+    const quote = mountQuote();
+    api.startQuote.mockResolvedValueOnce(
+      response(run({ status: "WAITING_HUMAN", export_declaration: declaration() }))
+    );
+    await quote.open(row);
+    api.confirmQuoteDeclaration.mockRejectedValueOnce(new Error("private token=hidden"));
+    const decision = { declaration_id: "statement-v1", choice: "not_controlled" as const };
+    await quote.confirmDeclaration(decision);
+    await quote.confirmDeclaration(decision);
+    await vi.advanceTimersByTimeAsync(6000);
+    expect(api.confirmQuoteDeclaration).toHaveBeenCalledTimes(1);
+    expect(api.quoteStatus).not.toHaveBeenCalled();
+    expect(quote.error.value).toContain("未重复发送");
+    expect(quote.error.value).not.toContain("private token");
+    expect(quote.busy.value).toBe(false);
+  });
+
   it("输入/继续结果不明确时不自动重试；网络错误停止轮询并清理画面", async () => {
     const quote = mountQuote();
     api.startQuote.mockResolvedValueOnce(
@@ -501,6 +596,70 @@ describe("报价结果弹窗", () => {
     expect(wrapper.find(".frame-placeholder").attributes("aria-busy")).toBe("false");
   });
 
+  it("声明显示完整文本和本次文件，不预选、不开放通用输入，并在声明或运行改变时重置选择", async () => {
+    const snapshot = run({
+      status: "WAITING_HUMAN",
+      reason: "QUOTE_EXPORT_DECLARATION_REQUIRED",
+      export_declaration: declaration(),
+    });
+    const wrapper = mountDialog(snapshot);
+    expect(wrapper.text()).toContain(declaration().statement);
+    expect(wrapper.get(".declaration-file").text()).toBe("part.step");
+    expect(wrapper.find(".frame-placeholder").exists()).toBe(false);
+    expect(wrapper.findAll("button").some((button) => button.text() === "验证并继续")).toBe(false);
+    expect(
+      wrapper
+        .findAll<HTMLInputElement>('input[type="radio"]')
+        .every((radio) => !radio.element.checked)
+    ).toBe(true);
+    const confirm = () =>
+      wrapper.findAll("button").find((button) => button.text() === "确认声明并继续")!;
+    expect(confirm().attributes("disabled")).toBeDefined();
+    await wrapper.get('input[type="radio"][value="not_controlled"]').setValue(true);
+    expect(confirm().attributes("disabled")).toBeUndefined();
+    await wrapper.setProps({ run: { ...snapshot } });
+    expect(confirm().attributes("disabled")).toBeUndefined();
+    await confirm().trigger("click");
+    expect(wrapper.emitted("declaration")).toEqual([
+      [{ declaration_id: "statement-v1", choice: "not_controlled" }],
+    ]);
+
+    await wrapper.setProps({
+      run: {
+        ...snapshot,
+        export_declaration: { ...declaration(), declaration_id: "statement-v2" },
+      },
+    });
+    expect(confirm().attributes("disabled")).toBeDefined();
+    await wrapper.get('input[type="radio"][value="controlled"]').setValue(true);
+    await wrapper.setProps({ run: { ...snapshot, run_id: "run-2" } });
+    expect(confirm().attributes("disabled")).toBeDefined();
+  });
+
+  it("声明文本作为纯文本显示，忙碌或错误时禁止确认，非登录阶段使用当前阶段提示", async () => {
+    const wrapper = mountDialog(
+      run({
+        status: "WAITING_HUMAN",
+        export_declaration: { ...declaration(), statement: "<img src=x onerror=alert(1)>" },
+      })
+    );
+    expect(wrapper.get(".declaration-statement").text()).toBe("<img src=x onerror=alert(1)>");
+    expect(wrapper.find(".declaration-statement img").exists()).toBe(false);
+    await wrapper.get('input[type="radio"][value="not_controlled"]').setValue(true);
+    await wrapper.setProps({ busy: true });
+    const confirm = () =>
+      wrapper.findAll("button").find((button) => button.text() === "确认声明并继续")!;
+    expect(confirm().attributes("disabled")).toBeDefined();
+    await wrapper.setProps({ busy: false, error: "声明操作回执尚未确认" });
+    expect(confirm().attributes("disabled")).toBeDefined();
+    await wrapper.setProps({
+      error: "",
+      run: run({ status: "WAITING_HUMAN", stage: "configure", can_input: true }),
+    });
+    expect(wrapper.get(".quote-help").text()).toContain("完成当前阶段的处理");
+    expect(wrapper.get(".quote-help").text()).not.toContain("完成登录");
+  });
+
   it("实际执行器原因显示明确中文，未知原因不会直接展示服务端内容", async () => {
     const wrapper = mountDialog(run({ status: "FAILED", reason: "parameters_mismatch" }));
     expect(wrapper.get(".el-alert").text()).toContain("平台回读参数与本次配置不一致");
@@ -508,11 +667,25 @@ describe("报价结果弹窗", () => {
       run: run({ status: "FAILED", reason: "PROVIDER_AUTOMATION_UNVERIFIED" }),
     });
     expect(wrapper.get(".el-alert").text()).toContain("自动上传和报价尚未通过验证");
+    await wrapper.setProps({
+      run: run({ status: "FAILED", reason: "JLC_EFFECTIVE_PARAMETERS_UNVERIFIED" }),
+    });
+    expect(wrapper.get(".el-alert").text()).toContain("嘉立创加工参数回读尚未完成验证");
     await wrapper.setProps({ run: run({ status: "FAILED", reason: "mutation_uncertain" }) });
     expect(wrapper.get(".el-alert").text()).toContain("回执尚未确认");
     await wrapper.setProps({ run: run({ status: "FAILED", reason: "private server content" }) });
     expect(wrapper.get(".el-alert").text()).toContain("本次报价未完成");
     expect(wrapper.text()).not.toContain("private server content");
+  });
+
+  it.each([
+    ["QUOTE_PRIOR_MUTATION_UNCONFIRMED_NO_RETRY", "请先核对原运行"],
+    ["QUOTE_CONFIGURATION_RECONCILING", "未重复点击保存"],
+    ["QUOTE_CONFIGURATION_UNCONFIRMED_NO_RETRY", "未重复保存"],
+  ])("参数保存原因 %s 显示可操作中文说明", (reason, expected) => {
+    const wrapper = mountDialog(run({ status: "RUNNING", stage: "configure", reason }));
+    expect(wrapper.get(".el-alert").text()).toContain(expected);
+    expect(wrapper.text()).not.toContain(reason);
   });
 
   it.each(["constructor", "__proto__"])("未知原因 %s 使用固定兜底文案", (reason) => {

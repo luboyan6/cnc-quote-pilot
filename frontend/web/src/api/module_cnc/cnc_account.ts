@@ -167,6 +167,8 @@ export interface CncAccountPageQuery extends PageQuery, UserByQueryParams {
 export interface CncAccountTable extends BaseType {
   platform_id?: number | string;
   platform_name?: string;
+  platform_login_url?: string;
+  platform_quote_entry_url?: string;
   alias?: string;
   username?: string;
   login_url?: string;
@@ -214,6 +216,7 @@ export interface CncLoginSession {
 
 export type CncLoginInput =
   | { kind: "click"; x: number; y: number }
+  | { kind: "drag"; x: number; y: number; x2: number; y2: number }
   | { kind: "scroll"; delta_x: number; delta_y: number }
   | { kind: "key"; key: CncLoginKey }
   | { kind: "text"; text: string };

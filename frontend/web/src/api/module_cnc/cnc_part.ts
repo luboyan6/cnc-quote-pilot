@@ -92,8 +92,6 @@ export interface CncPartPageQuery extends PageQuery, UserByQueryParams {
   extension?: string;
   size_bytes?: number;
   declared_unit?: string;
-  validation_status?: string;
-  upload_authorized?: boolean;
   file_path?: string;
   file_name?: string;
   file_type?: number;
@@ -104,8 +102,6 @@ export interface CncPartTable extends BaseType {
   extension?: string;
   size_bytes?: number;
   declared_unit?: string;
-  validation_status?: string;
-  upload_authorized?: boolean;
   file_path?: string;
   file_name?: string;
   file_type?: number;
@@ -116,8 +112,6 @@ export interface CncPartForm extends BaseFormType {
   extension?: string;
   size_bytes?: number;
   declared_unit?: string;
-  validation_status?: string;
-  upload_authorized?: boolean;
   file_path?: string;
   file_name?: string;
   file_type?: number;
