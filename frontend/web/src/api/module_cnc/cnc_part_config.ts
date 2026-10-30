@@ -296,12 +296,21 @@ export type CncQuoteStage =
 
 export interface CncLeadTimeTier {
   tier: string;
-  days: string;
-  part_amount?: string;
-  tax_amount?: string;
-  total_amount?: string;
-  discount_amount?: string;
-  estimated_ship_date?: string;
+  /** 本档单件金额；平台未给出单件口径时为 null */
+  unit_amount?: string | null;
+  /** 本档合计金额；部分平台只按整单给价 */
+  amount?: string | null;
+  /** 预计到货日期（平台原文或 ISO 日期） */
+  arrives_by?: string | null;
+  /** 平台原文，例如 "Standard Arrives by Nov 6 $721.89 ea. …" */
+  raw?: string | null;
+  /** 以下为部分平台/历史数据才有的字段 */
+  days?: string | null;
+  part_amount?: string | null;
+  tax_amount?: string | null;
+  total_amount?: string | null;
+  discount_amount?: string | null;
+  estimated_ship_date?: string | null;
 }
 
 export interface CncQuoteResult {

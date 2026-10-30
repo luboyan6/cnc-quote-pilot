@@ -5,7 +5,15 @@
         <div v-for="file in uploadedFiles" :key="file.id" class="file-item">
           <ElIcon class="file-icon"><Document /></ElIcon>
           <span class="file-name">{{ file.name }}</span>
-          <ElIcon class="file-remove" @click="removeFile(file.id)"><Close /></ElIcon>
+          <button
+            type="button"
+            class="file-remove"
+            :disabled="sending"
+            :aria-label="`移除 ${file.name}`"
+            @click="removeFile(file.id)"
+          >
+            <ElIcon><Close /></ElIcon>
+          </button>
         </div>
       </div>
       <div class="input-container">
@@ -74,6 +82,23 @@
                 </ElDropdownMenu>
               </template>
             </ElDropdown>
+            <ElSelect
+              v-if="skills.length"
+              :model-value="selectedSkills"
+              :disabled="disabled || sending"
+              multiple
+              collapse-tags
+              placeholder="选择技能"
+              aria-label="选择本轮技能"
+              @update:model-value="emit('skills-change', $event)"
+            >
+              <ElOption
+                v-for="skill in skills"
+                :key="skill.name"
+                :label="skill.description"
+                :value="skill.name"
+              />
+            </ElSelect>
           </div>
           <div class="input-actions">
             <ElUpload
@@ -83,8 +108,9 @@
               :on-change="handleFileChange"
               :accept="acceptTypes"
               :multiple="true"
+              :disabled="disabled || sending"
             >
-              <ElButton :icon="Paperclip" class="upload-btn" circle />
+              <ElButton :icon="Paperclip" class="upload-btn" circle aria-label="选择附件" />
             </ElUpload>
             <ElButton
               v-if="sending"
@@ -92,6 +118,7 @@
               type="danger"
               circle
               title="停止生成"
+              aria-label="停止生成"
               @click="handleStop"
             >
               <ElIcon><VideoPause /></ElIcon>
@@ -102,6 +129,7 @@
               class="send-button"
               type="primary"
               circle
+              aria-label="发送消息"
               @click="handleSend"
             >
               <ElIcon><Promotion /></ElIcon>
@@ -117,6 +145,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed, onMounted, ref } from "vue";
 import { ElMessage } from "element-plus";
 import {
   Promotion,
@@ -131,24 +160,33 @@ import {
 } from "@element-plus/icons-vue";
 import type { UploadFile } from "element-plus";
 import type { UploadedFile } from "../types";
-import AiChatAPI, { type AiModelConfigItem, type AiModelConfigList } from "@/api/module_ai/chat";
+import AiChatAPI, {
+  type AiModelConfigItem,
+  type AiModelConfigList,
+  type ChatSkill,
+} from "@/api/module_ai/chat";
 
 interface Props {
   disabled?: boolean;
   sending?: boolean;
   isConnected?: boolean;
+  skills?: ChatSkill[];
+  selectedSkills?: string[];
 }
 
 interface Emits {
-  (e: "send", message: string, files?: UploadedFile[]): void;
+  (e: "send", message: string, files?: UploadedFile[], accepted?: () => void): void;
   (e: "stop"): void;
   (e: "model-changed"): void;
+  (e: "skills-change", skills: string[]): void;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   disabled: false,
   sending: false,
   isConnected: true,
+  skills: () => [],
+  selectedSkills: () => [],
 });
 
 const emit = defineEmits<Emits>();
@@ -162,7 +200,7 @@ const switching = ref(false);
 const activeModelName = computed(() => {
   if (!activeId.value) return "系统默认";
   const item = items.value.find((i) => i.id === activeId.value);
-  return item?.name || "系统默认";
+  return item?.name || "已选模型不可用";
 });
 
 const loadModels = async () => {
@@ -211,7 +249,7 @@ const inputMessage = ref("");
 const uploadedFiles = ref<UploadedFile[]>([]);
 
 const acceptTypes = computed(() => {
-  return ".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.gif,.mp3,.wav,.mp4,.avi,.mov";
+  return ".step,.stp,.setp";
 });
 
 const placeholder = computed(() => {
@@ -219,12 +257,20 @@ const placeholder = computed(() => {
 });
 
 const handleFileChange = (uploadFile: UploadFile) => {
+  if (props.disabled || props.sending) return;
   const file = uploadFile.raw;
   if (!file) return;
 
-  const maxSize = 10 * 1024 * 1024;
-  if (file.size > maxSize) {
-    alert("文件大小不能超过10MB");
+  if (!/\.(step|stp|setp)$/i.test(file.name)) {
+    ElMessage.error("请选择 STEP 图纸文件");
+    return;
+  }
+  if (file.size === 0 || file.size > 50 * 1024 * 1024) {
+    ElMessage.error("图纸不能为空，且不能超过 50MB");
+    return;
+  }
+  if (uploadedFiles.value.length >= 8) {
+    ElMessage.error("每次最多选择 8 份图纸");
     return;
   }
 
@@ -240,6 +286,7 @@ const handleFileChange = (uploadFile: UploadFile) => {
 };
 
 const removeFile = (id: string) => {
+  if (props.sending) return;
   const index = uploadedFiles.value.findIndex((f) => f.id === id);
   if (index > -1) {
     uploadedFiles.value.splice(index, 1);
@@ -251,9 +298,15 @@ const handleSend = () => {
   if ((!message && uploadedFiles.value.length === 0) || props.disabled || props.sending) {
     return;
   }
-  emit("send", message, uploadedFiles.value.length > 0 ? [...uploadedFiles.value] : undefined);
-  inputMessage.value = "";
-  uploadedFiles.value = [];
+  emit(
+    "send",
+    message,
+    uploadedFiles.value.length > 0 ? [...uploadedFiles.value] : undefined,
+    () => {
+      inputMessage.value = "";
+      uploadedFiles.value = [];
+    }
+  );
 };
 
 const handleStop = () => {
@@ -326,9 +379,14 @@ defineExpose({
         }
 
         .file-remove {
+          display: inline-flex;
+          align-items: center;
+          padding: 0;
           font-size: 14px;
           color: var(--el-text-color-secondary);
           cursor: pointer;
+          background: transparent;
+          border: 0;
           transition: color 0.2s ease;
 
           &:hover {

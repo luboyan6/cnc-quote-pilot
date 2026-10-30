@@ -9,18 +9,27 @@
             <span class="stat-label">总体成功率</span>
             <div class="stat-value-row">
               <span class="stat-value text-emerald-600">
-                {{ statsLoading ? "--" : stats.overall_success_rate }}%
+                {{
+                  statsLoading || !stats.total_items ? "暂无结果" : `${stats.overall_success_rate}%`
+                }}
               </span>
               <ElTag
                 size="small"
-                :type="stats.overall_success_rate >= 80 ? 'success' : stats.overall_success_rate >= 50 ? 'warning' : 'danger'"
+                :type="
+                  stats.overall_success_rate >= 80
+                    ? 'success'
+                    : stats.overall_success_rate >= 50
+                      ? 'warning'
+                      : 'danger'
+                "
                 class="ml-2"
               >
                 {{ stats.success_quotes }} / {{ stats.total_quotes }} 成功
               </ElTag>
             </div>
             <span class="stat-subtext">
-              实际出价率: {{ stats.formal_quote_rate ?? "0.0%" }} · 完成率: {{ stats.completion_rate ?? "0.0%" }}
+              实际出价率: {{ stats.formal_quote_rate ?? "暂无结果" }} · 完成率:
+              {{ stats.completion_rate ?? "暂无结果" }}
             </span>
           </div>
           <div class="stat-icon-wrapper bg-emerald-50 text-emerald-600">
@@ -41,7 +50,8 @@
               <span class="stat-unit-text">正式出价</span>
             </div>
             <span class="stat-subtext">
-              估价: {{ stats.reference_estimate_quotes }} · 待审: {{ stats.pending_review_quotes }} · 失败: {{ stats.failed_quotes }}
+              估价: {{ stats.reference_estimate_quotes }} · 待审:
+              {{ stats.pending_review_quotes }} · 失败: {{ stats.failed_quotes }}
             </span>
           </div>
           <div class="stat-icon-wrapper bg-blue-50 text-blue-600">
@@ -77,16 +87,16 @@
           <div class="stat-text-box">
             <div class="flex items-center gap-2">
               <span class="stat-label">嘉立创中国 (JLC)</span>
-              <ElTag size="small" type="primary">CNY</ElTag>
             </div>
             <div class="stat-value-row">
               <span class="stat-value text-blue-600">
-                {{ jlcStat ? `${jlcStat.success_rate}%` : "--" }}
+                {{ jlcStat?.success_rate != null ? `${jlcStat.success_rate.toFixed(1)}%` : "--" }}
               </span>
               <span class="stat-unit-text">成功率</span>
             </div>
             <span class="stat-subtext">
-              正式率: {{ jlcStat?.formal_quote_rate ?? "-" }} · {{ jlcStat?.total_quotes || 0 }} 次请求
+              正式率: {{ jlcStat?.formal_quote_rate ?? "-" }} ·
+              {{ jlcStat?.total_quotes || 0 }} 次请求
             </span>
           </div>
           <div class="stat-icon-wrapper bg-blue-50 text-blue-600">
@@ -101,16 +111,20 @@
           <div class="stat-text-box">
             <div class="flex items-center gap-2">
               <span class="stat-label">Xometry US</span>
-              <ElTag size="small" type="success">USD</ElTag>
             </div>
             <div class="stat-value-row">
               <span class="stat-value text-indigo-600">
-                {{ xometryStat ? `${xometryStat.success_rate}%` : "--" }}
+                {{
+                  xometryStat?.success_rate != null
+                    ? `${xometryStat.success_rate.toFixed(1)}%`
+                    : "--"
+                }}
               </span>
               <span class="stat-unit-text">成功率</span>
             </div>
             <span class="stat-subtext">
-              正式率: {{ xometryStat?.formal_quote_rate ?? "-" }} · {{ xometryStat?.total_quotes || 0 }} 次请求
+              正式率: {{ xometryStat?.formal_quote_rate ?? "-" }} ·
+              {{ xometryStat?.total_quotes || 0 }} 次请求
             </span>
           </div>
           <div class="stat-icon-wrapper bg-indigo-50 text-indigo-600">
@@ -148,11 +162,7 @@
             <ElButton size="small" :icon="Refresh" @click="fetchHistoryPriceData">
               刷新图表
             </ElButton>
-            <ElButton
-              size="small"
-              text
-              @click="showChartSection = !showChartSection"
-            >
+            <ElButton size="small" text @click="showChartSection = !showChartSection">
               {{ showChartSection ? "收起图表" : "展开图表" }}
             </ElButton>
           </div>
@@ -160,7 +170,19 @@
       </template>
 
       <div v-show="showChartSection" class="chart-wrapper">
-        <div ref="chartRef" style="width: 100%; height: 280px;" />
+        <p
+          v-if="historyChart.incomparable || historyChart.unplottable"
+          role="status"
+          class="text-sm text-gray-500"
+        >
+          <span v-if="historyChart.incomparable"
+            >{{ historyChart.incomparable }} 条条件不完整的观测仅显示为独立点，不计算趋势。
+          </span>
+          <span v-if="historyChart.unplottable"
+            >{{ historyChart.unplottable }} 条缺少可绘制的时间、金额或币种，请查看结果列表。</span
+          >
+        </p>
+        <div ref="chartRef" style="width: 100%; height: 280px" />
       </div>
     </ElCard>
 
@@ -198,12 +220,7 @@
             >
               批量删除
             </ElButton>
-            <ElButton
-              type="primary"
-              plain
-              :icon="Refresh"
-              @click="refreshData"
-            >
+            <ElButton type="primary" plain :icon="Refresh" @click="refreshData">
               刷新数据
             </ElButton>
           </div>
@@ -223,36 +240,23 @@
       >
         <!-- 平台列 -->
         <template #platform="{ row }">
-          <ElTag
-            v-if="row.platform_id === 1"
-            type="success"
-            effect="light"
-            class="font-medium"
-          >
-            🇺🇸 Xometry US
+          <ElTag type="info" effect="light" class="font-medium">
+            {{ row.platform_name || row.platform_code || "平台未知" }}
           </ElTag>
-          <ElTag
-            v-else-if="row.platform_id === 2"
-            type="primary"
-            effect="light"
-            class="font-medium"
-          >
-            🇨🇳 嘉立创中国
-          </ElTag>
-          <ElTag v-else type="info">{{ row.platform_name || "-" }}</ElTag>
         </template>
 
         <!-- 报价金额列 -->
         <template #quote_amount="{ row }">
           <div v-if="row.unit_price != null" class="price-cell">
             <div class="price-main">
-              <span class="currency-symbol">{{ row.currency === 'USD' ? '$' : '¥' }}</span>
-              <span class="price-val">{{ row.unit_price }}</span>
+              <span class="price-val">{{ formatAmount(row.unit_price, row.currency) }}</span>
               <span class="price-scope">/ 件</span>
             </div>
-            <div v-if="row.total_amount" class="price-sub">
-              总额: {{ row.currency === 'USD' ? '$' : '¥' }}{{ row.total_amount }}
-              <ElTag v-if="row.tax_included" size="small" type="info" class="ml-1 scale-90">含税</ElTag>
+            <div v-if="row.total_amount != null" class="price-sub">
+              总额: {{ formatAmount(row.total_amount, row.currency) }}
+              <ElTag v-if="row.tax_included" size="small" type="info" class="ml-1 scale-90"
+                >含税</ElTag
+              >
             </div>
           </div>
           <span v-else class="text-gray-400">未出价</span>
@@ -260,12 +264,7 @@
 
         <!-- 状态与报价性质列 -->
         <template #status="{ row }">
-          <ElTag
-            v-if="row.quote_status === 'QUOTED'"
-            type="success"
-            effect="dark"
-            size="small"
-          >
+          <ElTag v-if="row.quote_status === 'QUOTED'" type="success" effect="dark" size="small">
             正式报价
           </ElTag>
           <ElTag
@@ -284,18 +283,10 @@
           >
             待人工审核
           </ElTag>
-          <ElTag
-            v-else-if="row.quote_status === 'CANCELLED'"
-            type="info"
-            size="small"
-          >
+          <ElTag v-else-if="row.quote_status === 'CANCELLED'" type="info" size="small">
             已取消
           </ElTag>
-          <ElTag
-            v-else
-            type="danger"
-            size="small"
-          >
+          <ElTag v-else type="danger" size="small">
             {{ row.error_code || row.error_message || "报价失败" }}
           </ElTag>
         </template>
@@ -314,7 +305,13 @@
             </template>
             <ElTag
               v-if="row.duration_seconds != null"
-              :type="Number(row.duration_seconds) <= 30 ? 'success' : Number(row.duration_seconds) <= 90 ? 'warning' : 'primary'"
+              :type="
+                Number(row.duration_seconds) <= 30
+                  ? 'success'
+                  : Number(row.duration_seconds) <= 90
+                    ? 'warning'
+                    : 'primary'
+              "
               size="small"
               class="cursor-pointer"
             >
@@ -326,7 +323,10 @@
 
         <!-- 受控证据截图列 -->
         <template #screenshot="{ row }">
-          <div v-if="row.evidence_screenshot || row.evidence_id" class="flex items-center justify-center">
+          <div
+            v-if="row.evidence_screenshot || row.evidence_id"
+            class="flex items-center justify-center"
+          >
             <ElButton
               link
               type="primary"
@@ -344,13 +344,7 @@
         <!-- 操作列 -->
         <template #operation="{ row }">
           <div class="flex items-center gap-2">
-            <ElButton
-              link
-              type="primary"
-              size="small"
-              :icon="View"
-              @click="handleOpenDetail(row)"
-            >
+            <ElButton link type="primary" size="small" :icon="View" @click="handleOpenDetail(row)">
               详情
             </ElButton>
             <ElPopconfirm
@@ -359,14 +353,7 @@
               @confirm="handleDeleteRow(row.id)"
             >
               <template #reference>
-                <ElButton
-                  link
-                  type="danger"
-                  size="small"
-                  :icon="Delete"
-                >
-                  删除
-                </ElButton>
+                <ElButton link type="danger" size="small" :icon="Delete"> 删除 </ElButton>
               </template>
             </ElPopconfirm>
           </div>
@@ -385,8 +372,8 @@
         <!-- 基础信息 -->
         <ElDescriptions :column="2" border title="基本信息">
           <ElDescriptionsItem label="平台">
-            <ElTag :type="selectedDetail.platform_id === 1 ? 'success' : 'primary'">
-              {{ selectedDetail.platform_name || (selectedDetail.platform_id === 1 ? 'Xometry US' : '嘉立创中国') }}
+            <ElTag type="info">
+              {{ selectedDetail.platform_name || selectedDetail.platform_code || "平台未知" }}
             </ElTag>
           </ElDescriptionsItem>
           <ElDescriptionsItem label="状态">
@@ -405,11 +392,12 @@
           </ElDescriptionsItem>
           <ElDescriptionsItem label="批次 / 轮次">
             <span class="text-xs font-mono">
-              批次: {{ selectedDetail.batch_id || "-" }} · 轮次: {{ selectedDetail.round_id || "-" }}
+              批次: {{ selectedDetail.batch_id || "-" }} · 轮次:
+              {{ selectedDetail.round_id || "-" }}
             </span>
           </ElDescriptionsItem>
           <ElDescriptionsItem label="报价时间">
-            {{ selectedDetail.quoted_at || selectedDetail.created_time || "-" }}
+            {{ selectedDetail.quoted_at || "未知" }}
           </ElDescriptionsItem>
         </ElDescriptions>
 
@@ -417,28 +405,38 @@
         <ElDescriptions :column="2" border title="价格与商业条件" class="mt-4">
           <ElDescriptionsItem label="单件价格">
             <strong class="text-lg text-primary">
-              {{ selectedDetail.currency === 'USD' ? '$' : '¥' }}{{ selectedDetail.unit_price ?? "0.00" }}
+              {{ formatAmount(selectedDetail.unit_price, selectedDetail.currency) }}
             </strong>
           </ElDescriptionsItem>
           <ElDescriptionsItem label="总金额">
             <strong class="text-lg text-emerald-600">
-              {{ selectedDetail.currency === 'USD' ? '$' : '¥' }}{{ selectedDetail.total_amount ?? "0.00" }}
+              {{ formatAmount(selectedDetail.total_amount, selectedDetail.currency) }}
             </strong>
           </ElDescriptionsItem>
           <ElDescriptionsItem label="税费 / 含税">
-            <span>{{ selectedDetail.tax_amount ? `${selectedDetail.currency === 'USD' ? '$' : '¥'}${selectedDetail.tax_amount}` : "-" }}</span>
-            <ElTag size="small" class="ml-2" :type="selectedDetail.tax_included ? 'success' : 'info'">
-              {{ selectedDetail.tax_included ? '含税' : '未注含税' }}
+            <span>{{ formatAmount(selectedDetail.tax_amount, selectedDetail.currency) }}</span>
+            <ElTag
+              size="small"
+              class="ml-2"
+              :type="selectedDetail.tax_included ? 'success' : 'info'"
+            >
+              {{
+                selectedDetail.tax_included == null
+                  ? "含税情况未知"
+                  : selectedDetail.tax_included
+                    ? "含税"
+                    : "不含税"
+              }}
             </ElTag>
           </ElDescriptionsItem>
           <ElDescriptionsItem label="运费估算">
-            {{ selectedDetail.shipping_amount ? `${selectedDetail.currency === 'USD' ? '$' : '¥'}${selectedDetail.shipping_amount}` : "免运费 / 需确认" }}
+            {{ formatAmount(selectedDetail.shipping_amount, selectedDetail.currency) }}
           </ElDescriptionsItem>
           <ElDescriptionsItem label="优惠券减免">
-            {{ selectedDetail.discount_amount ? `-${selectedDetail.currency === 'USD' ? '$' : '¥'}${selectedDetail.discount_amount}` : "-" }}
+            {{ formatAmount(selectedDetail.discount_amount, selectedDetail.currency) }}
           </ElDescriptionsItem>
           <ElDescriptionsItem label="交期原文">
-            {{ selectedDetail.lead_time_raw || "标准交期" }}
+            {{ selectedDetail.lead_time_raw || "未知" }}
           </ElDescriptionsItem>
           <ElDescriptionsItem v-if="selectedDetail.platform_quote_id" label="站方单号" :span="2">
             <code>{{ selectedDetail.platform_quote_id }}</code>
@@ -447,36 +445,62 @@
 
         <!-- 工艺参数与指纹 -->
         <ElDescriptions :column="2" border title="生效工艺参数与可比指纹" class="mt-4">
-          <ElDescriptionsItem label="加工材料">{{ selectedDetail.material || "默认" }}</ElDescriptionsItem>
-          <ElDescriptionsItem label="表面处理">{{ selectedDetail.surface_finish || "默认" }}</ElDescriptionsItem>
-          <ElDescriptionsItem label="加工数量">{{ selectedDetail.quantity || 1 }} 件</ElDescriptionsItem>
-          <ElDescriptionsItem label="精度公差">{{ selectedDetail.tolerance || "标准公差" }}</ElDescriptionsItem>
-          <ElDescriptionsItem label="表面粗糙度">{{ selectedDetail.roughness || "未指定" }}</ElDescriptionsItem>
+          <ElDescriptionsItem label="加工材料">{{
+            selectedDetail.material || "未知"
+          }}</ElDescriptionsItem>
+          <ElDescriptionsItem label="表面处理">{{
+            selectedDetail.surface_finish || "未知"
+          }}</ElDescriptionsItem>
+          <ElDescriptionsItem label="加工数量">{{
+            selectedDetail.quantity != null ? `${selectedDetail.quantity} 件` : "未知"
+          }}</ElDescriptionsItem>
+          <ElDescriptionsItem label="精度公差">{{
+            selectedDetail.tolerance || "未知"
+          }}</ElDescriptionsItem>
+          <ElDescriptionsItem label="表面粗糙度">{{
+            selectedDetail.roughness || "未知"
+          }}</ElDescriptionsItem>
           <ElDescriptionsItem label="图纸SHA256" :span="2">
-            <code class="text-xs break-all text-gray-600">{{ selectedDetail.file_sha256 || "-" }}</code>
+            <code class="text-xs break-all text-gray-600">{{
+              selectedDetail.file_sha256 || "-"
+            }}</code>
           </ElDescriptionsItem>
-          <ElDescriptionsItem label="可比指纹 (comparison_key)" :span="2">
-            <code class="text-xs break-all text-blue-600 font-mono">{{ selectedDetail.comparison_key || "未生成指纹" }}</code>
+          <ElDescriptionsItem label="已存储的历史指纹" :span="2">
+            <code class="text-xs break-all text-blue-600 font-mono">{{
+              selectedDetail.comparison_key || "未生成指纹"
+            }}</code>
           </ElDescriptionsItem>
         </ElDescriptions>
 
         <!-- 耗时拆解 -->
         <ElDescriptions :column="3" border title="分段耗时指标" class="mt-4">
           <ElDescriptionsItem label="总自然耗时">
-            <span class="font-semibold text-amber-600">{{ selectedDetail.duration_seconds || 0 }}s</span>
-            <span class="text-xs text-gray-400 ml-1">({{ selectedDetail.total_wall_ms ?? selectedDetail.elapsed_ms ?? 0 }}ms)</span>
+            <span class="font-semibold text-amber-600">{{
+              selectedDetail.duration_seconds != null
+                ? `${selectedDetail.duration_seconds}s`
+                : "未知"
+            }}</span>
+            <span class="text-xs text-gray-400 ml-1"
+              >({{ selectedDetail.total_wall_ms ?? selectedDetail.elapsed_ms ?? "未知" }} ms)</span
+            >
           </ElDescriptionsItem>
           <ElDescriptionsItem label="排队耗时">
-            {{ selectedDetail.queue_ms || 0 }} ms
+            {{ selectedDetail.queue_ms != null ? `${selectedDetail.queue_ms} ms` : "未知" }}
           </ElDescriptionsItem>
           <ElDescriptionsItem label="活跃执行耗时">
-            {{ selectedDetail.active_execution_ms || 0 }} ms
+            {{
+              selectedDetail.active_execution_ms != null
+                ? `${selectedDetail.active_execution_ms} ms`
+                : "未知"
+            }}
           </ElDescriptionsItem>
           <ElDescriptionsItem label="人工介入等待">
-            {{ selectedDetail.human_wait_ms || 0 }} ms
+            {{
+              selectedDetail.human_wait_ms != null ? `${selectedDetail.human_wait_ms} ms` : "未知"
+            }}
           </ElDescriptionsItem>
           <ElDescriptionsItem label="终态核对耗时">
-            {{ selectedDetail.reconcile_ms || 0 }} ms
+            {{ selectedDetail.reconcile_ms != null ? `${selectedDetail.reconcile_ms} ms` : "未知" }}
           </ElDescriptionsItem>
           <ElDescriptionsItem label="任务RunID">
             <code class="text-xs text-gray-500 font-mono">{{ selectedDetail.run_id }}</code>
@@ -485,7 +509,9 @@
 
         <!-- 失败信息 -->
         <ElAlert
-          v-if="!selectedDetail.success && (selectedDetail.error_code || selectedDetail.error_message)"
+          v-if="
+            !selectedDetail.success && (selectedDetail.error_code || selectedDetail.error_message)
+          "
           :title="`执行异常 [${selectedDetail.error_code || 'ERROR'}]: ${selectedDetail.error_message || '未知异常'}`"
           type="error"
           show-icon
@@ -494,7 +520,13 @@
         />
 
         <!-- 详情内的受控截图证据原图 -->
-        <div v-if="selectedDetail.id != null && (selectedDetail.evidence_screenshot || selectedDetail.evidence_id)" class="mt-4">
+        <div
+          v-if="
+            selectedDetail.id != null &&
+            (selectedDetail.evidence_screenshot || selectedDetail.evidence_id)
+          "
+          class="mt-4"
+        >
           <div class="flex items-center justify-between mb-2">
             <h4 class="font-semibold text-gray-800">受控私有证据原图</h4>
             <ElButton
@@ -512,7 +544,7 @@
               v-if="blobUrlMap.get(selectedDetail.id)"
               :src="blobUrlMap.get(selectedDetail.id)"
               alt="证据原图"
-              style="max-height: 380px; width: 100%; object-fit: contain;"
+              style="width: 100%; max-height: 380px; object-fit: contain"
             />
             <div v-else class="py-8 text-gray-400 flex flex-col items-center gap-2">
               <ElButton
@@ -543,7 +575,10 @@
     >
       <div v-if="screenshotTarget && screenshotTarget.id != null" class="screenshot-full-box">
         <div class="mb-2 text-sm text-gray-500 flex justify-between items-center">
-          <span>抓取时间: {{ screenshotTarget.quoted_at || screenshotTarget.created_time || "-" }}</span>
+          <span
+            >抓取时间:
+            {{ screenshotTarget.quoted_at || screenshotTarget.created_time || "-" }}</span
+          >
           <span class="text-xs text-gray-400">已通过 Bearer Token 受控读取二进制流</span>
         </div>
         <div class="screenshot-img-wrap">
@@ -556,9 +591,7 @@
           <div v-else-if="loadingBlobs.has(screenshotTarget.id)" class="text-white py-12">
             正在安全拉取证据流...
           </div>
-          <div v-else class="text-red-400 py-12">
-            证据图片拉取失败或已被清理
-          </div>
+          <div v-else class="text-red-400 py-12">证据图片拉取失败或已被清理</div>
         </div>
       </div>
     </ElDialog>
@@ -567,10 +600,20 @@
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
-import { CircleCheck, DataAnalysis, Delete, Picture, Platform, Refresh, Timer, TrendCharts, View } from "@element-plus/icons-vue";
+import {
+  CircleCheck,
+  DataAnalysis,
+  Delete,
+  Picture,
+  Platform,
+  Refresh,
+  Timer,
+  TrendCharts,
+  View,
+} from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
 import * as echarts from "echarts/core";
-import { LineChart } from "echarts/charts";
+import { LineChart, ScatterChart } from "echarts/charts";
 import {
   GridComponent,
   LegendComponent,
@@ -589,9 +632,12 @@ import CncQuoteResultAPI, {
   type CncQuoteResultTable,
   type CncQuoteStats,
 } from "@/api/module_cnc/cnc_quote_result";
+import { buildHistoryChart } from "./historyChart";
+import { formatAmount, summarizePlatformStats } from "./resultDisplay";
 
 echarts.use([
   LineChart,
+  ScatterChart,
   GridComponent,
   TooltipComponent,
   LegendComponent,
@@ -628,8 +674,10 @@ const stats = ref<CncQuoteStats>({
   platform_stats: [],
 });
 
-const jlcStat = computed(() => stats.value.platform_stats.find((p) => p.platform_id === 2));
-const xometryStat = computed(() => stats.value.platform_stats.find((p) => p.platform_id === 1));
+const jlcStat = computed(() => summarizePlatformStats(stats.value.platform_stats, "jlc_cnc_cn"));
+const xometryStat = computed(() =>
+  summarizePlatformStats(stats.value.platform_stats, "xometry_us")
+);
 
 async function fetchStats() {
   statsLoading.value = true;
@@ -651,6 +699,7 @@ let chartInstance: echarts.ECharts | null = null;
 const showChartSection = ref(true);
 const chartFilterPartId = ref<number | undefined>();
 const historyData = ref<CncHistoryPricePoint[]>([]);
+const historyChart = computed(() => buildHistoryChart(historyData.value));
 
 const partFilterOptions = computed(() => {
   const map = new Map<number, string>();
@@ -681,94 +730,24 @@ function renderChart() {
     chartInstance = echarts.init(chartRef.value);
   }
 
-  // 1. 提取所有有效时间轴点
-  const validPoints = historyData.value.filter((d) => d.quoted_time);
-  const timeLabels = Array.from(
-    new Set(
-      validPoints.map((d) => d.quoted_time!.slice(0, 19).replace("T", " "))
-    )
-  ).sort();
-
-  if (timeLabels.length === 0) {
+  if (historyChart.value.series.length === 0) {
     chartInstance.clear();
     return;
   }
 
-  // 2. 按可比键或平台/材料/数量分系列，确保曲线各点严格可比
-  const seriesGroups = new Map<string, {
-    name: string;
-    currency: string;
-    dataMap: Map<string, { unitPrice: number; priceDiff?: string | null; changeRate?: string | null; quoteKind: string }>;
-  }>();
-
-  for (const pt of validPoints) {
-    const groupKey = pt.comparison_key || `${pt.platform_name}_${pt.currency}_${pt.quantity}pcs_${pt.material || 'default'}`;
-    const seriesName = pt.comparison_key
-      ? `${pt.platform_name} · ${pt.part_name || '图纸'} (${pt.currency} ¥/$, ${pt.quantity}件)`
-      : `${pt.platform_name} · ${pt.material || '默认'} · ${pt.quantity}件 (${pt.currency})`;
-
-    if (!seriesGroups.has(groupKey)) {
-      seriesGroups.set(groupKey, {
-        name: seriesName,
-        currency: pt.currency,
-        dataMap: new Map(),
-      });
-    }
-
-    const timeStr = pt.quoted_time!.slice(0, 19).replace("T", " ");
-    const numPrice = Number(pt.unit_price) || 0;
-    seriesGroups.get(groupKey)!.dataMap.set(timeStr, {
-      unitPrice: numPrice,
-      priceDiff: pt.price_diff,
-      changeRate: pt.change_rate,
-      quoteKind: pt.quote_kind,
-    });
-  }
-
-  const seriesNames: string[] = [];
-  const seriesList: any[] = [];
   const colors = ["#3b82f6", "#10b981", "#f59e0b", "#8b5cf6", "#ec4899", "#06b6d4"];
-  let colorIdx = 0;
-
-  for (const [, grp] of seriesGroups) {
-    seriesNames.push(grp.name);
-    const yAxisIndex = grp.currency === "USD" ? 1 : 0;
-    const seriesPoints = timeLabels.map((t) => {
-      const entry = grp.dataMap.get(t);
-      return entry ? entry.unitPrice : null;
-    });
-
-    seriesList.push({
-      name: grp.name,
-      type: "line",
-      yAxisIndex,
-      data: seriesPoints,
-      smooth: false, // 严禁虚假连线
-      connectNulls: true,
-      showAllSymbol: true,
-      itemStyle: { color: colors[colorIdx % colors.length] },
-      lineStyle: { width: 2 },
-    });
-    colorIdx++;
-  }
+  const seriesList = historyChart.value.series.map((group, index) => ({
+    ...group,
+    smooth: false,
+    showAllSymbol: true,
+    itemStyle: { color: colors[index % colors.length] },
+    lineStyle: { width: 2 },
+  }));
 
   const option = {
-    tooltip: {
-      trigger: "axis",
-      formatter: (params: any[]) => {
-        if (!params || params.length === 0) return "";
-        let tip = `<div style="font-weight: bold; margin-bottom: 4px;">${params[0].axisValue}</div>`;
-        params.forEach((item) => {
-          if (item.value != null) {
-            const sym = item.seriesName.includes("USD") || item.seriesName.includes("Xometry") ? "$" : "¥";
-            tip += `<div><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${item.color};margin-right:6px;"></span>${item.seriesName}: <b>${sym}${item.value}</b></div>`;
-          }
-        });
-        return tip;
-      },
-    },
+    tooltip: { trigger: "item" },
     legend: {
-      data: seriesNames,
+      data: seriesList.map((series) => series.name),
       top: 0,
       type: "scroll",
     },
@@ -780,8 +759,7 @@ function renderChart() {
       containLabel: true,
     },
     xAxis: {
-      type: "category",
-      data: timeLabels,
+      type: "time",
       axisLabel: {
         rotate: 25,
         fontSize: 10,
@@ -895,7 +873,6 @@ const {
   data,
   loading,
   pagination,
-  searchParams,
   handleSizeChange,
   handleCurrentChange,
   refreshData: rawRefreshTable,
@@ -952,9 +929,7 @@ function refreshData() {
 }
 
 function onTableSelectionChange(rows: CncQuoteResultTable[]) {
-  selectedIds.value = rows
-    .map((r) => r.id)
-    .filter((id): id is number => id != null);
+  selectedIds.value = rows.map((r) => r.id).filter((id): id is number => id != null);
 }
 
 async function handleDeleteRow(id: number) {
@@ -962,7 +937,7 @@ async function handleDeleteRow(id: number) {
     await CncQuoteResultAPI.deleteCncQuoteResult([id]);
     ElMessage.success("删除记录成功");
     refreshData();
-  } catch (err) {
+  } catch {
     ElMessage.error("删除记录失败");
   }
 }
@@ -974,7 +949,7 @@ async function handleBatchDelete() {
     ElMessage.success(`成功删除 ${selectedIds.value.length} 条记录`);
     selectedIds.value = [];
     refreshData();
-  } catch (err) {
+  } catch {
     ElMessage.error("批量删除失败");
   }
 }
@@ -1071,33 +1046,33 @@ onBeforeUnmount(() => {
   gap: 10px;
 }
 
-@media (max-width: 1400px) {
+@media (width <= 1400px) {
   .stats-overview-grid {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
-@media (max-width: 900px) {
+@media (width <= 900px) {
   .stats-overview-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (max-width: 600px) {
+@media (width <= 600px) {
   .stats-overview-grid {
     grid-template-columns: 1fr;
   }
 }
 
 .stat-card {
-  border-radius: 8px;
   border: 1px solid #f0f0f0;
+  border-radius: 8px;
   transition: all 0.2s ease;
 }
 
 .stat-card:hover {
+  box-shadow: 0 4px 12px rgb(0 0 0 / 6%);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
 .stat-card-content {
@@ -1113,8 +1088,8 @@ onBeforeUnmount(() => {
 
 .stat-label {
   font-size: 13px;
-  color: #6b7280;
   font-weight: 500;
+  color: #6b7280;
 }
 
 .stat-value-row {
@@ -1130,15 +1105,15 @@ onBeforeUnmount(() => {
 }
 
 .stat-unit {
+  margin-left: 4px;
   font-size: 13px;
   color: #9ca3af;
-  margin-left: 4px;
 }
 
 .stat-unit-text {
+  margin-left: 6px;
   font-size: 12px;
   color: #9ca3af;
-  margin-left: 6px;
 }
 
 .stat-subtext {
@@ -1147,12 +1122,12 @@ onBeforeUnmount(() => {
 }
 
 .stat-icon-wrapper {
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
 }
 
 .chart-card {
@@ -1169,21 +1144,21 @@ onBeforeUnmount(() => {
 }
 
 .price-main {
-  font-weight: 700;
   font-size: 14px;
+  font-weight: 700;
   color: var(--el-color-primary);
 }
 
 .currency-symbol {
-  font-size: 12px;
   margin-right: 2px;
+  font-size: 12px;
 }
 
 .price-scope {
-  font-size: 11px;
-  color: #9ca3af;
-  font-weight: normal;
   margin-left: 2px;
+  font-size: 11px;
+  font-weight: normal;
+  color: #9ca3af;
 }
 
 .price-sub {
@@ -1197,26 +1172,26 @@ onBeforeUnmount(() => {
 }
 
 .screenshot-img-wrap {
-  background-color: #1f2937;
-  padding: 12px;
-  border-radius: 8px;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   max-height: 78vh;
+  padding: 12px;
   overflow: auto;
+  background-color: #1f2937;
+  border-radius: 8px;
 }
 
 .full-img {
   max-width: 100%;
   max-height: 74vh;
   object-fit: contain;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 40%);
 }
 
 .detail-container {
   max-height: 70vh;
-  overflow-y: auto;
   padding-right: 6px;
+  overflow-y: auto;
 }
 </style>

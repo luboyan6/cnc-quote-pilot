@@ -10,6 +10,32 @@ export interface ChatSessionListQuery extends PageQuery {
 }
 
 export const AiChatAPI = {
+  getCapabilities() {
+    return request<ApiResponse<ChatCapabilities>>({
+      url: `${API_PATH}/capabilities`,
+      method: "get",
+    });
+  },
+
+  getSkills() {
+    return request<ApiResponse<ChatSkill[]>>({
+      url: "/ai/skills/list",
+      method: "get",
+    });
+  },
+
+  uploadStepDrawing(file: File, requestId: string) {
+    const data = new FormData();
+    data.append("request_id", requestId);
+    data.append("file", file);
+    return request<ApiResponse<DrawingUploadResult>>({
+      url: "/cnc/drawing-upload/step",
+      method: "post",
+      data,
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+  },
+
   getSessionList(query: ChatSessionListQuery) {
     return request<ApiResponse<PageResult<ChatSession>>>({
       url: `${API_PATH}/list`,
@@ -96,6 +122,25 @@ export const AiChatAPI = {
   },
 };
 
+export interface ChatCapabilities {
+  protocol_version: 1 | 2;
+  source_available: boolean;
+}
+
+export interface ChatSkill {
+  name: string;
+  description: string;
+  allowed_tools: string[];
+}
+
+export interface DrawingUploadResult {
+  request_id: string;
+  state: "PENDING" | "READY";
+  part_id: number | null;
+  sha256: string;
+  size_bytes: number;
+}
+
 export interface AiModelConfigInput {
   name: string;
   base_url: string;
@@ -121,9 +166,11 @@ export interface ChatSessionMessage {
   role: string;
   content: string;
   created_at: number | null;
+  evidence_result_ids?: number[];
 }
 
 export interface ChatSession {
+  read_only?: boolean;
   session_id: string;
   agent_id: string | null;
   team_id: string | null;
@@ -173,6 +220,7 @@ export interface AiChatResponse {
 }
 
 export interface ChatSessionDetail {
+  read_only?: boolean;
   session_id: string;
   agent_id: string | null;
   team_id: string | null;

@@ -81,11 +81,11 @@
       <ElDescriptions :column="2" border>
         <ElDescriptionsItem label="当前选定交期" :span="2">{{ leadTimeLabel }}</ElDescriptionsItem>
         <ElDescriptionsItem v-if="run.result.tax_amount" label="税费">
-          <span>¥{{ run.result.tax_amount }}</span>
+          <span>{{ money(run.result.tax_amount) }}</span>
         </ElDescriptionsItem>
         <ElDescriptionsItem v-if="run.result.total_amount" label="总计（含税）">
-          <strong style="color: var(--el-color-primary); font-size: 15px;">¥{{ run.result.total_amount }}</strong>
-          <span v-if="run.result.discount_amount" style="margin-left: 8px; color: var(--el-color-danger); font-size: 12px;">(券后约 ¥{{ run.result.discount_amount }})</span>
+          <strong style="color: var(--el-color-primary); font-size: 15px;">{{ money(run.result.total_amount) }}</strong>
+          <span v-if="run.result.discount_amount" style="margin-left: 8px; color: var(--el-color-danger); font-size: 12px;">(券后约 {{ money(run.result.discount_amount) }})</span>
         </ElDescriptionsItem>
         <ElDescriptionsItem label="含税">{{
           includedLabel(run.result.tax_included)
@@ -104,32 +104,30 @@
       <div v-if="leadTimeTiers.length" class="lead-time-tiers" style="margin-top: 16px;">
         <h4 style="margin: 0 0 8px; font-size: 14px; font-weight: 600;">各交期阶梯报价明细</h4>
         <ElTable :data="leadTimeTiers" size="small" border style="width: 100%;">
-          <ElTableColumn prop="tier" label="交期类型" min-width="100">
+          <ElTableColumn prop="tier" label="交期类型" min-width="110">
             <template #default="{ row }">
-              <ElTag :type="row.tier.includes('加急') ? 'danger' : row.tier.includes('经济') ? 'info' : 'primary'" size="small">
-                {{ row.tier }}
-              </ElTag>
+              <ElTag :type="tierTagType(row.tier)" size="small">{{ row.tier }}</ElTag>
             </template>
           </ElTableColumn>
-          <ElTableColumn prop="days" label="交期时长" min-width="100" />
-          <ElTableColumn label="零件金额" min-width="100">
+          <ElTableColumn label="单价" min-width="100">
             <template #default="{ row }">
-              <span>¥{{ row.part_amount || '-' }}</span>
+              <strong style="color: var(--el-color-primary);">{{ money(row.unit_amount || row.part_amount) }}</strong>
             </template>
           </ElTableColumn>
-          <ElTableColumn label="税费" min-width="85">
+          <ElTableColumn v-if="tiersHaveTotal" label="合计" min-width="100">
+            <template #default="{ row }">{{ money(row.total_amount || row.amount) }}</template>
+          </ElTableColumn>
+          <ElTableColumn v-if="tiersHaveTax" label="税费" min-width="90">
+            <template #default="{ row }">{{ money(row.tax_amount) }}</template>
+          </ElTableColumn>
+          <ElTableColumn label="预计到货" min-width="120">
             <template #default="{ row }">
-              <span>¥{{ row.tax_amount || '-' }}</span>
+              <span>{{ row.arrives_by || row.estimated_ship_date || row.days || "平台未提供" }}</span>
             </template>
           </ElTableColumn>
-          <ElTableColumn label="含税总计" min-width="110">
+          <ElTableColumn label="平台原文" min-width="220">
             <template #default="{ row }">
-              <strong style="color: var(--el-color-primary);">¥{{ row.total_amount || '-' }}</strong>
-            </template>
-          </ElTableColumn>
-          <ElTableColumn prop="estimated_ship_date" label="预计发货时间" min-width="180">
-            <template #default="{ row }">
-              <span style="font-size: 12px; color: var(--el-text-color-secondary);">{{ row.estimated_ship_date || '-' }}</span>
+              <span style="font-size: 12px; color: var(--el-text-color-secondary);">{{ row.raw || "-" }}</span>
             </template>
           </ElTableColumn>
         </ElTable>
@@ -391,6 +389,25 @@ const leadTimeTiers = computed<CncLeadTimeTier[]>(() => {
   }
   return [];
 });
+/** 币种符号按平台回报取，不能默认人民币：Xometry 报 USD，嘉立创报 CNY。 */
+const currencySymbol = computed(() => {
+  const code = (props.run?.result?.currency || "").toUpperCase();
+  if (!code || code === "CNY" || code === "RMB") return "¥";
+  if (code === "USD") return "$";
+  if (code === "EUR") return "€";
+  return `${code} `;
+});
+function money(value?: string | null) {
+  return value ? `${currencySymbol.value}${value}` : "平台未提供";
+}
+function tierTagType(tier: string) {
+  const key = (tier || "").toLowerCase();
+  if (key.includes("fast") || key.includes("expedit") || key.includes("加急")) return "danger";
+  if (key.includes("least") || key.includes("econ") || key.includes("经济")) return "info";
+  return "primary";
+}
+const tiersHaveTotal = computed(() => leadTimeTiers.value.some((row) => row.total_amount || row.amount));
+const tiersHaveTax = computed(() => leadTimeTiers.value.some((row) => row.tax_amount));
 
 const leadTimeLabel = computed(() => {
   const lead = props.run?.result?.lead_time;

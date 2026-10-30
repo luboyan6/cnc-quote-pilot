@@ -30,6 +30,25 @@
             <span class="file-size">{{ formatFileSize(file.size) }}</span>
           </div>
         </div>
+        <ul v-if="message.progress?.length" class="message-progress" aria-live="polite">
+          <li v-for="item in message.progress" :key="item.id">
+            <span v-if="item.kind === 'skill'">已启用技能：{{ item.name }}</span>
+            <span v-else-if="item.status === 'active'">正在执行工具：{{ item.name }}</span>
+            <span v-else-if="item.status === 'completed'">工具已完成：{{ item.name }}</span>
+            <span v-else>工具执行失败：{{ item.name }}</span>
+          </li>
+        </ul>
+        <div v-if="message.evidenceResultIds?.length" class="message-evidence">
+          <ElButton
+            v-for="resultId in message.evidenceResultIds"
+            :key="resultId"
+            link
+            type="primary"
+            @click="emit('open-evidence', resultId)"
+          >
+            查看报价证据 #{{ resultId }}
+          </ElButton>
+        </div>
         <ElButton
           v-if="message.content.length > 200"
           text
@@ -80,6 +99,7 @@ interface Props {
 
 interface Emits {
   (e: "toggle-fold"): void;
+  (e: "open-evidence", resultId: number): void;
 }
 
 const props = defineProps<Props>();
@@ -118,6 +138,14 @@ const formatFileSize = (bytes: number): string => {
 </script>
 
 <style lang="scss" scoped>
+.message-progress {
+  padding: 0;
+  margin: 0 0 8px;
+  font-size: 12px;
+  color: var(--el-text-color-secondary);
+  list-style: none;
+}
+
 .message-group {
   display: flex;
   gap: 16px;

@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import CncQuoteResultAPI, {
   type CncHistoryPricePoint,
   type CncQuoteResultPageQuery,
@@ -140,9 +140,20 @@ describe("CNC 报价结果与受控证据 API 契约", () => {
     expect(res.data).toBe(fakeBlob);
   });
 
+  it("聊天证据请求仅允许已发布的私有图片", async () => {
+    request.mockResolvedValueOnce({ data: new Blob(["image"], { type: "image/png" }) });
+    await CncQuoteResultAPI.getPrivateScreenshotBlob(88);
+    const config = request.mock.calls[0]?.[0];
+    expect(config.url).toBe("/cnc/cnc_quote_result/screenshot/88");
+    expect(config.params).toEqual({ private_only: true });
+    expect(config.responseType).toBe("blob");
+  });
+
   it("支持受控 URL.createObjectURL 与 URL.revokeObjectURL 生命周期管理", () => {
     const fakeBlob = new Blob(["img-data"], { type: "image/png" });
-    const createObjectURLSpy = vi.spyOn(URL, "createObjectURL").mockReturnValue("blob:http://localhost/test-uuid");
+    const createObjectURLSpy = vi
+      .spyOn(URL, "createObjectURL")
+      .mockReturnValue("blob:http://localhost/test-uuid");
     const revokeObjectURLSpy = vi.spyOn(URL, "revokeObjectURL").mockImplementation(() => {});
 
     const objectUrl = URL.createObjectURL(fakeBlob);

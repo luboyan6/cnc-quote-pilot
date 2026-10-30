@@ -7,6 +7,15 @@ export interface ChatMessage {
   loading?: boolean;
   collapsed?: boolean;
   files?: UploadedFile[];
+  progress?: ChatProgress[];
+  evidenceResultIds?: number[];
+}
+
+export interface ChatProgress {
+  id: number;
+  kind: "skill" | "tool";
+  name: string;
+  status: "active" | "completed" | "failed";
 }
 
 // 上传文件类型
@@ -17,6 +26,8 @@ export interface UploadedFile {
   type: string;
   url?: string;
   file?: File;
+  requestId?: string;
+  uploadReady?: boolean;
 }
 
 // 会话消息类型（来自后端）

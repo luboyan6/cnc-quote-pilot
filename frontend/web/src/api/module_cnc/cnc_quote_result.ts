@@ -73,6 +73,16 @@ const CncQuoteResultAPI = {
       signal,
     });
   },
+
+  getPrivateScreenshotBlob(id: number, signal?: AbortSignal) {
+    return request<Blob>({
+      url: `${API_PATH}/screenshot/${id}`,
+      method: "get",
+      params: { private_only: true },
+      responseType: "blob",
+      signal,
+    });
+  },
 };
 
 export default CncQuoteResultAPI;
@@ -159,9 +169,9 @@ export interface CncQuoteResultTable extends BaseType {
 }
 
 export interface CncPlatformStat {
-  platform_id: number;
-  platform_name: string;
-  platform_code: string;
+  platform_id: number | null;
+  platform_name: string | null;
+  platform_code: string | null;
   total_quotes: number;
   formal_quotes: number;
   reference_estimates: number;
@@ -173,7 +183,7 @@ export interface CncPlatformStat {
   avg_duration_seconds: number;
   min_unit_price: string | number | null;
   max_unit_price: string | number | null;
-  currency: string;
+  currency: string | null;
   latest_quote_time: string | null;
 }
 
@@ -206,20 +216,20 @@ export interface CncHistoryPricePoint {
   config_name?: string | null;
   part_id?: number | null;
   part_name?: string | null;
-  platform_id: number;
-  platform_name: string;
+  platform_id: number | null;
+  platform_name: string | null;
   platform_code?: string | null;
   unit_price: string | number;
   total_amount?: string | number | null;
   price_diff?: string | null;
   change_rate?: string | null;
-  currency: string;
-  quantity: number;
+  currency: string | null;
+  quantity: number | null;
   quote_kind: string;
   comparison_key?: string | null;
   material?: string | null;
   surface_finish?: string | null;
-  duration_seconds: number;
+  duration_seconds: number | null;
   evidence_id?: string | null;
   evidence_screenshot?: string | null;
   quoted_time?: string | null;

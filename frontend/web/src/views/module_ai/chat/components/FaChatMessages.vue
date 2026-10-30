@@ -7,6 +7,7 @@
         :key="message.id"
         :message="message"
         @toggle-fold="handleToggleFold(message)"
+        @open-evidence="emit('open-evidence', $event)"
       />
     </div>
     <div v-if="error" class="error-banner">
@@ -28,6 +29,7 @@ interface Props {
 interface Emits {
   (e: "prompt-click", prompt: string): void;
   (e: "error-close"): void;
+  (e: "open-evidence", resultId: number): void;
 }
 
 const props = defineProps<Props>();
