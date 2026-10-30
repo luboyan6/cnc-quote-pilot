@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "cnc-management": {
+      "url": "http://127.0.0.1:10006/api/v1/mcp/",
+      "headers": {
+        "Authorization": "Bearer REPLACE_WITH_APPLICATION_ACCESS_TOKEN"
+      }
+    }
+  }
+}

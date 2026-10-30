@@ -1,0 +1,39 @@
+{
+  "id": "cnc-monitor-03-schedules",
+  "name": "cnc-monitor-03-schedules",
+  "title": "CNC 定时检测、监测计划与轮次",
+  "description": "复用APScheduler创建数据库驱动的监测计划与唯一轮次，处理暂停、重叠、漏跑和重启",
+  "status": "completed",
+  "dev_type": "backend",
+  "scope": "cnc-schedules",
+  "package": null,
+  "priority": "P0",
+  "creator": "WEIYC",
+  "assignee": "WEIYC",
+  "createdAt": "2026-10-28",
+  "completedAt": "2026-10-28",
+  "branch": "feat/deerflow-cnc-lead-agent",
+  "base_branch": "master",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "10-21-cnc-mvp-04-monitoring",
+  "relatedFiles": [],
+  "notes": "Created with explicit user task-creation consent on 2026-10-28. Planning artifacts only; no task activation or product implementation. Parent shared contract owns cross-child behavior.",
+  "meta": {
+    "execution_state": "planning_only",
+    "task_creation_approval": "user_explicit_create_tasks_2026-10-28",
+    "architecture": "deterministic_workflow",
+    "planning_artifacts": "prd_design_implement_and_curated_jsonl_ready_for_review",
+    "implementation_approval": "pending_final_plan_review",
+    "shared_contract": ".trellis/tasks/10-21-cnc-mvp-04-monitoring/research/implementation-contract.md",
+    "live_acceptance": "not_run",
+    "depends_on": [
+      "10-28-cnc-monitor-01-batch",
+      "10-28-cnc-monitor-02-recovery"
+    ],
+    "stage_order": 3
+  }
+}

@@ -1,0 +1,802 @@
+{
+  "diagnostic_schema": 1,
+  "entry_mode": "restored-owner-refresh-contract",
+  "fresh_context_requested": false,
+  "evidence_filename": "managed-refresh-contract-result-2026-10-26-3.json",
+  "started_at": "2026-10-26T10:35:23.572596+00:00",
+  "config_id": 3,
+  "account_id": 1,
+  "part_id": 4,
+  "quote_mutations": 0,
+  "events": [
+    {
+      "seconds": 4.766,
+      "kind": "owned_session_attached_before_navigation"
+    },
+    {
+      "seconds": 5.703,
+      "kind": "reviewed_route_request",
+      "route": {
+        "host": "www.xometry.com",
+        "path": "/quoting/home",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "resource_type": "document",
+      "method": "GET"
+    },
+    {
+      "seconds": 6.922,
+      "kind": "reviewed_or_error_response",
+      "route": {
+        "host": "www.xometry.com",
+        "path": "/quoting/home",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "status": 200,
+      "resource_type": "document"
+    },
+    {
+      "seconds": 6.922,
+      "kind": "main_navigation",
+      "route": {
+        "host": "www.xometry.com",
+        "path": "/quoting/home",
+        "query_keys": [],
+        "other_query_key_count": 0
+      }
+    },
+    {
+      "seconds": 7.016,
+      "kind": "request_failed",
+      "route": {
+        "host": "xometry5836.my.site.com",
+        "path": "[other-path]",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "resource_type": "script"
+    },
+    {
+      "seconds": 8.828,
+      "kind": "request_failed",
+      "route": {
+        "host": "www.googletagmanager.com",
+        "path": "[other-path]",
+        "query_keys": [],
+        "other_query_key_count": 1
+      },
+      "resource_type": "script"
+    },
+    {
+      "seconds": 8.828,
+      "kind": "request_failed",
+      "route": {
+        "host": "event-data-cdn.xometry.net",
+        "path": "[other-path]",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "resource_type": "script"
+    },
+    {
+      "seconds": 9.406,
+      "kind": "request_failed",
+      "route": {
+        "host": "rcg.conviva.com",
+        "path": "[other-path]",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "resource_type": "xhr"
+    },
+    {
+      "seconds": 9.406,
+      "kind": "request_failed",
+      "route": {
+        "host": "edge.fullstory.com",
+        "path": "[other-path]",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "resource_type": "script"
+    },
+    {
+      "seconds": 9.61,
+      "kind": "dom",
+      "stage": "before-identity-and-readiness-check",
+      "route": {
+        "host": "www.xometry.com",
+        "path": "/quoting/home",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "flags": {
+        "ready_state": "interactive",
+        "identity_cache_visible_to_page": false,
+        "identifier_visible_count": 0,
+        "password_visible_count": 0,
+        "one_time_code_visible_count": 0,
+        "captcha_visible_count": 0,
+        "guest_header": false,
+        "account_header": false,
+        "uploader_signin_required": false,
+        "primary_file_input_count": 0,
+        "continue_button_visible_count": 0,
+        "visible_known_messages": []
+      }
+    },
+    {
+      "seconds": 9.625,
+      "kind": "auth_bridge_flags",
+      "stage": "before-identity-and-readiness-check",
+      "app_variant": "legacy",
+      "identity_cache_present": false,
+      "ready_state": "interactive",
+      "identity_cache_in_context": false
+    },
+    {
+      "seconds": 9.625,
+      "kind": "reviewed_route_request",
+      "route": {
+        "host": "api.xometry.com",
+        "path": "/v2/users/me",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "resource_type": "fetch",
+      "method": "GET"
+    },
+    {
+      "seconds": 10.766,
+      "kind": "reviewed_or_error_response",
+      "route": {
+        "host": "api.xometry.com",
+        "path": "/v2/users/me",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "status": 200,
+      "resource_type": "fetch"
+    },
+    {
+      "seconds": 10.781,
+      "kind": "identity_and_readiness_result",
+      "verified": true
+    },
+    {
+      "seconds": 10.797,
+      "kind": "dom",
+      "stage": "after-identity-and-readiness-check",
+      "route": {
+        "host": "www.xometry.com",
+        "path": "/quoting/home",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "flags": {
+        "ready_state": "complete",
+        "identity_cache_visible_to_page": false,
+        "identifier_visible_count": 0,
+        "password_visible_count": 0,
+        "one_time_code_visible_count": 0,
+        "captcha_visible_count": 0,
+        "guest_header": false,
+        "account_header": false,
+        "uploader_signin_required": false,
+        "primary_file_input_count": 0,
+        "continue_button_visible_count": 0,
+        "visible_known_messages": []
+      }
+    },
+    {
+      "seconds": 10.813,
+      "kind": "auth_bridge_flags",
+      "stage": "after-identity-and-readiness-check",
+      "app_variant": "legacy",
+      "identity_cache_present": false,
+      "ready_state": "complete",
+      "identity_cache_in_context": false
+    },
+    {
+      "seconds": 10.828,
+      "kind": "dom",
+      "stage": "before-refresh-contract-read",
+      "route": {
+        "host": "www.xometry.com",
+        "path": "/quoting/home",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "flags": {
+        "ready_state": "complete",
+        "identity_cache_visible_to_page": false,
+        "identifier_visible_count": 0,
+        "password_visible_count": 0,
+        "one_time_code_visible_count": 0,
+        "captcha_visible_count": 0,
+        "guest_header": false,
+        "account_header": false,
+        "uploader_signin_required": false,
+        "primary_file_input_count": 0,
+        "continue_button_visible_count": 0,
+        "visible_known_messages": []
+      }
+    },
+    {
+      "seconds": 10.844,
+      "kind": "auth_bridge_flags",
+      "stage": "before-refresh-contract-read",
+      "app_variant": "legacy",
+      "identity_cache_present": false,
+      "ready_state": "complete",
+      "identity_cache_in_context": false
+    },
+    {
+      "seconds": 10.844,
+      "kind": "refresh_contract_get_attempted_once",
+      "identity_match": true
+    },
+    {
+      "seconds": 10.86,
+      "kind": "reviewed_route_request",
+      "route": {
+        "host": "www.xometry.com",
+        "path": "/api/auth/refresh",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "resource_type": "fetch",
+      "method": "GET"
+    },
+    {
+      "seconds": 11.094,
+      "kind": "reviewed_or_error_response",
+      "route": {
+        "host": "www.xometry.com",
+        "path": "/api/auth/refresh",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "status": 301,
+      "resource_type": "fetch"
+    },
+    {
+      "seconds": 11.281,
+      "kind": "request_failed",
+      "route": {
+        "host": "ingress.us1.rum-ingress-coralogix.com",
+        "path": "[other-path]",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "resource_type": "fetch"
+    },
+    {
+      "seconds": 11.938,
+      "kind": "reviewed_route_request",
+      "route": {
+        "host": "www.xometry.com",
+        "path": "/quoting/home",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "resource_type": "document",
+      "method": "GET"
+    },
+    {
+      "seconds": 11.953,
+      "kind": "request_failed",
+      "route": {
+        "host": "d2d1457e431c55589cd6869389fcdc7da348eb3d.appgw.conviva.com",
+        "path": "[other-path]",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "resource_type": "ping"
+    },
+    {
+      "seconds": 12.391,
+      "kind": "reviewed_or_error_response",
+      "route": {
+        "host": "www.xometry.com",
+        "path": "/quoting/home",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "status": 308,
+      "resource_type": "document"
+    },
+    {
+      "seconds": 12.391,
+      "kind": "reviewed_route_request",
+      "route": {
+        "host": "www.xometry.com",
+        "path": "/quoting/home/",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "resource_type": "document",
+      "method": "GET"
+    },
+    {
+      "seconds": 12.391,
+      "kind": "reviewed_or_error_response",
+      "route": {
+        "host": "www.xometry.com",
+        "path": "[other-path]",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "status": 404,
+      "resource_type": "fetch"
+    },
+    {
+      "seconds": 12.656,
+      "kind": "reviewed_or_error_response",
+      "route": {
+        "host": "www.xometry.com",
+        "path": "/quoting/home/",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "status": 200,
+      "resource_type": "document"
+    },
+    {
+      "seconds": 12.719,
+      "kind": "request_failed",
+      "route": {
+        "host": "prodregistryv2.org",
+        "path": "[other-path]",
+        "query_keys": [],
+        "other_query_key_count": 6
+      },
+      "resource_type": "ping"
+    },
+    {
+      "seconds": 12.719,
+      "kind": "request_failed",
+      "route": {
+        "host": "ingress.us1.rum-ingress-coralogix.com",
+        "path": "[other-path]",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "resource_type": "fetch"
+    },
+    {
+      "seconds": 12.719,
+      "kind": "request_failed",
+      "route": {
+        "host": "d2d1457e431c55589cd6869389fcdc7da348eb3d.appgw.conviva.com",
+        "path": "[other-path]",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "resource_type": "ping"
+    },
+    {
+      "seconds": 12.719,
+      "kind": "request_failed",
+      "route": {
+        "host": "sentry.mgmt.global.xmtr.io",
+        "path": "[other-path]",
+        "query_keys": [],
+        "other_query_key_count": 3
+      },
+      "resource_type": "fetch"
+    },
+    {
+      "seconds": 12.735,
+      "kind": "dom_read_transient",
+      "stage": "after-refresh-contract-read",
+      "reason": "NAVIGATION_CONTEXT_CHANGED",
+      "attempt": 1
+    },
+    {
+      "seconds": 12.735,
+      "kind": "main_navigation",
+      "route": {
+        "host": "www.xometry.com",
+        "path": "/quoting/home/",
+        "query_keys": [],
+        "other_query_key_count": 0
+      }
+    },
+    {
+      "seconds": 13.188,
+      "kind": "response_cookie_rejected",
+      "identity_cache": false,
+      "reasons": [
+        "SameSiteUnspecifiedTreatedAsLax"
+      ]
+    },
+    {
+      "seconds": 13.61,
+      "kind": "dom",
+      "stage": "after-refresh-contract-read",
+      "route": {
+        "host": "www.xometry.com",
+        "path": "/quoting/home/",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "flags": {
+        "ready_state": "interactive",
+        "identity_cache_visible_to_page": false,
+        "identifier_visible_count": 0,
+        "password_visible_count": 0,
+        "one_time_code_visible_count": 0,
+        "captcha_visible_count": 0,
+        "guest_header": true,
+        "account_header": false,
+        "uploader_signin_required": false,
+        "primary_file_input_count": 0,
+        "continue_button_visible_count": 0,
+        "visible_known_messages": [
+          "Dashboard"
+        ]
+      }
+    },
+    {
+      "seconds": 13.61,
+      "kind": "auth_bridge_flags",
+      "stage": "after-refresh-contract-read",
+      "app_variant": "next",
+      "identity_cache_present": false,
+      "ready_state": "interactive",
+      "identity_cache_in_context": false
+    },
+    {
+      "seconds": 13.828,
+      "kind": "reviewed_route_request",
+      "route": {
+        "host": "login.xometry.com",
+        "path": "/u/login",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "resource_type": "document",
+      "method": "GET"
+    },
+    {
+      "seconds": 14.641,
+      "kind": "reviewed_or_error_response",
+      "route": {
+        "host": "login.xometry.com",
+        "path": "/u/login",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "status": 302,
+      "resource_type": "document"
+    },
+    {
+      "seconds": 14.641,
+      "kind": "reviewed_route_request",
+      "route": {
+        "host": "www.xometry.com",
+        "path": "/login",
+        "query_keys": [],
+        "other_query_key_count": 1
+      },
+      "resource_type": "document",
+      "method": "GET"
+    },
+    {
+      "seconds": 15.672,
+      "kind": "reviewed_or_error_response",
+      "route": {
+        "host": "www.xometry.com",
+        "path": "/login",
+        "query_keys": [],
+        "other_query_key_count": 1
+      },
+      "status": 302,
+      "resource_type": "document"
+    },
+    {
+      "seconds": 15.672,
+      "kind": "reviewed_route_request",
+      "route": {
+        "host": "get.xometry.com",
+        "path": "/",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "resource_type": "document",
+      "method": "GET"
+    },
+    {
+      "seconds": 16.766,
+      "kind": "reviewed_or_error_response",
+      "route": {
+        "host": "get.xometry.com",
+        "path": "/",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "status": 302,
+      "resource_type": "document"
+    },
+    {
+      "seconds": 16.766,
+      "kind": "request",
+      "route": {
+        "host": "get.xometry.com",
+        "path": "[other-path]",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "resource_type": "document",
+      "method": "GET"
+    },
+    {
+      "seconds": 17.141,
+      "kind": "response",
+      "route": {
+        "host": "get.xometry.com",
+        "path": "[other-path]",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "status": 302,
+      "resource_type": "document"
+    },
+    {
+      "seconds": 17.141,
+      "kind": "reviewed_route_request",
+      "route": {
+        "host": "www.xometry.com",
+        "path": "/quoting/home/",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "resource_type": "document",
+      "method": "GET"
+    },
+    {
+      "seconds": 17.594,
+      "kind": "reviewed_or_error_response",
+      "route": {
+        "host": "www.xometry.com",
+        "path": "/quoting/home/",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "status": 200,
+      "resource_type": "document"
+    },
+    {
+      "seconds": 17.641,
+      "kind": "main_navigation",
+      "route": {
+        "host": "www.xometry.com",
+        "path": "/quoting/home/",
+        "query_keys": [],
+        "other_query_key_count": 0
+      }
+    },
+    {
+      "seconds": 19.297,
+      "kind": "dom",
+      "stage": "owner-final-login-state",
+      "route": {
+        "host": "www.xometry.com",
+        "path": "/quoting/home/",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "flags": {
+        "ready_state": "interactive",
+        "identity_cache_visible_to_page": false,
+        "identifier_visible_count": 0,
+        "password_visible_count": 0,
+        "one_time_code_visible_count": 0,
+        "captcha_visible_count": 0,
+        "guest_header": true,
+        "account_header": false,
+        "uploader_signin_required": false,
+        "primary_file_input_count": 0,
+        "continue_button_visible_count": 0,
+        "visible_known_messages": [
+          "Dashboard"
+        ]
+      }
+    },
+    {
+      "seconds": 19.313,
+      "kind": "auth_bridge_flags",
+      "stage": "owner-final-login-state",
+      "app_variant": "next",
+      "identity_cache_present": false,
+      "ready_state": "interactive",
+      "identity_cache_in_context": false
+    },
+    {
+      "seconds": 22.36,
+      "kind": "main_navigation",
+      "route": {
+        "host": "www.xometry.com",
+        "path": "/quoting/home/",
+        "query_keys": [],
+        "other_query_key_count": 0
+      }
+    },
+    {
+      "seconds": 23.016,
+      "kind": "reviewed_route_request",
+      "route": {
+        "host": "www.xometry.com",
+        "path": "/",
+        "query_keys": [],
+        "other_query_key_count": 1
+      },
+      "resource_type": "fetch",
+      "method": "GET"
+    },
+    {
+      "seconds": 23.313,
+      "kind": "reviewed_or_error_response",
+      "route": {
+        "host": "www.xometry.com",
+        "path": "/",
+        "query_keys": [],
+        "other_query_key_count": 1
+      },
+      "status": 200,
+      "resource_type": "fetch"
+    },
+    {
+      "seconds": 24.938,
+      "kind": "dom",
+      "stage": "owner-waiting-after-five-second-settle",
+      "route": {
+        "host": "www.xometry.com",
+        "path": "/quoting/home/",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "flags": {
+        "ready_state": "complete",
+        "identity_cache_visible_to_page": false,
+        "identifier_visible_count": 0,
+        "password_visible_count": 0,
+        "one_time_code_visible_count": 0,
+        "captcha_visible_count": 0,
+        "guest_header": true,
+        "account_header": false,
+        "uploader_signin_required": false,
+        "primary_file_input_count": 0,
+        "continue_button_visible_count": 0,
+        "visible_known_messages": [
+          "Dashboard"
+        ]
+      }
+    },
+    {
+      "seconds": 24.938,
+      "kind": "auth_bridge_flags",
+      "stage": "owner-waiting-after-five-second-settle",
+      "app_variant": "next",
+      "identity_cache_present": false,
+      "ready_state": "complete",
+      "identity_cache_in_context": false
+    },
+    {
+      "seconds": 24.969,
+      "kind": "reviewed_route_request",
+      "route": {
+        "host": "api.xometry.com",
+        "path": "/v2/users/me",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "resource_type": "fetch",
+      "method": "GET"
+    },
+    {
+      "seconds": 25.375,
+      "kind": "reviewed_or_error_response",
+      "route": {
+        "host": "api.xometry.com",
+        "path": "/v2/users/me",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "status": 200,
+      "resource_type": "fetch"
+    },
+    {
+      "seconds": 25.891,
+      "kind": "reviewed_route_request",
+      "route": {
+        "host": "api.xometry.com",
+        "path": "/v2/users/me",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "resource_type": "fetch",
+      "method": "GET"
+    },
+    {
+      "seconds": 26.281,
+      "kind": "reviewed_or_error_response",
+      "route": {
+        "host": "api.xometry.com",
+        "path": "/v2/users/me",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "status": 200,
+      "resource_type": "fetch"
+    },
+    {
+      "seconds": 26.813,
+      "kind": "reviewed_route_request",
+      "route": {
+        "host": "api.xometry.com",
+        "path": "/v2/users/me",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "resource_type": "fetch",
+      "method": "GET"
+    },
+    {
+      "seconds": 27.344,
+      "kind": "reviewed_or_error_response",
+      "route": {
+        "host": "api.xometry.com",
+        "path": "/v2/users/me",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "status": 200,
+      "resource_type": "fetch"
+    },
+    {
+      "seconds": 27.547,
+      "kind": "waiting_settled_identity_and_readiness",
+      "verified": false
+    }
+  ],
+  "network_summary": {
+    "request:document": 8,
+    "response:document:200": 3,
+    "request:script": 129,
+    "response:script:200": 124,
+    "request:xhr": 1,
+    "request:fetch": 25,
+    "response:fetch:202": 3,
+    "response:fetch:204": 2,
+    "response:fetch:200": 14,
+    "response:fetch:308": 1,
+    "response:fetch:301": 1,
+    "response:document:308": 1,
+    "response:fetch:404": 1,
+    "response:document:302": 4
+  },
+  "credential_submissions": 0,
+  "selected_frozen_file_verified": true,
+  "encrypted_state_restore_used": true,
+  "refresh_get_attempted": true,
+  "refresh_contract": {
+    "status": 404,
+    "redirected": true,
+    "content_type": "text/html",
+    "json_object": false,
+    "expires_in_seconds_number": false,
+    "error_key_present": false
+  },
+  "ordinary_network_event_count": 2,
+  "status": "WAITING_HUMAN",
+  "reason": "PROVIDER_VERIFICATION_REQUIRED",
+  "waiting_settled_identity_readiness_verified": false,
+  "executor_active_count_after_exit": 0,
+  "owner_finish_reason": "SESSION_CLOSED",
+  "manager_cleanup_completed": true,
+  "finished_at": "2026-10-26T10:35:51.484094+00:00"
+}

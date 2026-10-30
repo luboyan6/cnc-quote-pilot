@@ -1,0 +1,7 @@
+{"file":".trellis/spec/backend/index.md","reason":"Current backend guideline index; follow actual package boundaries"}
+{"file":".trellis/spec/backend/cnc-auto-quote.md","reason":"Existing single-run API, frozen file/parameter, result truthfulness and intent contracts"}
+{"file":".trellis/spec/backend/cnc-account-login.md","reason":"Account isolation, permissions, owner lifecycle and fenced lease"}
+{"file":".trellis/spec/backend/browser-executor.md","reason":"Shared browser/file/evidence boundaries and uncertain-mutation handling"}
+{"file":".trellis/spec/guides/cross-layer-thinking-guide.md","reason":"Check data shapes, typed projections and API/UI/DB lifecycle consistency"}
+{"file":".trellis/tasks/10-21-cnc-mvp-04-monitoring/research/planning-revision-2026-10-28.md","reason":"Current scope authority, verified source anchors, preserved historical plan and no implementation approval"}
+{"file":".trellis/tasks/10-21-cnc-mvp-04-monitoring/research/implementation-contract.md","reason":"Owning shared contracts for batches, retries, schedules, metrics, API, migration and rollback"}

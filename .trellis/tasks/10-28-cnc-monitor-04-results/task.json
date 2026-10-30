@@ -1,0 +1,40 @@
+{
+  "id": "cnc-monitor-04-results",
+  "name": "cnc-monitor-04-results",
+  "title": "CNC 结果展示与可比价格历史",
+  "description": "扩展Vue报价结果页与批次、计划页面，统一正式报价指标、可比历史、Decimal契约和私有证据访问",
+  "status": "in_progress",
+  "dev_type": "fullstack",
+  "scope": "cnc-results",
+  "package": null,
+  "priority": "P0",
+  "creator": "WEIYC",
+  "assignee": "WEIYC",
+  "createdAt": "2026-10-28",
+  "completedAt": null,
+  "branch": "feat/deerflow-cnc-lead-agent",
+  "base_branch": "master",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "10-21-cnc-mvp-04-monitoring",
+  "relatedFiles": [],
+  "notes": "Created with explicit user task-creation consent on 2026-10-28. Planning artifacts only; no task activation or product implementation. Parent shared contract owns cross-child behavior.",
+  "meta": {
+    "execution_state": "planning_only",
+    "task_creation_approval": "user_explicit_create_tasks_2026-10-28",
+    "architecture": "deterministic_workflow",
+    "planning_artifacts": "prd_design_implement_and_curated_jsonl_ready_for_review",
+    "implementation_approval": "pending_final_plan_review",
+    "shared_contract": ".trellis/tasks/10-21-cnc-mvp-04-monitoring/research/implementation-contract.md",
+    "live_acceptance": "not_run",
+    "depends_on": [
+      "10-28-cnc-monitor-01-batch",
+      "10-28-cnc-monitor-02-recovery",
+      "10-28-cnc-monitor-03-schedules"
+    ],
+    "stage_order": 4
+  }
+}

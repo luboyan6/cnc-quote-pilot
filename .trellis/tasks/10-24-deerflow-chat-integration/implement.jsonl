@@ -1,0 +1,11 @@
+{"file":".trellis/tasks/10-24-deerflow-cnc-agent/research/source-integration-replan-2026-10-29.md","reason":"Latest user decision, fixed source reference, project paths, component adaptation and cancellation gates"}
+{"file":".trellis/tasks/10-24-deerflow-cnc-agent/research/local-contracts.md","reason":"Current source integration, transport, history, identity and domain ownership contract"}
+{"file":".trellis/tasks/10-24-deerflow-chat-integration/research/agent-integration-baseline-2026-10-29.md","reason":"Current WebSocket stop, session ownership, model selection and Vue generation-fence gaps"}
+{"file":".trellis/spec/backend/index.md","reason":"Discover backend conventions; current source overrides stale path descriptions"}
+{"file":".trellis/spec/backend/ai-agent.md","reason":"Planned source integration contracts, required tests and forbidden whole-platform migration"}
+{"file":".trellis/spec/backend/cnc-account-login.md","reason":"Current owner, credential privacy and lease boundaries"}
+{"file":".trellis/spec/backend/cnc-auto-quote.md","reason":"Existing Quote Run/Intent, input snapshots and domain permissions"}
+{"file":".trellis/spec/backend/browser-executor.md","reason":"Controlled browser, immutable uploads and uncertain mutation handling"}
+{"file":".trellis/spec/backend/cnc-validation.md","reason":"Separate offline/model/platform acceptance and file-specific authorization"}
+{"file":".trellis/spec/frontend/index.md","reason":"Discover frontend checks"}
+{"file":".trellis/spec/frontend/cnc-auto-quote.md","reason":"Current serial observations, epoch barriers and truthful results"}

@@ -1,0 +1,1604 @@
+{
+  "quote_mutations": 0,
+  "account_id": 1,
+  "config_id": 3,
+  "observations": [
+    {
+      "stage": "verified-managed-home",
+      "host": "www.xometry.com",
+      "path": "/quoting/home/",
+      "query_keys": [],
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "id": "header-login-register-button",
+          "role": null,
+          "type": "button",
+          "testid": "Button-header-login-register-button",
+          "label": "Log In / Register",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "SPAN",
+          "id": "workspace-switcher-trigger",
+          "role": "button",
+          "type": null,
+          "testid": null,
+          "label": "Switch workspace",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "dashboard-get-instant-quote-block",
+          "role": null,
+          "type": "button",
+          "testid": "DashboardGetInstantQuoteBlock-dashboard-get-instant-quote-block",
+          "label": "Start a quote",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "dashboard-get-instant-quote-primary",
+          "role": null,
+          "type": "button",
+          "testid": "DashboardGetInstantQuotePrimary-dashboard-get-instant-quote-primary",
+          "label": "Get an Instant Quote",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "rc-tabs-0-more",
+          "role": null,
+          "type": "button",
+          "testid": null,
+          "label": "",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "INPUT",
+          "id": "quote-table-date-filter",
+          "role": "combobox",
+          "type": "search",
+          "testid": null,
+          "label": "Filter by date",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "dashboard-table-columns-toggle",
+          "role": null,
+          "type": "button",
+          "testid": "DashboardTableToolbar-dashboard-table-columns-toggle",
+          "label": "Customize Columns",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "quote-table-export",
+          "role": null,
+          "type": "button",
+          "testid": "Button-quote-table-export",
+          "label": "Export CSV",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "dashboard-table-expand-Q59-6980-1120",
+          "role": null,
+          "type": "button",
+          "testid": null,
+          "label": "Expand quote Q59-6980-1120",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "A",
+          "id": null,
+          "role": null,
+          "type": null,
+          "testid": null,
+          "label": "Configure part 1 of quote Q59-6980-1120",
+          "accept": null,
+          "quote_path": "/quoting/quote/Q59-6980-1120/6ad979df11d9bc75b92c67db/",
+          "quantity": null
+        },
+        {
+          "tag": "A",
+          "id": null,
+          "role": null,
+          "type": null,
+          "testid": null,
+          "label": "Configure part 2 of quote Q59-6980-1120",
+          "accept": null,
+          "quote_path": "/quoting/quote/Q59-6980-1120/6adc4b7a03aed67ecaa36f85/",
+          "quantity": null
+        },
+        {
+          "tag": "A",
+          "id": null,
+          "role": null,
+          "type": null,
+          "testid": null,
+          "label": "Configure part 3 of quote Q59-6980-1120",
+          "accept": null,
+          "quote_path": "/quoting/quote/Q59-6980-1120/6adc4b81bf1ba8ef33ee5ae1/",
+          "quantity": null
+        },
+        {
+          "tag": "A",
+          "id": null,
+          "role": null,
+          "type": null,
+          "testid": "quote-link-Q59-6980-1120",
+          "label": "Q59-6980-1120",
+          "accept": null,
+          "quote_path": "/quoting/quote/Q59-6980-1120",
+          "quantity": null
+        },
+        {
+          "tag": "A",
+          "id": "quote-row-cta-Q59-6980-1120",
+          "role": null,
+          "type": null,
+          "testid": "QuoteTableRowActions-quote-row-cta-Q59-6980-1120",
+          "label": "Review & Checkout",
+          "accept": null,
+          "quote_path": "/quoting/quote/Q59-6980-1120",
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": null,
+          "role": null,
+          "type": "button",
+          "testid": "quote-row-kebab-Q59-6980-1120",
+          "label": "More actions for quote Q59-6980-1120",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "dashboard-table-expand-Q78-4652-8737",
+          "role": null,
+          "type": "button",
+          "testid": null,
+          "label": "Expand quote Q78-4652-8737",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "A",
+          "id": null,
+          "role": null,
+          "type": null,
+          "testid": null,
+          "label": "Configure part 1 of quote Q78-4652-8737",
+          "accept": null,
+          "quote_path": "/quoting/quote/Q78-4652-8737/6ad984bfe15e7419e29c8b92/",
+          "quantity": null
+        },
+        {
+          "tag": "A",
+          "id": null,
+          "role": null,
+          "type": null,
+          "testid": "quote-link-Q78-4652-8737",
+          "label": "Q78-4652-8737",
+          "accept": null,
+          "quote_path": "/quoting/quote/Q78-4652-8737",
+          "quantity": null
+        },
+        {
+          "tag": "A",
+          "id": "quote-row-cta-Q78-4652-8737",
+          "role": null,
+          "type": null,
+          "testid": "QuoteTableRowActions-quote-row-cta-Q78-4652-8737",
+          "label": "Review & Checkout",
+          "accept": null,
+          "quote_path": "/quoting/quote/Q78-4652-8737",
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": null,
+          "role": null,
+          "type": "button",
+          "testid": "quote-row-kebab-Q78-4652-8737",
+          "label": "More actions for quote Q78-4652-8737",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "INPUT",
+          "id": "_r_32_",
+          "role": "combobox",
+          "type": "search",
+          "testid": null,
+          "label": "Page Size",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "privacy-banner-accept-button",
+          "role": null,
+          "type": "button",
+          "testid": "Button-privacy-banner-accept-button",
+          "label": "Accept",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        }
+      ],
+      "headings": [
+        {
+          "tag": "H1",
+          "id": null,
+          "text": "Dashboard"
+        }
+      ],
+      "fields": [
+        {
+          "testid": "DashboardGetInstantQuoteBlock-dashboard-get-instant-quote-block",
+          "tag": "BUTTON",
+          "text": "",
+          "disabled": false
+        },
+        {
+          "testid": "DashboardGetInstantQuotePrimary-dashboard-get-instant-quote-primary",
+          "tag": "BUTTON",
+          "text": "Get an Instant Quote",
+          "disabled": false
+        },
+        {
+          "testid": "slot-dashboard-quoteTable",
+          "tag": "DIV",
+          "text": " Filter by date\nCustomize Columns\nExport CSV\n\t\t\nQuote\n\t\nStatus\n\t\nSubtotal\n\tArrives By\t\nLast Updated\n\tActions\n\n\t\n\u00a0\n\t\nQuote\n\t\nStatus\n\t\nSubtotal\n\t\nArrives By\n\t\nLast Updated\n\t\nActions\n\n\n\t\t\n+1\nQ59-6980-1120\n4 parts\n\t\nAuto-Quoted\n\t$969.11\tNov. 10, 2026\tOct. 24, 2026\t\nReview & Checkout\n\n\n\t\t\nQ78-4652-8737\n1 part\n\t\nAuto-Quoted\n\t$296.10\tNov. 11, 2026\tOct. 22",
+          "disabled": false
+        },
+        {
+          "testid": "Button-quote-table-export",
+          "tag": "BUTTON",
+          "text": "Export CSV",
+          "disabled": false
+        },
+        {
+          "testid": "part-thumbnail-stack",
+          "tag": "DIV",
+          "text": "+1",
+          "disabled": false
+        },
+        {
+          "testid": "quote-link-Q59-6980-1120",
+          "tag": "A",
+          "text": "Q59-6980-1120",
+          "disabled": false
+        },
+        {
+          "testid": "QuoteTableRowActions-quote-row-cta-Q59-6980-1120",
+          "tag": "A",
+          "text": "Review & Checkout",
+          "disabled": false
+        },
+        {
+          "testid": "quote-row-kebab-Q59-6980-1120",
+          "tag": "BUTTON",
+          "text": "",
+          "disabled": false
+        },
+        {
+          "testid": "part-thumbnail-stack",
+          "tag": "DIV",
+          "text": "",
+          "disabled": false
+        },
+        {
+          "testid": "quote-link-Q78-4652-8737",
+          "tag": "A",
+          "text": "Q78-4652-8737",
+          "disabled": false
+        },
+        {
+          "testid": "QuoteTableRowActions-quote-row-cta-Q78-4652-8737",
+          "tag": "A",
+          "text": "Review & Checkout",
+          "disabled": false
+        },
+        {
+          "testid": "quote-row-kebab-Q78-4652-8737",
+          "tag": "BUTTON",
+          "text": "",
+          "disabled": false
+        }
+      ]
+    },
+    {
+      "stage": "verified-managed-legacy-config",
+      "host": "www.xometry.com",
+      "path": "/quoting/quote/Q59-6980-1120/6ad979df11d9bc75b92c67db/",
+      "query_keys": [
+        "vercel_part_config"
+      ],
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "id": "navbar-cta-button",
+          "role": null,
+          "type": "button",
+          "testid": "StartQuoteButton-navbar-cta-button",
+          "label": "Get an Instant Quote",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "header-my-account-button",
+          "role": null,
+          "type": "button",
+          "testid": "Button-header-my-account-button",
+          "label": "My Account",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "INPUT",
+          "id": null,
+          "role": null,
+          "type": "file",
+          "testid": null,
+          "label": "",
+          "accept": "",
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "INPUT",
+          "id": null,
+          "role": null,
+          "type": "file",
+          "testid": null,
+          "label": "",
+          "accept": ".step,.stp,.sldprt,.stl,.dxf,.ipt,.x_t,.x_b,.3dxml,.catpart,.prt,.1,.2,.3,.4,.5,.6,.7,.8,.9,.10,.11,.12,.13,.14,.15,.16,.17,.18,.19,.20,.21,.22,.23,.24,.25,.26,.27,.28,.29,.30,.31,.32,.33,.34,.35,.36,.37,.38,.39,.40,.41,.42,.43,.44,.45,.46,.47,.48,.49,.50,.51,.52,.53,.54,.55,.56,.57,.58,.59,.60,.61,.62,.63,.64,.65,.66,.67,.68,.69,.70,.71,.72,.73,.74,.75,.76,.77,.78,.79,.80,.81,.82,.83,.84,.85,.86,.87,.88,.89,.90,.91,.92,.93,.94,.95,.96,.97,.98,.99,.sat,.3mf,.jt,.edxml,.catprt,.part",
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "A",
+          "id": null,
+          "role": null,
+          "type": null,
+          "testid": null,
+          "label": "Dashboard",
+          "accept": null,
+          "quote_path": "/quoting/home",
+          "quantity": null
+        },
+        {
+          "tag": "A",
+          "id": null,
+          "role": null,
+          "type": null,
+          "testid": null,
+          "label": "Quote Q59-6980-1120",
+          "accept": null,
+          "quote_path": "/quoting/quote/Q59-6980-1120/",
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "configure-part-header-current-part",
+          "role": null,
+          "type": "button",
+          "testid": "ConfigurePartHeaderPartToggle-configure-part-header-current-part",
+          "label": "D14-TO-CS-ADAPTER_LP0335_P2002B.STEP",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "configure-part-header-cancel",
+          "role": null,
+          "type": "button",
+          "testid": "Button-configure-part-header-cancel",
+          "label": "Cancel",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "configure-part-header-save-and-view-quote",
+          "role": null,
+          "type": "button",
+          "testid": "Button-configure-part-header-save-and-view-quote",
+          "label": "Save Configuration",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "4B3F89E",
+          "role": null,
+          "type": "button",
+          "testid": null,
+          "label": "Edit Part Name",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "configure-part-left-rail-viewer-home",
+          "role": null,
+          "type": "button",
+          "testid": "Button-configure-part-left-rail-viewer-home",
+          "label": "Reset view",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "configure-part-left-rail-viewer-zoom-in",
+          "role": null,
+          "type": "button",
+          "testid": "Button-configure-part-left-rail-viewer-zoom-in",
+          "label": "Zoom in",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "configure-part-left-rail-viewer-zoom-out",
+          "role": null,
+          "type": "button",
+          "testid": "Button-configure-part-left-rail-viewer-zoom-out",
+          "label": "Zoom out",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "configure-part-left-rail-analyze",
+          "role": null,
+          "type": "button",
+          "testid": null,
+          "label": "Analyze 3D Model",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "configure-part-left-rail-cad-file",
+          "role": null,
+          "type": "button",
+          "testid": null,
+          "label": "Analyze D14-TO-CS-ADAPTER_LP0335_P2002B.STEP",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "configure-part-left-rail-update-cad",
+          "role": null,
+          "type": "button",
+          "testid": "Button-configure-part-left-rail-update-cad",
+          "label": "Update CAD File",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "INPUT",
+          "id": null,
+          "role": null,
+          "type": "file",
+          "testid": null,
+          "label": "Choose files to upload",
+          "accept": "",
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "A",
+          "id": null,
+          "role": null,
+          "type": null,
+          "testid": "ConfigurePartLeftRail-configure-part-left-rail-upload-files-browse",
+          "label": "browse",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "configure-part-left-rail-dfm-header",
+          "role": null,
+          "type": "button",
+          "testid": null,
+          "label": "DFM Check Complete (8/8) \u00b7 Needs review",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "role": "button",
+          "type": null,
+          "testid": null,
+          "label": "Wall Thickness Check\nWarning",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "role": "button",
+          "type": null,
+          "testid": null,
+          "label": "Void Check\nPassed",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "role": "button",
+          "type": null,
+          "testid": null,
+          "label": "Large Part Dimension\nPassed",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "role": "button",
+          "type": null,
+          "testid": null,
+          "label": "Model Fidelity\nPassed",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "role": "button",
+          "type": null,
+          "testid": null,
+          "label": "Floating Parts Check\nPassed",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "role": "button",
+          "type": null,
+          "testid": null,
+          "label": "File Type\nPassed",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "role": "button",
+          "type": null,
+          "testid": null,
+          "label": "Model Shell Count\nPassed",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "role": "button",
+          "type": null,
+          "testid": null,
+          "label": "Part Exceeds Maximum Size for This Finish\nPassed",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "DIV",
+          "id": "option-select-process",
+          "role": "button",
+          "type": null,
+          "testid": null,
+          "label": "Process: CNC",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "DIV",
+          "id": "option-select-cnc-subprocess-select",
+          "role": "button",
+          "type": null,
+          "testid": null,
+          "label": "Preferred Subprocess: No Preference",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "DIV",
+          "id": "material-select-material-select",
+          "role": "button",
+          "type": null,
+          "testid": null,
+          "label": "Material: Aluminum 6061-T6x (Best Available)",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "DIV",
+          "id": "finish-select-finish-multiselect",
+          "role": "button",
+          "type": null,
+          "testid": null,
+          "label": "Finish: Standard",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "binary-sw-threads-and-tapped-holes-checkbox",
+          "role": "switch",
+          "type": "button",
+          "testid": null,
+          "label": "",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "binary-sw-inserts-checkbox",
+          "role": "switch",
+          "type": "button",
+          "testid": null,
+          "label": "",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "DIV",
+          "id": "option-select-tolerances-radio-metal",
+          "role": "button",
+          "type": null,
+          "testid": null,
+          "label": "Precision Tolerance: \u00b1.005\u2033 (\u00b10.13mm)",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "DIV",
+          "id": "option-select-surface-roughness-select",
+          "role": "button",
+          "type": null,
+          "testid": null,
+          "label": "Precision Surface Roughness: 125uin/3.2um Ra",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "DIV",
+          "id": "part-marking-select-silkscreen-checkbox",
+          "role": "button",
+          "type": null,
+          "testid": null,
+          "label": "Part Marking: Select markings",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "INPUT",
+          "id": "stack-radio-inspection-radio-standard-inspection",
+          "role": null,
+          "type": "radio",
+          "testid": null,
+          "label": "",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "INPUT",
+          "id": "stack-radio-inspection-radio-formal-inspection",
+          "role": null,
+          "type": "radio",
+          "testid": null,
+          "label": "",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "INPUT",
+          "id": "stack-radio-inspection-radio-cmm-inspection",
+          "role": null,
+          "type": "radio",
+          "testid": null,
+          "label": "",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "INPUT",
+          "id": "stack-radio-inspection-radio-fair-inspection",
+          "role": null,
+          "type": "radio",
+          "testid": null,
+          "label": "",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "INPUT",
+          "id": "stack-radio-inspection-radio-source-inspection",
+          "role": null,
+          "type": "radio",
+          "testid": null,
+          "label": "",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "INPUT",
+          "id": "stack-radio-inspection-radio-build-hold-inspection",
+          "role": null,
+          "type": "radio",
+          "testid": null,
+          "label": "",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "INPUT",
+          "id": "stack-radio-inspection-radio-custom-inspection",
+          "role": null,
+          "type": "radio",
+          "testid": null,
+          "label": "",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "INPUT",
+          "id": "cert-itar-ear-binary-cert-itar-ear",
+          "role": null,
+          "type": "checkbox",
+          "testid": null,
+          "label": "",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "INPUT",
+          "id": "cert-cmmc-cert-binary-cert-cmmc-cert",
+          "role": null,
+          "type": "checkbox",
+          "testid": null,
+          "label": "",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "INPUT",
+          "id": "cert-as9100-binary-cert-as9100",
+          "role": null,
+          "type": "checkbox",
+          "testid": null,
+          "label": "",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "INPUT",
+          "id": "cert-iso9001-binary-cert-iso9001",
+          "role": null,
+          "type": "checkbox",
+          "testid": null,
+          "label": "",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "INPUT",
+          "id": "cert-hardware-cert-binary-cert-hardware-cert",
+          "role": null,
+          "type": "checkbox",
+          "testid": null,
+          "label": "",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "INPUT",
+          "id": "cert-c-of-c-cert-binary-cert-c-of-c-cert",
+          "role": null,
+          "type": "checkbox",
+          "testid": null,
+          "label": "",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "INPUT",
+          "id": "cert-material-traceability-binary-cert-material-traceability",
+          "role": null,
+          "type": "checkbox",
+          "testid": null,
+          "label": "",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "INPUT",
+          "id": "cert-jcp-certified-binary-cert-jcp-certified",
+          "role": null,
+          "type": "checkbox",
+          "testid": null,
+          "label": "",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "INPUT",
+          "id": "cert-material-cert-binary-cert-material-cert",
+          "role": null,
+          "type": "checkbox",
+          "testid": null,
+          "label": "",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "configure-part-quantity-decrease",
+          "role": null,
+          "type": "button",
+          "testid": "Button-configure-part-quantity-decrease",
+          "label": "Decrease quantity",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "INPUT",
+          "id": null,
+          "role": "spinbutton",
+          "type": null,
+          "testid": null,
+          "label": "Quantity",
+          "accept": null,
+          "quote_path": null,
+          "quantity": "1"
+        },
+        {
+          "tag": "BUTTON",
+          "id": "configure-part-quantity-increase",
+          "role": null,
+          "type": "button",
+          "testid": "Button-configure-part-quantity-increase",
+          "label": "Increase quantity",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "configure-part-pricing-volume-discounts",
+          "role": null,
+          "type": "button",
+          "testid": "Button-configure-part-pricing-volume-discounts",
+          "label": "Get Volume Discounts",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "A",
+          "id": null,
+          "role": null,
+          "type": null,
+          "testid": "Link-configure-part-pricing-status-save-link",
+          "label": "Save Configuration",
+          "accept": null,
+          "quote_path": "/quoting/quote/Q59-6980-1120/",
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "privacy-banner-accept-button",
+          "role": null,
+          "type": "button",
+          "testid": "Button-privacy-banner-accept-button",
+          "label": "Accept",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        }
+      ],
+      "headings": [],
+      "fields": [
+        {
+          "testid": "StartQuoteButton-navbar-cta-button",
+          "tag": "BUTTON",
+          "text": "Get an Instant Quote",
+          "disabled": false
+        },
+        {
+          "testid": "ConfigurePartBreadcrumb-configure-part-header-breadcrumb",
+          "tag": "NAV",
+          "text": "Dashboard\n/\nQuote Q59-6980-1120\n/\nD14-TO-CS-ADAPTER_LP0335_P2002B.STEP",
+          "disabled": false
+        },
+        {
+          "testid": "ConfigurePartHeaderPartToggle-configure-part-header-current-part",
+          "tag": "BUTTON",
+          "text": "D14-TO-CS-ADAPTER_LP0335_P2002B.STEP",
+          "disabled": false
+        },
+        {
+          "testid": "Button-configure-part-header-cancel",
+          "tag": "BUTTON",
+          "text": "Cancel",
+          "disabled": false
+        },
+        {
+          "testid": "Button-configure-part-header-save-and-view-quote",
+          "tag": "BUTTON",
+          "text": "Save Configuration",
+          "disabled": false
+        },
+        {
+          "testid": "configure-part-columns",
+          "tag": "DIV",
+          "text": "[container]",
+          "disabled": false
+        },
+        {
+          "testid": "configure-part-left-rail-preview-dimensions-row",
+          "tag": "DIV",
+          "text": "\u2212\nV0\nAnalyze 3D Model\nLength:\n28.00 mm (1.102 in)\nWidth:\n25.00 mm (0.984 in)\nHeight:\n5.47 mm (0.216 in)\nVolume:\n1,861 mm\u00b3 (0.114 in\u00b3)",
+          "disabled": false
+        },
+        {
+          "testid": "configure-part-left-rail-viewer-toolbar",
+          "tag": "DIV",
+          "text": "\u2212",
+          "disabled": false
+        },
+        {
+          "testid": "Button-configure-part-left-rail-viewer-home",
+          "tag": "BUTTON",
+          "text": "",
+          "disabled": false
+        },
+        {
+          "testid": "Button-configure-part-left-rail-viewer-zoom-in",
+          "tag": "BUTTON",
+          "text": "",
+          "disabled": false
+        },
+        {
+          "testid": "Button-configure-part-left-rail-viewer-zoom-out",
+          "tag": "BUTTON",
+          "text": "\u2212",
+          "disabled": false
+        },
+        {
+          "testid": "configure-part-left-rail-analyze-overlay",
+          "tag": "DIV",
+          "text": "Analyze 3D Model",
+          "disabled": false
+        },
+        {
+          "testid": "configure-part-left-rail-dimensions",
+          "tag": "DIV",
+          "text": "Length:\n28.00 mm (1.102 in)\nWidth:\n25.00 mm (0.984 in)\nHeight:\n5.47 mm (0.216 in)\nVolume:\n1,861 mm\u00b3 (0.114 in\u00b3)",
+          "disabled": false
+        },
+        {
+          "testid": "configure-part-dimension-label",
+          "tag": "SPAN",
+          "text": "Length:",
+          "disabled": false
+        },
+        {
+          "testid": "configure-part-dimension-label",
+          "tag": "SPAN",
+          "text": "Width:",
+          "disabled": false
+        },
+        {
+          "testid": "configure-part-dimension-label",
+          "tag": "SPAN",
+          "text": "Height:",
+          "disabled": false
+        },
+        {
+          "testid": "configure-part-dimension-label",
+          "tag": "SPAN",
+          "text": "Volume:",
+          "disabled": false
+        },
+        {
+          "testid": "configure-part-left-rail-files",
+          "tag": "DIV",
+          "text": "CAD File\n...02B.STEP\nV0\nUpdate\nSupporting Files (0)\nDrop supporting files here, or browse\nMax file size: 150 MB.",
+          "disabled": false
+        },
+        {
+          "testid": "configure-part-left-rail-cad-file-label",
+          "tag": "DIV",
+          "text": "CAD File",
+          "disabled": false
+        },
+        {
+          "testid": "configure-part-left-rail-cad-file",
+          "tag": "DIV",
+          "text": "...02B.STEP\nV0\nUpdate",
+          "disabled": false
+        },
+        {
+          "testid": "configure-part-left-rail-cad-file-version",
+          "tag": "SPAN",
+          "text": "V0",
+          "disabled": false
+        },
+        {
+          "testid": "Button-configure-part-left-rail-update-cad",
+          "tag": "BUTTON",
+          "text": "Update",
+          "disabled": false
+        },
+        {
+          "testid": "configure-part-left-rail-supporting-files-label",
+          "tag": "DIV",
+          "text": "Supporting Files (0)",
+          "disabled": false
+        },
+        {
+          "testid": "ConfigurePartLeftRail-configure-part-left-rail-upload-files-browse",
+          "tag": "A",
+          "text": "browse",
+          "disabled": false
+        },
+        {
+          "testid": "configure-part-left-rail-dfm-check-list",
+          "tag": "DIV",
+          "text": "Wall Thickness Check\nWarning\nThin areas can be challenging to machine because they may vibrate or flex under the pressure of the cutting tool, leading to chatter or bowing defects.\nRecommendation\nTo ensure a high-quality finish and dimensional accuracy, consider thickening these areas to at least 0.024\u2033. If a wall must stay thin, reducing wall heig",
+          "disabled": false
+        },
+        {
+          "testid": "option-select-process",
+          "tag": "DIV",
+          "text": "CNC",
+          "disabled": false
+        },
+        {
+          "testid": "option-select-cnc-subprocess-select",
+          "tag": "DIV",
+          "text": "No Preference",
+          "disabled": false
+        },
+        {
+          "testid": "material-select-material-select",
+          "tag": "DIV",
+          "text": "Aluminum 6061-T6x (Best Available)",
+          "disabled": false
+        },
+        {
+          "testid": "finish-select-finish-multiselect",
+          "tag": "DIV",
+          "text": "Standard",
+          "disabled": false
+        },
+        {
+          "testid": "option-select-tolerances-radio-metal",
+          "tag": "DIV",
+          "text": "\u00b1.005\u2033 (\u00b10.13mm)",
+          "disabled": false
+        },
+        {
+          "testid": "option-select-surface-roughness-select",
+          "tag": "DIV",
+          "text": "125uin/3.2um Ra",
+          "disabled": false
+        },
+        {
+          "testid": "part-marking-select-silkscreen-checkbox",
+          "tag": "DIV",
+          "text": "Select markings",
+          "disabled": false
+        },
+        {
+          "testid": "configure-part-pricing-commerce-stack",
+          "tag": "DIV",
+          "text": "$256.52\n$304.02\nSave 16%\nLead time: 7 business days\nLeast Expensive",
+          "disabled": false
+        },
+        {
+          "testid": "Button-configure-part-quantity-decrease",
+          "tag": "BUTTON",
+          "text": "",
+          "disabled": true
+        },
+        {
+          "testid": "Button-configure-part-quantity-increase",
+          "tag": "BUTTON",
+          "text": "",
+          "disabled": false
+        },
+        {
+          "testid": "Button-configure-part-pricing-volume-discounts",
+          "tag": "BUTTON",
+          "text": "Volume Discounts",
+          "disabled": false
+        },
+        {
+          "testid": "Link-configure-part-pricing-status-save-link",
+          "tag": "A",
+          "text": "Save Configuration",
+          "disabled": false
+        }
+      ]
+    },
+    {
+      "stage": "managed-primary-uploader",
+      "host": "www.xometry.com",
+      "path": "/quoting/home/",
+      "query_keys": [
+        "startNewQuote"
+      ],
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "id": "header-login-register-button",
+          "role": null,
+          "type": "button",
+          "testid": "Button-header-login-register-button",
+          "label": "Log In / Register",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "SPAN",
+          "id": "workspace-switcher-trigger",
+          "role": "button",
+          "type": null,
+          "testid": null,
+          "label": "Switch workspace",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "dashboard-get-instant-quote-block",
+          "role": null,
+          "type": "button",
+          "testid": "DashboardGetInstantQuoteBlock-dashboard-get-instant-quote-block",
+          "label": "Start a quote",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "dashboard-get-instant-quote-primary",
+          "role": null,
+          "type": "button",
+          "testid": "DashboardGetInstantQuotePrimary-dashboard-get-instant-quote-primary",
+          "label": "Get an Instant Quote",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "rc-tabs-0-more",
+          "role": null,
+          "type": "button",
+          "testid": null,
+          "label": "",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "INPUT",
+          "id": "quote-table-date-filter",
+          "role": "combobox",
+          "type": "search",
+          "testid": null,
+          "label": "Filter by date",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "dashboard-table-columns-toggle",
+          "role": null,
+          "type": "button",
+          "testid": "DashboardTableToolbar-dashboard-table-columns-toggle",
+          "label": "Customize Columns",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "quote-table-export",
+          "role": null,
+          "type": "button",
+          "testid": "Button-quote-table-export",
+          "label": "Export CSV",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "dashboard-table-expand-Q59-6980-1120",
+          "role": null,
+          "type": "button",
+          "testid": null,
+          "label": "Expand quote Q59-6980-1120",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "A",
+          "id": null,
+          "role": null,
+          "type": null,
+          "testid": null,
+          "label": "Configure part 1 of quote Q59-6980-1120",
+          "accept": null,
+          "quote_path": "/quoting/quote/Q59-6980-1120/6ad979df11d9bc75b92c67db/",
+          "quantity": null
+        },
+        {
+          "tag": "A",
+          "id": null,
+          "role": null,
+          "type": null,
+          "testid": null,
+          "label": "Configure part 2 of quote Q59-6980-1120",
+          "accept": null,
+          "quote_path": "/quoting/quote/Q59-6980-1120/6adc4b7a03aed67ecaa36f85/",
+          "quantity": null
+        },
+        {
+          "tag": "A",
+          "id": null,
+          "role": null,
+          "type": null,
+          "testid": null,
+          "label": "Configure part 3 of quote Q59-6980-1120",
+          "accept": null,
+          "quote_path": "/quoting/quote/Q59-6980-1120/6adc4b81bf1ba8ef33ee5ae1/",
+          "quantity": null
+        },
+        {
+          "tag": "A",
+          "id": null,
+          "role": null,
+          "type": null,
+          "testid": "quote-link-Q59-6980-1120",
+          "label": "Q59-6980-1120",
+          "accept": null,
+          "quote_path": "/quoting/quote/Q59-6980-1120",
+          "quantity": null
+        },
+        {
+          "tag": "A",
+          "id": "quote-row-cta-Q59-6980-1120",
+          "role": null,
+          "type": null,
+          "testid": "QuoteTableRowActions-quote-row-cta-Q59-6980-1120",
+          "label": "Review & Checkout",
+          "accept": null,
+          "quote_path": "/quoting/quote/Q59-6980-1120",
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": null,
+          "role": null,
+          "type": "button",
+          "testid": "quote-row-kebab-Q59-6980-1120",
+          "label": "More actions for quote Q59-6980-1120",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "dashboard-table-expand-Q78-4652-8737",
+          "role": null,
+          "type": "button",
+          "testid": null,
+          "label": "Expand quote Q78-4652-8737",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "A",
+          "id": null,
+          "role": null,
+          "type": null,
+          "testid": null,
+          "label": "Configure part 1 of quote Q78-4652-8737",
+          "accept": null,
+          "quote_path": "/quoting/quote/Q78-4652-8737/6ad984bfe15e7419e29c8b92/",
+          "quantity": null
+        },
+        {
+          "tag": "A",
+          "id": null,
+          "role": null,
+          "type": null,
+          "testid": "quote-link-Q78-4652-8737",
+          "label": "Q78-4652-8737",
+          "accept": null,
+          "quote_path": "/quoting/quote/Q78-4652-8737",
+          "quantity": null
+        },
+        {
+          "tag": "A",
+          "id": "quote-row-cta-Q78-4652-8737",
+          "role": null,
+          "type": null,
+          "testid": "QuoteTableRowActions-quote-row-cta-Q78-4652-8737",
+          "label": "Review & Checkout",
+          "accept": null,
+          "quote_path": "/quoting/quote/Q78-4652-8737",
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": null,
+          "role": null,
+          "type": "button",
+          "testid": "quote-row-kebab-Q78-4652-8737",
+          "label": "More actions for quote Q78-4652-8737",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "INPUT",
+          "id": "_r_32_",
+          "role": "combobox",
+          "type": "search",
+          "testid": null,
+          "label": "Page Size",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "privacy-banner-accept-button",
+          "role": null,
+          "type": "button",
+          "testid": "Button-privacy-banner-accept-button",
+          "label": "Accept",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        }
+      ],
+      "headings": [
+        {
+          "tag": "H1",
+          "id": null,
+          "text": "Dashboard"
+        }
+      ],
+      "fields": [
+        {
+          "testid": "DashboardGetInstantQuoteBlock-dashboard-get-instant-quote-block",
+          "tag": "BUTTON",
+          "text": "",
+          "disabled": false
+        },
+        {
+          "testid": "DashboardGetInstantQuotePrimary-dashboard-get-instant-quote-primary",
+          "tag": "BUTTON",
+          "text": "Get an Instant Quote",
+          "disabled": false
+        },
+        {
+          "testid": "slot-dashboard-quoteTable",
+          "tag": "DIV",
+          "text": " Filter by date\nCustomize Columns\nExport CSV\n\t\t\nQuote\n\t\nStatus\n\t\nSubtotal\n\tArrives By\t\nLast Updated\n\tActions\n\n\t\n\u00a0\n\t\nQuote\n\t\nStatus\n\t\nSubtotal\n\t\nArrives By\n\t\nLast Updated\n\t\nActions\n\n\n\t\t\n+1\nQ59-6980-1120\n4 parts\n\t\nAuto-Quoted\n\t$969.11\tNov. 10, 2026\tOct. 24, 2026\t\nReview & Checkout\n\n\n\t\t\nQ78-4652-8737\n1 part\n\t\nAuto-Quoted\n\t$296.10\tNov. 11, 2026\tOct. 22",
+          "disabled": false
+        },
+        {
+          "testid": "Button-quote-table-export",
+          "tag": "BUTTON",
+          "text": "Export CSV",
+          "disabled": false
+        },
+        {
+          "testid": "part-thumbnail-stack",
+          "tag": "DIV",
+          "text": "+1",
+          "disabled": false
+        },
+        {
+          "testid": "quote-link-Q59-6980-1120",
+          "tag": "A",
+          "text": "Q59-6980-1120",
+          "disabled": false
+        },
+        {
+          "testid": "QuoteTableRowActions-quote-row-cta-Q59-6980-1120",
+          "tag": "A",
+          "text": "Review & Checkout",
+          "disabled": false
+        },
+        {
+          "testid": "quote-row-kebab-Q59-6980-1120",
+          "tag": "BUTTON",
+          "text": "",
+          "disabled": false
+        },
+        {
+          "testid": "part-thumbnail-stack",
+          "tag": "DIV",
+          "text": "",
+          "disabled": false
+        },
+        {
+          "testid": "quote-link-Q78-4652-8737",
+          "tag": "A",
+          "text": "Q78-4652-8737",
+          "disabled": false
+        },
+        {
+          "testid": "QuoteTableRowActions-quote-row-cta-Q78-4652-8737",
+          "tag": "A",
+          "text": "Review & Checkout",
+          "disabled": false
+        },
+        {
+          "testid": "quote-row-kebab-Q78-4652-8737",
+          "tag": "BUTTON",
+          "text": "",
+          "disabled": false
+        }
+      ]
+    }
+  ],
+  "request_failures": [
+    {
+      "host": "xometry5836.my.site.com",
+      "path": "/ESWSEChatService1744244374743/assets/js/bootstrap.min.js",
+      "kind": "script"
+    },
+    {
+      "host": "www.googletagmanager.com",
+      "path": "/gtm.js",
+      "kind": "script"
+    },
+    {
+      "host": "event-data-cdn.xometry.net",
+      "path": "/analytics.js/v1/RqFqnBMxmtVly2NspqAi7sZJOf2GIgmf/analytics.min.js",
+      "kind": "script"
+    },
+    {
+      "host": "rcg.conviva.com",
+      "path": "/js/d2d1457e431c55589cd6869389fcdc7da348eb3d/2.0.2/remote_config.json",
+      "kind": "xhr"
+    },
+    {
+      "host": "edge.fullstory.com",
+      "path": "/s/fs.js",
+      "kind": "script"
+    },
+    {
+      "host": "d2d1457e431c55589cd6869389fcdc7da348eb3d.appgw.conviva.com",
+      "path": "/ctp",
+      "kind": "ping"
+    },
+    {
+      "host": "sentry.mgmt.global.xmtr.io",
+      "path": "/api/24/envelope/",
+      "kind": "fetch"
+    },
+    {
+      "host": "ingress.us1.rum-ingress-coralogix.com",
+      "path": "/browser/v1beta/logs",
+      "kind": "fetch"
+    },
+    {
+      "host": "d2d1457e431c55589cd6869389fcdc7da348eb3d.appgw.conviva.com",
+      "path": "/ctp",
+      "kind": "ping"
+    },
+    {
+      "host": "sentry.mgmt.global.xmtr.io",
+      "path": "/api/24/envelope/",
+      "kind": "fetch"
+    },
+    {
+      "host": "prodregistryv2.org",
+      "path": "/v1/rgstr",
+      "kind": "ping"
+    }
+  ],
+  "response_failures": [],
+  "status": "INSPECTED",
+  "identity_match": true
+}

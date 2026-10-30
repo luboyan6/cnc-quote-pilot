@@ -1,0 +1,38 @@
+{
+  "id": "cnc-monitor-02-recovery",
+  "name": "cnc-monitor-02-recovery",
+  "title": "CNC 异常分类、重试与执行恢复",
+  "description": "按副作用阶段分类异常，建立有限重试、人工接管、Intent只读核对、租约恢复及取消栅栏",
+  "status": "completed",
+  "dev_type": "backend",
+  "scope": "cnc-recovery",
+  "package": null,
+  "priority": "P0",
+  "creator": "WEIYC",
+  "assignee": "WEIYC",
+  "createdAt": "2026-10-28",
+  "completedAt": "2026-10-28",
+  "branch": "feat/deerflow-cnc-lead-agent",
+  "base_branch": "master",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "10-21-cnc-mvp-04-monitoring",
+  "relatedFiles": [],
+  "notes": "Created with explicit user task-creation consent on 2026-10-28. Planning artifacts only; no task activation or product implementation. Parent shared contract owns cross-child behavior.",
+  "meta": {
+    "execution_state": "implementation_and_regressions_passed",
+    "task_creation_approval": "user_explicit_create_tasks_2026-10-28",
+    "architecture": "deterministic_workflow",
+    "planning_artifacts": "prd_design_implement_and_curated_jsonl_ready_for_review",
+    "implementation_approval": "user_explicit_continue_2026-10-28",
+    "shared_contract": ".trellis/tasks/10-21-cnc-mvp-04-monitoring/research/implementation-contract.md",
+    "live_acceptance": "not_run",
+    "depends_on": [
+      "10-28-cnc-monitor-01-batch"
+    ],
+    "stage_order": 2
+  }
+}

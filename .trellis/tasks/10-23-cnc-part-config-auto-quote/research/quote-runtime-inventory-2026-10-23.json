@@ -16,9 +16,44 @@
       "upload_authorized": true,
       "validation_status": "PENDING",
       "enabled_accounts": 1
+    },
+    {
+      "config_id": 2,
+      "part_id": 2,
+      "platform_id": 2,
+      "enabled": true,
+      "material": "铝合金",
+      "quantity": 1,
+      "surface_finish": null,
+      "extension": "step",
+      "upload_authorized": true,
+      "validation_status": "PENDING",
+      "enabled_accounts": 1
     }
   ],
   "runs": [
+    {
+      "run_id": "89803919-ffbd-4094-aab4-06c345112296",
+      "config_id": 2,
+      "part_id": 2,
+      "platform_id": 2,
+      "account_id": 2,
+      "status": "FAILED",
+      "stage": "prepare",
+      "reason": "policy_blocked",
+      "active_config_id": null
+    },
+    {
+      "run_id": "3804d1cd-84fb-486e-b73a-5f326809cb95",
+      "config_id": 1,
+      "part_id": 2,
+      "platform_id": 1,
+      "account_id": 1,
+      "status": "FAILED",
+      "stage": "prepare",
+      "reason": "PROVIDER_AUTOMATION_UNVERIFIED",
+      "active_config_id": null
+    },
     {
       "run_id": "74a8b51b-fb3b-4f97-9c6b-c7e8fdfa1c74",
       "config_id": 1,
@@ -87,6 +122,11 @@
     {
       "platform_id": 1,
       "platform_name": "xometry",
+      "enabled_accounts": 1
+    },
+    {
+      "platform_id": 2,
+      "platform_name": "嘉立创中国",
       "enabled_accounts": 1
     }
   ],

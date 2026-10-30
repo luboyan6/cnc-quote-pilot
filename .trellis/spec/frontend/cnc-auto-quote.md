@@ -6,20 +6,24 @@ Read when changing the configuration row action, quote API/composable/dialog, or
 
 ## 2. Signatures
 
-`useAutoQuote()` exposes visible/run/selectedRow/accounts/selectedAccount/choosingAccount/loadingIds/frameUrl/error/info/busy/interactive and open/close/chooseAccount/command. The API module uses seven fixed quote endpoints and strict response types; start body allows only request_id and optional account_id. QuoteRun carries requested parameters and optional result; monetary values remain strings. `info` is the non-error notice for recovered existing-account activity.
+`useAutoQuote()` exposes visible/run/selectedRow/accounts/selectedAccount/choosingAccount/loadingIds/frameUrl/error/info/busy/interactive and open/close/chooseAccount/command/confirmDeclaration. The API module uses the original seven quote endpoints plus the fixed declaration endpoint below; start body allows only request_id and optional account_id. QuoteRun carries requested parameters and optional result; monetary values remain strings. `info` is the non-error notice for recovered existing-account activity.
+
+`POST /cnc/cnc_part_config/{id}/quote/runs/{run_id}/declaration` accepts only `{declaration_id, choice}`, with `choice` equal to `not_controlled` or `controlled`, and returns QuoteRun. `QuoteRun.export_declaration` is optional/null or `{declaration_id, statement, options: [{value, label}]}`. The server binds the decision to its frozen file, actor and current statement; the client never supplies a hash/path or credentials.
 
 `ControlledBrowser.vue` is shared with AccountLoginDialog. Inputs remain the existing fixed click/scroll/key/text union; no JavaScript, arbitrary URL, locator, file path or clipboard interface.
 
 ## 3. Contracts
 
-- Render the row action using existing table operations and Element Plus style. Require config query OR detail plus config update and account query/update. Disabled configurations cannot start; preserve existing uncommitted CRUD/option logic.
+- Render the row action using existing table operations and Element Plus style. Require config query OR detail plus config update and account query/update. Disabled configurations cannot start; preserve existing uncommitted CRUD/option logic. The page's start/account-choice/input/resume/declaration handlers recheck current permissions; close still cleans up after permission loss. Quote runs reuse the backend login owner; do not create a competing login HTTP session from this page.
 - No eligible account shows an actionable message; one starts automatically, multiple require selection. Server may recover an existing same-config run with another previously selected account: only adopt an eligible returned account, display its actual masked identity and explicitly explain recovery rather than claiming a new selected-account run started.
-- Poll serially around1.5s, with generation checks after every await. Never allow a late account/frame/start response to replace another row's state. Do not automatically repeat start/input/resume after transport failure.
-- Closing first invalidates generation, stops/aborts read polls, releases object URLs and schedules cancellation. Before another config starts, wait ALL prior creates and cancellations, not just the same config ID: different configs may share an account. A start resolving after closure must release its returned nonterminal run.
+- Poll serially around1.5s, with generation checks after every await. Never allow a late account/frame/start/declaration response to replace another row's state. Do not automatically repeat start/input/resume/declaration after transport failure.
+- Closing first invalidates generation, stops/aborts read polls, releases object URLs and schedules cancellation. Before another config starts, wait ALL prior creates, declaration requests and cancellations, not just the same config ID: different configs may share an account. A start resolving after closure must release its returned nonterminal run.
 - Human input requires WAITING_HUMAN AND can_input AND no local error/busy. WAITING_HUMAN with can_input=false must retain the reason without trying to fetch an inaccessible frame. Automatic phases cannot accept concurrent human parameter changes.
+- An export declaration uses its explicit typed action even though generic `can_input=false`. Display the complete plain-text statement/options and current file. Never preselect a classification; clear selection when run/declaration ID changes. Submit only a current allowed option during WAITING_HUMAN, hide generic browser/resume while a declaration is present, and track its mutation promise through close/reopen barriers.
 - Terminal statuses are QUOTED/REFERENCE_ESTIMATE/PENDING_REVIEW/FAILED/CANCELLED. Display them distinctly; only QUOTED is a successful final quote. Preserve exact Decimal amount/currency/unit-vs-line and nullable tax/shipping.
 - LeadTime's canonical raw display field is `text`; preserve platform wording. Unknown lead time uses a human label, not JSON or invented production days. Actual lowercase BrowserStop reasons and uppercase quote-local reasons need actionable Chinese mappings; unknown reasons get a safe generic fallback.
 - `quoteMessages.ts` owns the allowlisted reason mapping for both run notices and pre-run account/start failures. Recognize known `Error.message`, rejected response `data.msg`, and unsuccessful response envelopes; unknown messages, including inherited object keys, retain the generic notice. Never display arbitrary exception text or retry a mutation because its error was translated.
+- Map `JLC_EFFECTIVE_PARAMETERS_UNVERIFIED` to an actionable message that JLC parameter readback is unverified and automatic upload/estimate cannot proceed; do not imply an estimate was produced.
 - Use crypto.randomUUID with secure getRandomValues UUIDv4 fallback for non-secure/LAN environments; generate inside error handling so unavailable crypto cannot strand busy/loading flags. Do not use Math.random for request IDs.
 
 ## 4. Validation & error matrix
@@ -33,6 +37,8 @@ Read when changing the configuration row action, quote API/composable/dialog, or
 | Returned wrong config/ineligible account | Reject; no silent adoption |
 | Late read/frame after row switch | Ignore; revoke obsolete URLs |
 | WAITING_HUMAN, can_input=false | Explain block, no unavailable frame request |
+| Export declaration present | Show complete statement/file and unselected options; no generic input/resume |
+| Declaration ID changes / old response after close | Clear selection / ignore obsolete response; no repeat POST |
 | Mutation response not confirmed | Stop sending, no automatic replay |
 | Result is reference estimate or pending audit | Warning status, no success label |
 
@@ -44,7 +50,7 @@ Read when changing the configuration row action, quote API/composable/dialog, or
 
 ## 6. Tests required
 
-`cnc-part-config-options.spec.ts` covers actual row click/permissions and existing configuration options. `cnc-part-config-auto-quote.spec.ts` covers zero/one/many account handling, serial reads, human control, cross-config pending-create/cancel barriers, late cleanup, existing-account recovery and exact result/status/lead-time rendering. `cnc-part-config-quote-api.spec.ts` checks fixed API paths, POST body allowlist and JPEG Blob boundary. Regress original account login/API/platform-option suites when extracting the shared browser UI.
+`cnc-part-config-options.spec.ts` covers actual row click/permissions and existing configuration options. `cnc-part-config-auto-quote.spec.ts` covers zero/one/many account handling, serial reads, human control, cross-config pending-create/cancel barriers, late cleanup, existing-account recovery and exact result/status/lead-time rendering. It also checks declarations have no default selection, reset on version changes, block generic input/resume, send once, and settle before reopening. `cnc-part-config-quote-api.spec.ts` checks fixed API paths, POST body allowlists (including declaration_id/choice only) and JPEG Blob boundary. Regress original account login/API/platform-option suites when extracting the shared browser UI.
 
 Run focused Vitest, type-check, changed-file ESLint/Prettier/Stylelint and production build. State which code revision the build covers; do not claim a pre-edit build verifies later behavior.
 
@@ -57,7 +63,7 @@ The existing shared `FaButtonTable` renders tooltip-wrapped icon DIVs without bu
 await closing.get(nextConfigId);
 
 // Correct: serialize prior create settlement and all cleanup before admission.
-await Promise.all([...starting, ...closing.values()]);
+await Promise.all([...starting, ...declaring, ...closing.values()]);
 if (generation !== epoch) return;
 ```
 

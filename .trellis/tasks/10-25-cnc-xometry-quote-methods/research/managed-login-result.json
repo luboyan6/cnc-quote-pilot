@@ -1,0 +1,7 @@
+{
+  "quote_mutations": 0,
+  "account_id": 1,
+  "config_id": 3,
+  "status": "WAITING_HUMAN",
+  "reason": "PROVIDER_VERIFICATION_REQUIRED"
+}

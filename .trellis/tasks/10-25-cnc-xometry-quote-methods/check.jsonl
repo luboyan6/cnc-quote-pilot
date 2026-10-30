@@ -1,0 +1,6 @@
+{"file":".trellis/spec/backend/cnc-auto-quote.md","reason":"Review durable intents, complete parameter readback, current quote evidence and compatibility."}
+{"file":".trellis/spec/backend/cnc-account-login.md","reason":"Regress login reuse, identity, owner isolation, leases and privacy."}
+{"file":".trellis/spec/backend/browser-executor.md","reason":"Review byte identity, same-owner actions, policy and no blind mutation retries."}
+{"file":".trellis/spec/frontend/cnc-auto-quote.md","reason":"Review account selection, race barriers, teardown and result/declaration interactions."}
+{"file":".trellis/spec/guides/cross-layer-thinking-guide.md","reason":"Trace typed commands and receipts across HTTP, owner, persistence and rendering."}
+{"file":".trellis/tasks/10-25-cnc-xometry-quote-methods/research/existing-flow.md","reason":"Separate this task from existing dirty changes and synthetic checks from live acceptance."}

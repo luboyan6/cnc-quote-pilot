@@ -1,45 +1,65 @@
-# 04 批量、幂等与定时历史：设计
+# 四模块集成技术设计
 
-当前平台修订（D-17，2026-10-22，用户已答复）：**Xometry US 第一（platform_code=xometry_us，provider_group=xometry），嘉立创 CNC 中国站第二（platform_code=jlc_cnc_cn，provider_group=jlc），RapidDirect 第三并延期**。可信入口为 https://www.jlc-cnc.com/cncOrder/#/placeOrder；不保存跟踪查询。当前目标覆盖前两平台全部既有功能；RapidDirect 要到前两平台功能与整体验收完成后再实施，不作为 02～05 的前置。此前 RD→Xometry 的选择/实测仅保留历史范围，具体以父 decisions.md D-17 为准。用户既有顺序实施授权继续有效，无需重新创建任务或重复审批。
+> 当前版本：2026-10-28；planning。详细跨子项数据/接口/状态定义只维护在 [共享契约](research/implementation-contract.md)，本文件描述组合方式与边界。
 
-进入规则：01 按 Xometry US 的真实首平台 G-01～G-07/E2 与安全停止点交接 02；02 真闭环及 01 嘉立创 CNC 的第二平台 E2 满足后才能全面实施 03；04/05 依赖前两平台真实链路。第二家待核验不会阻止首家满足门槛后进入 02；完整 MVP 仍必须两家独立 provider_group 的真实 QUOTED，不用同集团入口、参考价或待审核补数。Xometry 现有 A/B 人工受控报价不是完整 E2/E3；嘉立创目前观察到的系统预估价为 REFERENCE_ESTIMATE，不通过真实报价 gate。产品自动登录/加密会话/关闭重建 context 的实现与验证归 02/03，不能把尚未实现的产品会话能力倒置为 01 开发前置。
+## 架构与责任
 
-当前分工继承[业务 Workflow 与异常分支](../10-21-cnc-pricing-mvp/workflow-design.md)：S01～S11 固定正常步骤，E01～E13 规定出口；Deep Agents 分析未知异常并选择允许策略，代码守卫/复验后恢复，正常步骤不强制模型调用。
+沿用 FastAPI 模块化单体、SQLAlchemy/PostgreSQL、Redis、APScheduler、Playwright、Vue/Element Plus/ECharts。账号及既有单次报价服务保持唯一执行入口；新增领域编排承接批次、恢复和监测。相关 [源码证据](research/planning-revision-2026-10-28.md)已保存。
 
-本子项继承 [父设计](../10-21-cnc-pricing-mvp/design.md)、[稳定契约](../10-21-cnc-pricing-mvp/research/mvp-contract.md)及[平台 JSON 契约](../10-21-cnc-pricing-mvp/research/platform-configs/README.md)；它们是本子任务的实际设计输入，不复制状态/金额/安全规则形成第二套定义。
+~~~text
+手动批次 API ────────────────┐
+                            ├→ BatchService → PostgreSQL batch/items
+APScheduler → 同步扫描 handler ┘                         ↓
+                                             lifespan QuoteDispatcher
+                                                       ↓
+                                         当前权限/快照/租约/Intent 检查
+                                                       ↓
+                                         QuoteService → 两个平台报价
+                                                       ↓
+                                         Run + Result 原子终结事务
+                                                       ↓
+                                        批次/轮次/统计/历史/私有证据
+~~~
 
-按[Deep Agents 设计](../10-21-cnc-pricing-mvp/agent-design.md)将同版 Agent 接入批量/监测，当前核验基线 `0.7.29`；业务任务/预算/intent 与 checkpoint 分工一致。
+调度器只建轮次和入队。消费者不复用 HTTP Session；同步扫描和异步浏览器不跨线程共享 Session/Page。首期 CNC 执行固定一个 API 进程/事件循环、一个自动执行槽；多 worker 拓扑在支持前由配置校验拒绝。
 
-## 范围与依赖
+## 领域数据与执行生命周期
 
-责任：CNC task/schedule/history、领取/租约与既有 scheduler builtin，相关模型/测试；不重建共享调度器。
+T1 创建 Batch/Item，复用现有 Run 表记录尝试，保留 active_config_id 唯一约束和请求唯一键。T2 接入现有 Intent，控制不明操作核对和重启。T3 创建 Schedule/Round，唯一时点关联一个 batch。T4 扩展现有 QuoteResult 作为唯一历史与结果表。
 
-进入条件：02/03 两家适配器与配置快照/结果契约稳定且可真实报价。
+每个子项有不可变输入 fingerprint、原配置 revision、文件哈希和明确账号。数量覆盖经过内部快照接口，不写原配置。现有账号、文件和当前权限继续复验；已修改来源被拒绝并要求新建输入。
 
-追溯：MVP-R05/06/07/10/11/13/14/15；M-01～08；DV-08/09/11；父 AC-12/13。
+执行状态和报价性质分离。批次完成度、正式报价率、估价数/待审数从子项和结果计算；尝试明细保留，不能因重试多计批次成功。状态枚举、指标分母与边界见共享契约第 4、7 节。
 
-## 本阶段实现行为
+## 一致性与恢复
 
-1. 展开 12 明细并固定平台配置/SDK/模型/Skills/流程与策略版本，每 item 独立步骤/intent；未知异常创建服务端 incident/thread，恢复同异常沿用原 thread，全部异常共享 item 预算。无异常不要求创建 Agent checkpoint。
-2. 实现 owner 幂等键、同批去重、租约/账号锁/限流、有限重试和取消；提交不明只读协调。
-3. 复用现有 leader/builtin 创建持久监测轮次，重复 tick/重启不重建同轮，错过/重叠有记录。
-4. 追加保存两轮有效观测，同价不去掉；按全部有效参数和商业口径比较，未知或不同口径不强行算差额。
-5. 把 02 的固定步骤、异常策略/复验、checkpoint/人工恢复/取消接入消费者；重启协调 intent/远端引用和恢复位置。所有 incident/模型/Schema 调用共享原 item 预算，重复决策/新 tool_call_id 不重发；调度器仅入队，Agent 不推进主步骤。
+- 请求、子项、尝试、轮次、结果均有数据库唯一约束；进程锁只作为优化。
+- 短事务领取队列并释放行锁，使用 owner/token 续租与条件更新；浏览器阶段不持有长事务。
+- 所有快捷平台路径接入账号隔离、lease、frozen input 与 durable intent。原账号不能在隐式 fallback 中切换。
+- 结果落库失败不得报告 COMPLETED；已发生远端副作用必须核对或重试本地保存。
+- 取消是持久请求与所有者停止协议，保留真实结果和不明记录。重启只自动继续已证实安全的操作。
+- 批次状态无需前端轮询推动；页面关闭不终止批次。
 
-## 验证与风险
+## 调度策略
 
-TC-09/10/13～15/21～25、TC-CFG-06、TC-DA-05～07/09；12 项基准、两轮真实自动监测，Agent thread/版本隔离、幂等/取消/真实 saver 重启/崩溃协调与数据库完整性测试。
+固定 60 秒扫描业务表；计划时区用于显示/解释，唯一时点和存储使用 UTC。计划锁内建 round/batch/items 并推进 next_run_at。重复 tick 由唯一约束兜底。计划暂停阻止未来准入；已有轮次继续。重叠记录跳过，停机漏跑记录缺口，容量不足保留待处理时点。详见共享契约第 6 节。
 
-风险/降级：调度重复、配置变更污染历史、静默默认附加服务、长等待占锁；固定配置、有限预算与可复算等待记录。
+## API 与 UI
 
-现有规划文件和静态检查不代表产品实现、真实报价或性能已经通过。保护账号/STEP/证据、有限重试与禁止交易保持父契约。
+新增批次与计划的插件 controller/service/crud/schema，路径及 RBAC 见共享契约第 8 节；新增路由须通过真实 OpenAPI/HTTP 注册检查，避免动态路由重复注册。
 
-## BR-2026-10-21 共用归属与选型
+Vue 增加批次任务和监测计划页面，并扩展已有结果页面。任务详情使用已有 Run 受控人工接口。新批次页面的关闭只停止串行读取，显式取消单独操作；原单次对话框关闭行为不在本轮改变。
 
-[源码依据](../../../docs/browser-reference-analysis.md)和[统一接口](../../../docs/browser-implementation-design.md)为本轮设计输入；[BR](../10-21-cnc-browser-reuse/prd.md) 一处交付 Playwright 官方 SDK 薄封装和独立 MIT 出站代理。SchedulerUtil 只入队；消费同一执行层，同账号持久租约、operation intent 与观测由本任务/02 持有。
+列表/统计/趋势/截图采用一致的服务端筛选与数据范围。金额通过 Decimal 字符串传输；历史按完整可比键生成。证据使用私有存储、记录授权和带认证 Blob 读取。
 
-禁止另建 CDP/DOM 上传协议、Ref 引擎或 BrowserSkill gateway。接入条件：秘密加密/私有证据及 Trace、owner/platform/account 绑定、允许域、挑战转人工和禁止交易。保留 02/03 真闭环依赖；重复 tick/取消/租约丢失/丢回执不重复提交；两轮真实监测独立验收。
+## 兼容与迁移
 
-## D-17 前两平台交付边界
+所有 Run 新关联列可空，旧手动记录仍能查询。旧结果缺少比较口径时显示未知；不补造币种、税费、正式性质或历史成功数据。run_id 重复检查通过后才能加唯一约束，冲突数据不自动删改。
 
-本阶段目标固定为 Xometry US 与嘉立创 CNC 中国站；12 基准、每平台 10 项、两轮监测、Web/CSV/证据及全部原验收保持。RapidDirect 为第三家延期 backlog，不出现在当前批次、监测模板或成功率分母中；前两家完整功能与验收完成后才考虑实施。
+T1/T3/T4 按实际 Alembic head 依次产生兼容迁移，先增加结构，再接入写入与读取；不自动升级用户数据库。其他旧 Agent 任务和全局 spec 不在本轮改写。
+
+## 方案取舍与回滚
+
+当前规模采用数据库持久队列与现有调度器，降低第二套 Broker/Worker 的运维成本；代价是首期固定单进程执行和有界吞吐。将来增加 worker 时再补独立执行进程与命令路由。
+
+回滚先关闭新准入、暂停扫描/领取，再有界结算活跃项；结果、Intent 和证据保留。默认回滚代码和功能开关，数据已写入后不破坏性降级删表。

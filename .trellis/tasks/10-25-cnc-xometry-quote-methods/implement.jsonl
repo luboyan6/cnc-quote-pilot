@@ -1,0 +1,7 @@
+{"file":".trellis/spec/backend/cnc-auto-quote.md","reason":"Quote run, durable mutation, provider activation and result-validation contracts."}
+{"file":".trellis/spec/backend/cnc-account-login.md","reason":"Reuse the existing login owner, identity verification and fenced account lifecycle."}
+{"file":".trellis/spec/backend/browser-executor.md","reason":"Official frozen-byte uploads, trusted hosts, same-owner Page and no mutation replay."}
+{"file":".trellis/spec/frontend/cnc-auto-quote.md","reason":"Preserve row permissions, account choice, serial polling, cleanup and truthful result display."}
+{"file":".trellis/spec/guides/cross-layer-thinking-guide.md","reason":"Keep new declaration/receipt fields consistent from DTO to owner, persistence and UI."}
+{"file":".trellis/spec/guides/code-reuse-thinking-guide.md","reason":"Reuse the existing quote and login pipeline instead of duplicating it."}
+{"file":".trellis/tasks/10-25-cnc-xometry-quote-methods/research/existing-flow.md","reason":"Current source inventory, skill references, uncertain upload and live acceptance limits."}

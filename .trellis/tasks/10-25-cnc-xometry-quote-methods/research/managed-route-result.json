@@ -1,0 +1,460 @@
+{
+  "quote_mutations": 0,
+  "account_id": 1,
+  "config_id": 3,
+  "observations": [
+    {
+      "stage": "verified-managed-home",
+      "host": "www.xometry.com",
+      "path": "/quoting/home/",
+      "query_keys": [],
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "id": "header-login-register-button",
+          "role": null,
+          "type": "button",
+          "testid": "Button-header-login-register-button",
+          "label": "Log In / Register",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "SPAN",
+          "id": "workspace-switcher-trigger",
+          "role": "button",
+          "type": null,
+          "testid": null,
+          "label": "Switch workspace",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "dashboard-get-instant-quote-block",
+          "role": null,
+          "type": "button",
+          "testid": "DashboardGetInstantQuoteBlock-dashboard-get-instant-quote-block",
+          "label": "Start a quote",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "dashboard-get-instant-quote-primary",
+          "role": null,
+          "type": "button",
+          "testid": "DashboardGetInstantQuotePrimary-dashboard-get-instant-quote-primary",
+          "label": "Get an Instant Quote",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "rc-tabs-0-more",
+          "role": null,
+          "type": "button",
+          "testid": null,
+          "label": "",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "INPUT",
+          "id": "quote-table-date-filter",
+          "role": "combobox",
+          "type": "search",
+          "testid": null,
+          "label": "Filter by date",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "dashboard-table-columns-toggle",
+          "role": null,
+          "type": "button",
+          "testid": "DashboardTableToolbar-dashboard-table-columns-toggle",
+          "label": "Customize Columns",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "quote-table-export",
+          "role": null,
+          "type": "button",
+          "testid": "Button-quote-table-export",
+          "label": "Export CSV",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "dashboard-table-expand-Q59-6980-1120",
+          "role": null,
+          "type": "button",
+          "testid": null,
+          "label": "Expand quote Q59-6980-1120",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "A",
+          "id": null,
+          "role": null,
+          "type": null,
+          "testid": null,
+          "label": "Configure part 1 of quote Q59-6980-1120",
+          "accept": null,
+          "quote_path": "/quoting/quote/Q59-6980-1120/6ad979df11d9bc75b92c67db/",
+          "quantity": null
+        },
+        {
+          "tag": "A",
+          "id": null,
+          "role": null,
+          "type": null,
+          "testid": null,
+          "label": "Configure part 2 of quote Q59-6980-1120",
+          "accept": null,
+          "quote_path": "/quoting/quote/Q59-6980-1120/6adc4b7a03aed67ecaa36f85/",
+          "quantity": null
+        },
+        {
+          "tag": "A",
+          "id": null,
+          "role": null,
+          "type": null,
+          "testid": null,
+          "label": "Configure part 3 of quote Q59-6980-1120",
+          "accept": null,
+          "quote_path": "/quoting/quote/Q59-6980-1120/6adc4b81bf1ba8ef33ee5ae1/",
+          "quantity": null
+        },
+        {
+          "tag": "A",
+          "id": null,
+          "role": null,
+          "type": null,
+          "testid": "quote-link-Q59-6980-1120",
+          "label": "Q59-6980-1120",
+          "accept": null,
+          "quote_path": "/quoting/quote/Q59-6980-1120",
+          "quantity": null
+        },
+        {
+          "tag": "A",
+          "id": "quote-row-cta-Q59-6980-1120",
+          "role": null,
+          "type": null,
+          "testid": "QuoteTableRowActions-quote-row-cta-Q59-6980-1120",
+          "label": "Review & Checkout",
+          "accept": null,
+          "quote_path": "/quoting/quote/Q59-6980-1120",
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": null,
+          "role": null,
+          "type": "button",
+          "testid": "quote-row-kebab-Q59-6980-1120",
+          "label": "More actions for quote Q59-6980-1120",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "dashboard-table-expand-Q78-4652-8737",
+          "role": null,
+          "type": "button",
+          "testid": null,
+          "label": "Expand quote Q78-4652-8737",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "A",
+          "id": null,
+          "role": null,
+          "type": null,
+          "testid": null,
+          "label": "Configure part 1 of quote Q78-4652-8737",
+          "accept": null,
+          "quote_path": "/quoting/quote/Q78-4652-8737/6ad984bfe15e7419e29c8b92/",
+          "quantity": null
+        },
+        {
+          "tag": "A",
+          "id": null,
+          "role": null,
+          "type": null,
+          "testid": "quote-link-Q78-4652-8737",
+          "label": "Q78-4652-8737",
+          "accept": null,
+          "quote_path": "/quoting/quote/Q78-4652-8737",
+          "quantity": null
+        },
+        {
+          "tag": "A",
+          "id": "quote-row-cta-Q78-4652-8737",
+          "role": null,
+          "type": null,
+          "testid": "QuoteTableRowActions-quote-row-cta-Q78-4652-8737",
+          "label": "Review & Checkout",
+          "accept": null,
+          "quote_path": "/quoting/quote/Q78-4652-8737",
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": null,
+          "role": null,
+          "type": "button",
+          "testid": "quote-row-kebab-Q78-4652-8737",
+          "label": "More actions for quote Q78-4652-8737",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "INPUT",
+          "id": "_r_32_",
+          "role": "combobox",
+          "type": "search",
+          "testid": null,
+          "label": "Page Size",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "privacy-banner-accept-button",
+          "role": null,
+          "type": "button",
+          "testid": "Button-privacy-banner-accept-button",
+          "label": "Accept",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        }
+      ],
+      "headings": [
+        {
+          "tag": "H1",
+          "id": null,
+          "text": "Dashboard"
+        }
+      ],
+      "fields": [
+        {
+          "testid": "DashboardGetInstantQuoteBlock-dashboard-get-instant-quote-block",
+          "tag": "BUTTON",
+          "text": "",
+          "disabled": false
+        },
+        {
+          "testid": "DashboardGetInstantQuotePrimary-dashboard-get-instant-quote-primary",
+          "tag": "BUTTON",
+          "text": "Get an Instant Quote",
+          "disabled": false
+        },
+        {
+          "testid": "slot-dashboard-quoteTable",
+          "tag": "DIV",
+          "text": " Filter by date\nCustomize Columns\nExport CSV\n\t\t\nQuote\n\t\nStatus\n\t\nSubtotal\n\tArrives By\t\nLast Updated\n\tActions\n\n\t\n\u00a0\n\t\nQuote\n\t\nStatus\n\t\nSubtotal\n\t\nArrives By\n\t\nLast Updated\n\t\nActions\n\n\n\t\t\n+1\nQ59-6980-1120\n4 parts\n\t\nAuto-Quoted\n\t$969.11\tNov. 10, 2026\tOct. 24, 2026\t\nReview & Checkout\n\n\n\t\t\nQ78-4652-8737\n1 part\n\t\nAuto-Quoted\n\t$296.10\tNov. 11, 2026\tOct. 22",
+          "disabled": false
+        },
+        {
+          "testid": "Button-quote-table-export",
+          "tag": "BUTTON",
+          "text": "Export CSV",
+          "disabled": false
+        },
+        {
+          "testid": "part-thumbnail-stack",
+          "tag": "DIV",
+          "text": "+1",
+          "disabled": false
+        },
+        {
+          "testid": "quote-link-Q59-6980-1120",
+          "tag": "A",
+          "text": "Q59-6980-1120",
+          "disabled": false
+        },
+        {
+          "testid": "QuoteTableRowActions-quote-row-cta-Q59-6980-1120",
+          "tag": "A",
+          "text": "Review & Checkout",
+          "disabled": false
+        },
+        {
+          "testid": "quote-row-kebab-Q59-6980-1120",
+          "tag": "BUTTON",
+          "text": "",
+          "disabled": false
+        },
+        {
+          "testid": "part-thumbnail-stack",
+          "tag": "DIV",
+          "text": "",
+          "disabled": false
+        },
+        {
+          "testid": "quote-link-Q78-4652-8737",
+          "tag": "A",
+          "text": "Q78-4652-8737",
+          "disabled": false
+        },
+        {
+          "testid": "QuoteTableRowActions-quote-row-cta-Q78-4652-8737",
+          "tag": "A",
+          "text": "Review & Checkout",
+          "disabled": false
+        },
+        {
+          "testid": "quote-row-kebab-Q78-4652-8737",
+          "tag": "BUTTON",
+          "text": "",
+          "disabled": false
+        }
+      ]
+    },
+    {
+      "stage": "managed-primary-uploader",
+      "host": "www.xometry.com",
+      "path": "/quoting/home/",
+      "query_keys": [],
+      "controls": [
+        {
+          "tag": "INPUT",
+          "id": null,
+          "role": null,
+          "type": "file",
+          "testid": null,
+          "label": "Choose files to upload",
+          "accept": "",
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "A",
+          "id": null,
+          "role": null,
+          "type": null,
+          "testid": "UploadView-instant-quote-dropzone-browse",
+          "label": "choose a file",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "SPAN",
+          "id": null,
+          "role": "button",
+          "type": null,
+          "testid": null,
+          "label": "See all accepted file types",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "instant-quote-recent",
+          "role": null,
+          "type": "button",
+          "testid": "UploadView-instant-quote-recent",
+          "label": "Add from Recent CAD Files",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "INPUT",
+          "id": null,
+          "role": null,
+          "type": "checkbox",
+          "testid": "Checkbox-instant-quote-large-order-toggle",
+          "label": "",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        },
+        {
+          "tag": "BUTTON",
+          "id": "instant-quote-continue",
+          "role": null,
+          "type": "button",
+          "testid": "UploadView-instant-quote-continue",
+          "label": "Start Instant Quote",
+          "accept": null,
+          "quote_path": null,
+          "quantity": null
+        }
+      ],
+      "headings": [
+        {
+          "tag": "H1",
+          "id": null,
+          "text": "Dashboard"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "text": "Start a New Quote\nUpload a 3D model to see instant pricing, lead time, and DFM feedback.\nDrag and drop, or choose a file\nUpload at least 1 CAD file to get started.\nCAD, drawings, and more \u2014 up to 150 MB per file \nAdd from Recent CAD Files\nSign in to start a new quote.\nThis is a large or assembly order\nStart Instant Quote"
+        }
+      ],
+      "fields": [
+        {
+          "testid": "UploadView-instant-quote-dropzone-browse",
+          "tag": "A",
+          "text": "choose a file",
+          "disabled": false
+        },
+        {
+          "testid": "UploadView-instant-quote-recent",
+          "tag": "BUTTON",
+          "text": "Add from Recent CAD Files",
+          "disabled": false
+        },
+        {
+          "testid": "Alert-upload-view-error",
+          "tag": "DIV",
+          "text": "Sign in to start a new quote.",
+          "disabled": false
+        },
+        {
+          "testid": "Checkbox-instant-quote-large-order-toggle",
+          "tag": "INPUT",
+          "text": "",
+          "disabled": false
+        },
+        {
+          "testid": "UploadView-instant-quote-continue",
+          "tag": "BUTTON",
+          "text": "Start Instant Quote",
+          "disabled": true
+        }
+      ]
+    }
+  ],
+  "request_failures": [],
+  "response_failures": [],
+  "status": "INSPECTED",
+  "identity_match": true
+}

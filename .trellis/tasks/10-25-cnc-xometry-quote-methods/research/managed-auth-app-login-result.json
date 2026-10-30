@@ -1,0 +1,87 @@
+{
+  "diagnostic_schema": 1,
+  "entry_mode": "app-login",
+  "evidence_filename": "managed-auth-app-login-result.json",
+  "started_at": "2026-10-25T07:49:55.327747+00:00",
+  "config_id": 3,
+  "account_id": 1,
+  "part_id": 4,
+  "quote_mutations": 0,
+  "events": [
+    {
+      "seconds": 3.766,
+      "kind": "owned_session_attached_before_navigation"
+    },
+    {
+      "seconds": 4.829,
+      "kind": "reviewed_route_request",
+      "route": {
+        "host": "www.xometry.com",
+        "path": "/quoting/home",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "resource_type": "document",
+      "method": "GET"
+    },
+    {
+      "seconds": 5.141,
+      "kind": "reviewed_or_error_response",
+      "route": {
+        "host": "www.xometry.com",
+        "path": "/quoting/home",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "status": 308,
+      "resource_type": "document"
+    },
+    {
+      "seconds": 5.141,
+      "kind": "reviewed_route_request",
+      "route": {
+        "host": "www.xometry.com",
+        "path": "/quoting/home/",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "resource_type": "document",
+      "method": "GET"
+    },
+    {
+      "seconds": 5.5,
+      "kind": "reviewed_or_error_response",
+      "route": {
+        "host": "www.xometry.com",
+        "path": "/quoting/home/",
+        "query_keys": [],
+        "other_query_key_count": 0
+      },
+      "status": 200,
+      "resource_type": "document"
+    },
+    {
+      "seconds": 5.5,
+      "kind": "main_navigation",
+      "route": {
+        "host": "www.xometry.com",
+        "path": "/quoting/home/",
+        "query_keys": [],
+        "other_query_key_count": 0
+      }
+    }
+  ],
+  "network_summary": {
+    "request:document": 2,
+    "response:document:308": 1,
+    "response:document:200": 1
+  },
+  "selected_frozen_file_verified": true,
+  "executor_active_count_after_exit": 0,
+  "owner_finish_reason": "browser_failed",
+  "status": "STOPPED",
+  "reason": "browser_failed",
+  "manager_cleanup_completed": true,
+  "database_cleanup_completed": true,
+  "finished_at": "2026-10-25T07:50:15.537013+00:00"
+}

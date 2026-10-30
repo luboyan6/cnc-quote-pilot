@@ -1,0 +1,4 @@
+{"file": ".trellis/spec/backend/cnc-account-login.md", "reason": "Account permission, owner, lifecycle and credential privacy invariants"}
+{"file": ".trellis/spec/guides/cross-layer-thinking-guide.md", "reason": "MCP transport to auth, service, transaction, and result contracts"}
+{"file": ".trellis/tasks/10-24-cnc-management-mcp/research/source-analysis.md", "reason": "Verified WeKnora architecture, repository findings and current SDK sources"}
+{"file": ".trellis/spec/backend/cnc-mcp.md", "reason": "Final executable MCP transport, tool, privacy and rollback contracts"}

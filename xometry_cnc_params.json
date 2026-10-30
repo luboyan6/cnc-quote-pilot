@@ -1,0 +1,2791 @@
+{
+  "metadata": {
+    "platform": "Xometry US",
+    "platform_code": "xometry_us",
+    "website_url": "https://www.xometry.com",
+    "quote_url": "https://www.xometry.com/quoting/quote/",
+    "currency": "USD",
+    "version": "1.0.0",
+    "extracted_at": "2026-10-25 15:35:00",
+    "description": "Xometry US CNC在线报价平台全量加工参数及参数联动关联约束规则库"
+  },
+  "parameter_definitions": {
+    "process": {
+      "name": "CNC Machining",
+      "code": "CNC",
+      "description": "Subtractive manufacturing process utilizing computer-controlled machine tools."
+    },
+    "subprocesses": [
+      {
+        "name": "No Preference",
+        "code": "NO_PREFERENCE",
+        "is_default": true,
+        "description": "Allows Xometry to choose the optimal CNC machining method based on part geometry."
+      },
+      {
+        "name": "CNC Mill and Turning Combo",
+        "code": "MILL_TURN_COMBO",
+        "is_default": false,
+        "description": "Combined multi-axis milling and turning centers for complex turned parts with prismatic features."
+      },
+      {
+        "name": "CNC Milling",
+        "code": "MILLING",
+        "is_default": false,
+        "description": "3-axis, 4-axis, or 5-axis vertical/horizontal milling for prismatic parts."
+      },
+      {
+        "name": "CNC Router",
+        "code": "ROUTER",
+        "is_default": false,
+        "description": "High-speed CNC routing for large format sheet materials, plastics, and woods."
+      },
+      {
+        "name": "CNC Turning (Lathe)",
+        "code": "TURNING",
+        "is_default": false,
+        "description": "High-precision lathe turning for cylindrical components."
+      },
+      {
+        "name": "Micro Machining",
+        "code": "MICRO_MACHINING",
+        "is_default": false,
+        "description": "Ultra-precision micro milling and micromachining for miniature features."
+      },
+      {
+        "name": "Swiss-Type Turning",
+        "code": "SWISS_TURNING",
+        "is_default": false,
+        "description": "Sliding headstock Swiss lathe turning for high-volume, slender precision parts."
+      },
+      {
+        "name": "Other",
+        "code": "OTHER",
+        "is_default": false,
+        "description": "Specialized machining setups specified in drawing or quote notes."
+      }
+    ],
+    "material_categories": [
+      "Aluminum",
+      "Stainless Steel",
+      "Steel",
+      "Brass, Bronze, or Copper",
+      "Plastic",
+      "Titanium",
+      "Composite",
+      "Other"
+    ],
+    "materials": [
+      {
+        "name": "Aluminum 2024",
+        "category": "Aluminum",
+        "is_metal": true,
+        "tolerance_group": "metal",
+        "cost_tier": "Cost tier 2 of 5",
+        "description": "A high-strength, aerospace-grade aluminum alloy known for its excellent fatigue resistance and machinability. Not as corrosion-resistant as 6061 but ideal for aerospace and structural applications.",
+        "supported_finishes": [
+          "Standard",
+          "Black Anodize",
+          "Black Hardcoat Anodize",
+          "Blue Anodize",
+          "Clear Anodize",
+          "Clear Hardcoat Anodize",
+          "Gold Anodize",
+          "Gray Hardcoat Anodize",
+          "Green Anodize",
+          "Orange Anodize",
+          "PTFE Impregnated Hard Anodize",
+          "Purple Anodize",
+          "Red Anodize",
+          "Yellow Anodize",
+          "Chem Film Clear",
+          "Chem Film Gold",
+          "Case Harden",
+          "Temper",
+          "Through Harden",
+          "Bead Blast",
+          "Tumbled",
+          "Electroless Nickel Plating",
+          "Gold Plating",
+          "Silver Plating",
+          "Zinc Plating",
+          "Electropolish",
+          "Cerakote",
+          "Powder Coating",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.005″ (±0.13mm)",
+          "±.010″ (±0.25mm)",
+          "This part requires tolerances tighter than ±.005″ (±0.13mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Aluminum 6061-T6x (Best Available)",
+        "category": "Aluminum",
+        "is_metal": true,
+        "tolerance_group": "metal",
+        "cost_tier": "Cost tier 1 of 5",
+        "is_default": true,
+        "description": "A versatile, heat-treatable aluminum alloy with excellent corrosion resistance and a good strength-to-weight ratio. Allows for flexibility when any variation of 6061-T6-tempered alloys is acceptable.",
+        "supported_finishes": [
+          "Standard",
+          "Black Anodize",
+          "Black Hardcoat Anodize",
+          "Blue Anodize",
+          "Clear Anodize",
+          "Clear Hardcoat Anodize",
+          "Gold Anodize",
+          "Gray Hardcoat Anodize",
+          "Green Anodize",
+          "Orange Anodize",
+          "PTFE Impregnated Hard Anodize",
+          "Purple Anodize",
+          "Red Anodize",
+          "Yellow Anodize",
+          "Chem Film Clear",
+          "Chem Film Gold",
+          "Case Harden",
+          "Temper",
+          "Through Harden",
+          "Bead Blast",
+          "Tumbled",
+          "Electroless Nickel Plating",
+          "Gold Plating",
+          "Silver Plating",
+          "Zinc Plating",
+          "Electropolish",
+          "Cerakote",
+          "Powder Coating",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.005″ (±0.13mm)",
+          "±.010″ (±0.25mm)",
+          "This part requires tolerances tighter than ±.005″ (±0.13mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Aluminum 6061-T651, Plate",
+        "category": "Aluminum",
+        "is_metal": true,
+        "tolerance_group": "metal",
+        "cost_tier": "Cost tier 1 of 5",
+        "description": "A stress-relieved aluminum plate variant of 6061-T6, providing excellent machinability, corrosion resistance, and mechanical properties for structural and aerospace applications.",
+        "supported_finishes": [
+          "Standard",
+          "Black Anodize",
+          "Black Hardcoat Anodize",
+          "Blue Anodize",
+          "Clear Anodize",
+          "Clear Hardcoat Anodize",
+          "Gold Anodize",
+          "Gray Hardcoat Anodize",
+          "Green Anodize",
+          "Orange Anodize",
+          "PTFE Impregnated Hard Anodize",
+          "Purple Anodize",
+          "Red Anodize",
+          "Yellow Anodize",
+          "Chem Film Clear",
+          "Chem Film Gold",
+          "Case Harden",
+          "Temper",
+          "Through Harden",
+          "Bead Blast",
+          "Tumbled",
+          "Electroless Nickel Plating",
+          "Gold Plating",
+          "Silver Plating",
+          "Zinc Plating",
+          "Electropolish",
+          "Cerakote",
+          "Powder Coating",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.005″ (±0.13mm)",
+          "±.010″ (±0.25mm)",
+          "This part requires tolerances tighter than ±.005″ (±0.13mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Aluminum 6061-T6/T6511, Bar/Rod",
+        "category": "Aluminum",
+        "is_metal": true,
+        "tolerance_group": "metal",
+        "cost_tier": "Cost tier 1 of 5",
+        "description": "An extruded aluminum bar/rod version of 6061-T6 with high strength, good corrosion resistance, and excellent machinability, commonly used in aerospace and industrial components.",
+        "supported_finishes": [
+          "Standard",
+          "Black Anodize",
+          "Black Hardcoat Anodize",
+          "Blue Anodize",
+          "Clear Anodize",
+          "Clear Hardcoat Anodize",
+          "Gold Anodize",
+          "Gray Hardcoat Anodize",
+          "Green Anodize",
+          "Orange Anodize",
+          "PTFE Impregnated Hard Anodize",
+          "Purple Anodize",
+          "Red Anodize",
+          "Yellow Anodize",
+          "Chem Film Clear",
+          "Chem Film Gold",
+          "Case Harden",
+          "Temper",
+          "Through Harden",
+          "Bead Blast",
+          "Tumbled",
+          "Electroless Nickel Plating",
+          "Gold Plating",
+          "Silver Plating",
+          "Zinc Plating",
+          "Electropolish",
+          "Cerakote",
+          "Powder Coating",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.005″ (±0.13mm)",
+          "±.010″ (±0.25mm)",
+          "This part requires tolerances tighter than ±.005″ (±0.13mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Aluminum 6063",
+        "category": "Aluminum",
+        "is_metal": true,
+        "tolerance_group": "metal",
+        "cost_tier": "Cost tier 2 of 5",
+        "description": "A medium-strength aluminum alloy known for its superior corrosion resistance and smooth surface finish, commonly used in architectural and structural applications.",
+        "supported_finishes": [
+          "Standard",
+          "Black Anodize",
+          "Black Hardcoat Anodize",
+          "Blue Anodize",
+          "Clear Anodize",
+          "Clear Hardcoat Anodize",
+          "Gold Anodize",
+          "Gray Hardcoat Anodize",
+          "Green Anodize",
+          "Orange Anodize",
+          "PTFE Impregnated Hard Anodize",
+          "Purple Anodize",
+          "Red Anodize",
+          "Yellow Anodize",
+          "Chem Film Clear",
+          "Chem Film Gold",
+          "Case Harden",
+          "Temper",
+          "Through Harden",
+          "Bead Blast",
+          "Tumbled",
+          "Electroless Nickel Plating",
+          "Gold Plating",
+          "Silver Plating",
+          "Zinc Plating",
+          "Electropolish",
+          "Cerakote",
+          "Powder Coating",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.005″ (±0.13mm)",
+          "±.010″ (±0.25mm)",
+          "This part requires tolerances tighter than ±.005″ (±0.13mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Aluminum 7050",
+        "category": "Aluminum",
+        "is_metal": true,
+        "tolerance_group": "metal",
+        "cost_tier": "Cost tier 2 of 5",
+        "description": "A high-strength aluminum alloy with excellent resistance to stress corrosion cracking, commonly used in aerospace and structural applications where toughness is required.",
+        "supported_finishes": [
+          "Standard",
+          "Black Anodize",
+          "Black Hardcoat Anodize",
+          "Blue Anodize",
+          "Clear Anodize",
+          "Clear Hardcoat Anodize",
+          "Gold Anodize",
+          "Gray Hardcoat Anodize",
+          "Green Anodize",
+          "Orange Anodize",
+          "PTFE Impregnated Hard Anodize",
+          "Purple Anodize",
+          "Red Anodize",
+          "Yellow Anodize",
+          "Chem Film Clear",
+          "Chem Film Gold",
+          "Case Harden",
+          "Temper",
+          "Through Harden",
+          "Bead Blast",
+          "Tumbled",
+          "Electroless Nickel Plating",
+          "Gold Plating",
+          "Silver Plating",
+          "Zinc Plating",
+          "Electropolish",
+          "Cerakote",
+          "Powder Coating",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.005″ (±0.13mm)",
+          "±.010″ (±0.25mm)",
+          "This part requires tolerances tighter than ±.005″ (±0.13mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Aluminum 7075-T6",
+        "category": "Aluminum",
+        "is_metal": true,
+        "tolerance_group": "metal",
+        "cost_tier": "Cost tier 1 of 5",
+        "description": "One of the strongest aluminum alloys, offering high strength-to-weight ratio and excellent fatigue resistance, widely used in aerospace and high-performance applications.",
+        "supported_finishes": [
+          "Standard",
+          "Black Anodize",
+          "Black Hardcoat Anodize",
+          "Blue Anodize",
+          "Clear Anodize",
+          "Clear Hardcoat Anodize",
+          "Gold Anodize",
+          "Gray Hardcoat Anodize",
+          "Green Anodize",
+          "Orange Anodize",
+          "PTFE Impregnated Hard Anodize",
+          "Purple Anodize",
+          "Red Anodize",
+          "Yellow Anodize",
+          "Chem Film Clear",
+          "Chem Film Gold",
+          "Case Harden",
+          "Temper",
+          "Through Harden",
+          "Bead Blast",
+          "Tumbled",
+          "Electroless Nickel Plating",
+          "Gold Plating",
+          "Silver Plating",
+          "Zinc Plating",
+          "Electropolish",
+          "Cerakote",
+          "Powder Coating",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.005″ (±0.13mm)",
+          "±.010″ (±0.25mm)",
+          "This part requires tolerances tighter than ±.005″ (±0.13mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Aluminum 7075-T7351",
+        "category": "Aluminum",
+        "is_metal": true,
+        "tolerance_group": "metal",
+        "cost_tier": "Cost tier 2 of 5",
+        "description": "A stress-relieved version of 7075-T6, offering improved fracture toughness and resistance to stress corrosion cracking while maintaining high strength.",
+        "supported_finishes": [
+          "Standard",
+          "Black Anodize",
+          "Black Hardcoat Anodize",
+          "Blue Anodize",
+          "Clear Anodize",
+          "Clear Hardcoat Anodize",
+          "Gold Anodize",
+          "Gray Hardcoat Anodize",
+          "Green Anodize",
+          "Orange Anodize",
+          "PTFE Impregnated Hard Anodize",
+          "Purple Anodize",
+          "Red Anodize",
+          "Yellow Anodize",
+          "Chem Film Clear",
+          "Chem Film Gold",
+          "Case Harden",
+          "Temper",
+          "Through Harden",
+          "Bead Blast",
+          "Tumbled",
+          "Electroless Nickel Plating",
+          "Gold Plating",
+          "Silver Plating",
+          "Zinc Plating",
+          "Electropolish",
+          "Cerakote",
+          "Powder Coating",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.005″ (±0.13mm)",
+          "±.010″ (±0.25mm)",
+          "This part requires tolerances tighter than ±.005″ (±0.13mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Aluminum MIC-6",
+        "category": "Aluminum",
+        "is_metal": true,
+        "tolerance_group": "metal",
+        "cost_tier": "Cost tier 2 of 5",
+        "description": "A precision-machined cast aluminum plate known for its excellent stability, flatness, and uniformity, making it ideal for tooling, jigs, and fixtures.",
+        "supported_finishes": [
+          "Standard",
+          "Black Anodize",
+          "Black Hardcoat Anodize",
+          "Blue Anodize",
+          "Clear Anodize",
+          "Clear Hardcoat Anodize",
+          "Gold Anodize",
+          "Gray Hardcoat Anodize",
+          "Green Anodize",
+          "Orange Anodize",
+          "PTFE Impregnated Hard Anodize",
+          "Purple Anodize",
+          "Red Anodize",
+          "Yellow Anodize",
+          "Chem Film Clear",
+          "Chem Film Gold",
+          "Case Harden",
+          "Temper",
+          "Through Harden",
+          "Bead Blast",
+          "Tumbled",
+          "Electroless Nickel Plating",
+          "Gold Plating",
+          "Silver Plating",
+          "Zinc Plating",
+          "Electropolish",
+          "Cerakote",
+          "Powder Coating",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.005″ (±0.13mm)",
+          "±.010″ (±0.25mm)",
+          "This part requires tolerances tighter than ±.005″ (±0.13mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Copper 101",
+        "category": "Brass, Bronze, or Copper",
+        "is_metal": true,
+        "tolerance_group": "metal",
+        "cost_tier": "Cost tier 3 of 5",
+        "description": "A high-purity copper alloy (99.99% Cu) with excellent electrical and thermal conductivity, commonly used in electrical and electronic applications.",
+        "supported_finishes": [
+          "Standard",
+          "Passivate",
+          "Temper",
+          "Bead Blast",
+          "Tumbled",
+          "Electroless Nickel Plating",
+          "Gold Plating",
+          "Silver Plating",
+          "Zinc Plating",
+          "Electropolish",
+          "Cerakote",
+          "Powder Coating",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.005″ (±0.13mm)",
+          "±.010″ (±0.25mm)",
+          "This part requires tolerances tighter than ±.005″ (±0.13mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Copper 260 (Brass)",
+        "category": "Brass, Bronze, or Copper",
+        "is_metal": true,
+        "tolerance_group": "metal",
+        "cost_tier": "Cost tier 2 of 5",
+        "description": "A brass alloy composed of copper and zinc, offering good corrosion resistance, machinability, and formability, often used in decorative and functional applications.",
+        "supported_finishes": [
+          "Standard",
+          "Passivate",
+          "Temper",
+          "Bead Blast",
+          "Tumbled",
+          "Electroless Nickel Plating",
+          "Gold Plating",
+          "Silver Plating",
+          "Zinc Plating",
+          "Electropolish",
+          "Cerakote",
+          "Powder Coating",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.005″ (±0.13mm)",
+          "±.010″ (±0.25mm)",
+          "This part requires tolerances tighter than ±.005″ (±0.13mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Copper C110",
+        "category": "Brass, Bronze, or Copper",
+        "is_metal": true,
+        "tolerance_group": "metal",
+        "cost_tier": "Cost tier 4 of 5",
+        "description": "A widely used high-conductivity copper alloy (99.9% Cu) known for its excellent electrical and thermal properties, used in wiring, bus bars, and heat exchangers.",
+        "supported_finishes": [
+          "Standard",
+          "Passivate",
+          "Temper",
+          "Bead Blast",
+          "Tumbled",
+          "Electroless Nickel Plating",
+          "Gold Plating",
+          "Silver Plating",
+          "Zinc Plating",
+          "Electropolish",
+          "Cerakote",
+          "Powder Coating",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.005″ (±0.13mm)",
+          "±.010″ (±0.25mm)",
+          "This part requires tolerances tighter than ±.005″ (±0.13mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Copper C932 (Bronze)",
+        "category": "Brass, Bronze, or Copper",
+        "is_metal": true,
+        "tolerance_group": "metal",
+        "cost_tier": "Cost tier 3 of 5",
+        "description": "A leaded tin bronze alloy with excellent wear resistance and self-lubricating properties, commonly used in bearings and bushings.",
+        "supported_finishes": [
+          "Standard",
+          "Passivate",
+          "Temper",
+          "Bead Blast",
+          "Tumbled",
+          "Electroless Nickel Plating",
+          "Gold Plating",
+          "Silver Plating",
+          "Zinc Plating",
+          "Electropolish",
+          "Cerakote",
+          "Powder Coating",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.005″ (±0.13mm)",
+          "±.010″ (±0.25mm)",
+          "This part requires tolerances tighter than ±.005″ (±0.13mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Copper C360 (Brass)",
+        "category": "Brass, Bronze, or Copper",
+        "is_metal": true,
+        "tolerance_group": "metal",
+        "cost_tier": "Cost tier 3 of 5",
+        "description": "A free-machining brass alloy with excellent machinability, moderate strength, and corrosion resistance, widely used in precision components.",
+        "supported_finishes": [
+          "Standard",
+          "Passivate",
+          "Temper",
+          "Bead Blast",
+          "Tumbled",
+          "Electroless Nickel Plating",
+          "Gold Plating",
+          "Silver Plating",
+          "Zinc Plating",
+          "Electropolish",
+          "Cerakote",
+          "Powder Coating",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.005″ (±0.13mm)",
+          "±.010″ (±0.25mm)",
+          "This part requires tolerances tighter than ±.005″ (±0.13mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Garolite G10 (FR4)",
+        "category": "Composite",
+        "is_metal": false,
+        "tolerance_group": "plastic",
+        "cost_tier": "Cost tier 3 of 5",
+        "description": "A fiberglass-reinforced epoxy laminate with excellent electrical insulation, mechanical strength, and flame resistance, commonly used in electrical and structural applications.",
+        "supported_finishes": [
+          "Standard",
+          "Bead Blast",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.010″ (±0.25mm)",
+          "±.020″ (±0.5mm)",
+          "This part requires tolerances tighter than ±.010″ (±0.25mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Garolite G10",
+        "category": "Composite",
+        "is_metal": false,
+        "tolerance_group": "plastic",
+        "cost_tier": "Cost tier 3 of 5",
+        "description": "A high-performance composite material made from fiberglass and epoxy resin, offering excellent mechanical strength, low moisture absorption, and electrical insulation properties.",
+        "supported_finishes": [
+          "Standard",
+          "Bead Blast",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.010″ (±0.25mm)",
+          "±.020″ (±0.5mm)",
+          "This part requires tolerances tighter than ±.010″ (±0.25mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Garolite G11 (FR5)",
+        "category": "Composite",
+        "is_metal": false,
+        "tolerance_group": "plastic",
+        "cost_tier": "Cost tier 3 of 5",
+        "description": "A high-strength fiberglass laminate similar to G10 but with better heat resistance and electrical insulating properties, often used in demanding industrial applications.",
+        "supported_finishes": [
+          "Standard",
+          "Bead Blast",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.010″ (±0.25mm)",
+          "±.020″ (±0.5mm)",
+          "This part requires tolerances tighter than ±.010″ (±0.25mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "ABS",
+        "category": "Plastic",
+        "is_metal": false,
+        "tolerance_group": "plastic",
+        "cost_tier": "Cost tier 1 of 5",
+        "description": "A tough, impact-resistant plastic with good machinability, commonly used in prototyping, automotive, and consumer products.",
+        "supported_finishes": [
+          "Standard",
+          "Bead Blast",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.010″ (±0.25mm)",
+          "±.020″ (±0.5mm)",
+          "This part requires tolerances tighter than ±.010″ (±0.25mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Acrylic",
+        "category": "Plastic",
+        "is_metal": false,
+        "tolerance_group": "plastic",
+        "cost_tier": "Cost tier 1 of 5",
+        "description": "A transparent thermoplastic with excellent optical clarity, weather resistance, and moderate impact strength, often used in displays and enclosures.",
+        "supported_finishes": [
+          "Standard",
+          "Bead Blast",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.010″ (±0.25mm)",
+          "±.020″ (±0.5mm)",
+          "This part requires tolerances tighter than ±.010″ (±0.25mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Acetal (POM)",
+        "category": "Plastic",
+        "is_metal": false,
+        "tolerance_group": "plastic",
+        "cost_tier": "Cost tier 2 of 5",
+        "description": "A low-friction engineering plastic with high impact resistance and excellent dimensional stability, making it ideal for gears, bearings, and precision parts. Acetal is the generic version of Delrin.",
+        "supported_finishes": [
+          "Standard",
+          "Bead Blast",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.010″ (±0.25mm)",
+          "±.020″ (±0.5mm)",
+          "This part requires tolerances tighter than ±.010″ (±0.25mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Delrin 100 (AF)",
+        "category": "Plastic",
+        "is_metal": false,
+        "tolerance_group": "plastic",
+        "cost_tier": "Cost tier 2 of 5",
+        "description": "A specialized grade of Delrin with added PTFE for improved wear resistance and lower friction, ideal for high-performance sliding applications.",
+        "supported_finishes": [
+          "Standard",
+          "Bead Blast",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.010″ (±0.25mm)",
+          "±.020″ (±0.5mm)",
+          "This part requires tolerances tighter than ±.010″ (±0.25mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Delrin 150",
+        "category": "Plastic",
+        "is_metal": false,
+        "tolerance_group": "plastic",
+        "cost_tier": "Cost tier 2 of 5",
+        "description": "A general-purpose acetal homopolymer offering high strength, low friction, and excellent machinability for precision components.",
+        "supported_finishes": [
+          "Standard",
+          "Bead Blast",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.010″ (±0.25mm)",
+          "±.020″ (±0.5mm)",
+          "This part requires tolerances tighter than ±.010″ (±0.25mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "HDPE",
+        "category": "Plastic",
+        "is_metal": false,
+        "tolerance_group": "plastic",
+        "cost_tier": "Cost tier 1 of 5",
+        "description": "A lightweight, impact-resistant plastic with good chemical resistance, used in industrial, outdoor, marine, and food applications.",
+        "supported_finishes": [
+          "Standard",
+          "Bead Blast",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.010″ (±0.25mm)",
+          "±.020″ (±0.5mm)",
+          "This part requires tolerances tighter than ±.010″ (±0.25mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Nylon 6/6",
+        "category": "Plastic",
+        "is_metal": false,
+        "tolerance_group": "plastic",
+        "cost_tier": "Cost tier 2 of 5",
+        "description": "A strong, wear-resistant plastic with good mechanical properties, commonly used for gears, bushings, and structural components.",
+        "supported_finishes": [
+          "Standard",
+          "Bead Blast",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.010″ (±0.25mm)",
+          "±.020″ (±0.5mm)",
+          "This part requires tolerances tighter than ±.010″ (±0.25mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "PC (Polycarbonate)",
+        "category": "Plastic",
+        "is_metal": false,
+        "tolerance_group": "plastic",
+        "cost_tier": "Cost tier 2 of 5",
+        "description": "A tough, impact-resistant plastic with excellent transparency and heat resistance, commonly used in protective covers and optical applications.",
+        "supported_finishes": [
+          "Standard",
+          "Bead Blast",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.010″ (±0.25mm)",
+          "±.020″ (±0.5mm)",
+          "This part requires tolerances tighter than ±.010″ (±0.25mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "PEEK",
+        "category": "Plastic",
+        "is_metal": false,
+        "tolerance_group": "plastic",
+        "cost_tier": "Cost tier 4 of 5",
+        "description": "A high-performance thermoplastic with exceptional mechanical strength, chemical resistance, and heat resistance, used in aerospace and medical applications.",
+        "supported_finishes": [
+          "Standard",
+          "Bead Blast",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.010″ (±0.25mm)",
+          "±.020″ (±0.5mm)",
+          "This part requires tolerances tighter than ±.010″ (±0.25mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "PEEK (USP Class VI TECAPEEK)",
+        "category": "Plastic",
+        "is_metal": false,
+        "tolerance_group": "plastic",
+        "cost_tier": "Cost tier 4 of 5",
+        "description": "A biocompatible grade of PEEK meeting USP Class VI standards, suitable for medical and pharmaceutical applications.",
+        "supported_finishes": [
+          "Standard",
+          "Bead Blast",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.010″ (±0.25mm)",
+          "±.020″ (±0.5mm)",
+          "This part requires tolerances tighter than ±.010″ (±0.25mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "PEEK GF30",
+        "category": "Plastic",
+        "is_metal": false,
+        "tolerance_group": "plastic",
+        "cost_tier": "Cost tier 4 of 5",
+        "description": "A glass-filled PEEK composite with enhanced stiffness, strength, and wear resistance for high-load applications.",
+        "supported_finishes": [
+          "Standard",
+          "Bead Blast",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.010″ (±0.25mm)",
+          "±.020″ (±0.5mm)",
+          "This part requires tolerances tighter than ±.010″ (±0.25mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Polypropylene",
+        "category": "Plastic",
+        "is_metal": false,
+        "tolerance_group": "plastic",
+        "cost_tier": "Cost tier 3 of 5",
+        "description": "A lightweight, flexible plastic with good chemical resistance, impact strength, and low moisture absorption, often used in containers and industrial applications.",
+        "supported_finishes": [
+          "Standard",
+          "Bead Blast",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.010″ (±0.25mm)",
+          "±.020″ (±0.5mm)",
+          "This part requires tolerances tighter than ±.010″ (±0.25mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "PTFE (Teflon)",
+        "category": "Plastic",
+        "is_metal": false,
+        "tolerance_group": "plastic",
+        "cost_tier": "Cost tier 2 of 5",
+        "description": "A non-stick, chemically resistant plastic with excellent electrical insulation and low friction properties, ideal for seals, gaskets, and bearings.",
+        "supported_finishes": [
+          "Standard",
+          "Bead Blast",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.010″ (±0.25mm)",
+          "±.020″ (±0.5mm)",
+          "This part requires tolerances tighter than ±.010″ (±0.25mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "PVC",
+        "category": "Plastic",
+        "is_metal": false,
+        "tolerance_group": "plastic",
+        "cost_tier": "Cost tier 1 of 5",
+        "description": "A rigid plastic with good chemical resistance, flame retardance, and electrical insulation properties, used in piping and industrial applications.",
+        "supported_finishes": [
+          "Standard",
+          "Bead Blast",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.010″ (±0.25mm)",
+          "±.020″ (±0.5mm)",
+          "This part requires tolerances tighter than ±.010″ (±0.25mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "UHMW PE",
+        "category": "Plastic",
+        "is_metal": false,
+        "tolerance_group": "plastic",
+        "cost_tier": "Cost tier 1 of 5",
+        "description": "A highly durable polyethylene plastic with excellent wear resistance, impact strength, and low friction, commonly used in conveyor systems and impact surfaces.",
+        "supported_finishes": [
+          "Standard",
+          "Bead Blast",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.010″ (±0.25mm)",
+          "±.020″ (±0.5mm)",
+          "This part requires tolerances tighter than ±.010″ (±0.25mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "ULTEM 1000",
+        "category": "Plastic",
+        "is_metal": false,
+        "tolerance_group": "plastic",
+        "cost_tier": "Cost tier 2 of 5",
+        "description": "A high-performance thermoplastic with excellent heat resistance, mechanical strength, and electrical properties, used in aerospace and electronics.",
+        "supported_finishes": [
+          "Standard",
+          "Bead Blast",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.010″ (±0.25mm)",
+          "±.020″ (±0.5mm)",
+          "This part requires tolerances tighter than ±.010″ (±0.25mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "ULTEM 2300",
+        "category": "Plastic",
+        "is_metal": false,
+        "tolerance_group": "plastic",
+        "cost_tier": "Cost tier 2 of 5",
+        "description": "A 30% glass-filled ULTEM variant with enhanced stiffness and dimensional stability for demanding structural applications.",
+        "supported_finishes": [
+          "Standard",
+          "Bead Blast",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.010″ (±0.25mm)",
+          "±.020″ (±0.5mm)",
+          "This part requires tolerances tighter than ±.010″ (±0.25mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Nitronic 60",
+        "category": "Stainless Steel",
+        "is_metal": true,
+        "tolerance_group": "metal",
+        "cost_tier": "Cost tier 3 of 5",
+        "description": "A stainless steel alloy known for its excellent wear and galling resistance, commonly used in high-stress and sliding applications.",
+        "supported_finishes": [
+          "Standard",
+          "Black Oxide",
+          "Passivate",
+          "Annealing",
+          "Bead Blast",
+          "Tumbled",
+          "Electroless Nickel Plating",
+          "Gold Plating",
+          "Silver Plating",
+          "Zinc Plating",
+          "Electropolish",
+          "Cerakote",
+          "Powder Coating",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.005″ (±0.13mm)",
+          "±.010″ (±0.25mm)",
+          "This part requires tolerances tighter than ±.005″ (±0.13mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Stainless Steel 15-5",
+        "category": "Stainless Steel",
+        "is_metal": true,
+        "tolerance_group": "metal",
+        "cost_tier": "Cost tier 4 of 5",
+        "description": "A precipitation-hardened stainless steel with high strength and moderate corrosion resistance, used in aerospace and structural applications.",
+        "supported_finishes": [
+          "Standard",
+          "Black Oxide",
+          "Passivate",
+          "Annealing",
+          "Bead Blast",
+          "Tumbled",
+          "Electroless Nickel Plating",
+          "Gold Plating",
+          "Silver Plating",
+          "Zinc Plating",
+          "Electropolish",
+          "Cerakote",
+          "Powder Coating",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.005″ (±0.13mm)",
+          "±.010″ (±0.25mm)",
+          "This part requires tolerances tighter than ±.005″ (±0.13mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Stainless Steel 15-5PH H1150",
+        "category": "Stainless Steel",
+        "is_metal": true,
+        "tolerance_group": "metal",
+        "cost_tier": "Cost tier 4 of 5",
+        "description": "A heat-treated version of 15-5 stainless steel with improved toughness and stress resistance.",
+        "supported_finishes": [
+          "Standard",
+          "Black Oxide",
+          "Passivate",
+          "Annealing",
+          "Bead Blast",
+          "Tumbled",
+          "Electroless Nickel Plating",
+          "Gold Plating",
+          "Silver Plating",
+          "Zinc Plating",
+          "Electropolish",
+          "Cerakote",
+          "Powder Coating",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.005″ (±0.13mm)",
+          "±.010″ (±0.25mm)",
+          "This part requires tolerances tighter than ±.005″ (±0.13mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Stainless Steel 15-5PH H900",
+        "category": "Stainless Steel",
+        "is_metal": true,
+        "tolerance_group": "metal",
+        "cost_tier": "Cost tier 4 of 5",
+        "description": "A high-strength, precipitation-hardened stainless steel with good corrosion resistance, commonly used in aerospace components.",
+        "supported_finishes": [
+          "Standard",
+          "Black Oxide",
+          "Passivate",
+          "Annealing",
+          "Bead Blast",
+          "Tumbled",
+          "Electroless Nickel Plating",
+          "Gold Plating",
+          "Silver Plating",
+          "Zinc Plating",
+          "Electropolish",
+          "Cerakote",
+          "Powder Coating",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.005″ (±0.13mm)",
+          "±.010″ (±0.25mm)",
+          "This part requires tolerances tighter than ±.005″ (±0.13mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Stainless Steel 17-4",
+        "category": "Stainless Steel",
+        "is_metal": true,
+        "tolerance_group": "metal",
+        "cost_tier": "Cost tier 4 of 5",
+        "description": "A versatile, high-strength stainless steel with good corrosion resistance, commonly used in aerospace and medical applications.",
+        "supported_finishes": [
+          "Standard",
+          "Black Oxide",
+          "Passivate",
+          "Annealing",
+          "Bead Blast",
+          "Tumbled",
+          "Electroless Nickel Plating",
+          "Gold Plating",
+          "Silver Plating",
+          "Zinc Plating",
+          "Electropolish",
+          "Cerakote",
+          "Powder Coating",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.005″ (±0.13mm)",
+          "±.010″ (±0.25mm)",
+          "This part requires tolerances tighter than ±.005″ (±0.13mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Stainless Steel 17-4PH H1150",
+        "category": "Stainless Steel",
+        "is_metal": true,
+        "tolerance_group": "metal",
+        "cost_tier": "Cost tier 4 of 5",
+        "description": "A heat-treated version of 17-4 stainless steel offering improved toughness and corrosion resistance.",
+        "supported_finishes": [
+          "Standard",
+          "Black Oxide",
+          "Passivate",
+          "Annealing",
+          "Bead Blast",
+          "Tumbled",
+          "Electroless Nickel Plating",
+          "Gold Plating",
+          "Silver Plating",
+          "Zinc Plating",
+          "Electropolish",
+          "Cerakote",
+          "Powder Coating",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.005″ (±0.13mm)",
+          "±.010″ (±0.25mm)",
+          "This part requires tolerances tighter than ±.005″ (±0.13mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Stainless Steel 17-4PH H900",
+        "category": "Stainless Steel",
+        "is_metal": true,
+        "tolerance_group": "metal",
+        "cost_tier": "Cost tier 4 of 5",
+        "description": "A high-strength precipitation-hardened stainless steel with excellent fatigue resistance, used in demanding applications.",
+        "supported_finishes": [
+          "Standard",
+          "Black Oxide",
+          "Passivate",
+          "Annealing",
+          "Bead Blast",
+          "Tumbled",
+          "Electroless Nickel Plating",
+          "Gold Plating",
+          "Silver Plating",
+          "Zinc Plating",
+          "Electropolish",
+          "Cerakote",
+          "Powder Coating",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.005″ (±0.13mm)",
+          "±.010″ (±0.25mm)",
+          "This part requires tolerances tighter than ±.005″ (±0.13mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Stainless Steel 303",
+        "category": "Stainless Steel",
+        "is_metal": true,
+        "tolerance_group": "metal",
+        "cost_tier": "Cost tier 3 of 5",
+        "description": "An easy-to-machine stainless steel with moderate corrosion resistance, commonly used in fasteners and fittings.",
+        "supported_finishes": [
+          "Standard",
+          "Black Oxide",
+          "Passivate",
+          "Annealing",
+          "Bead Blast",
+          "Tumbled",
+          "Electroless Nickel Plating",
+          "Gold Plating",
+          "Silver Plating",
+          "Zinc Plating",
+          "Electropolish",
+          "Cerakote",
+          "Powder Coating",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.005″ (±0.13mm)",
+          "±.010″ (±0.25mm)",
+          "This part requires tolerances tighter than ±.005″ (±0.13mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Stainless Steel 304/304L",
+        "category": "Stainless Steel",
+        "is_metal": true,
+        "tolerance_group": "metal",
+        "cost_tier": "Cost tier 4 of 5",
+        "description": "A widely used stainless steel with good corrosion resistance and formability, commonly used in food, medical, and industrial applications.",
+        "supported_finishes": [
+          "Standard",
+          "Black Oxide",
+          "Passivate",
+          "Annealing",
+          "Bead Blast",
+          "Tumbled",
+          "Electroless Nickel Plating",
+          "Gold Plating",
+          "Silver Plating",
+          "Zinc Plating",
+          "Electropolish",
+          "Cerakote",
+          "Powder Coating",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.005″ (±0.13mm)",
+          "±.010″ (±0.25mm)",
+          "This part requires tolerances tighter than ±.005″ (±0.13mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Stainless Steel 316/316L",
+        "category": "Stainless Steel",
+        "is_metal": true,
+        "tolerance_group": "metal",
+        "cost_tier": "Cost tier 4 of 5",
+        "description": "A corrosion-resistant stainless steel with superior resistance to marine and chemical environments.",
+        "supported_finishes": [
+          "Standard",
+          "Black Oxide",
+          "Passivate",
+          "Annealing",
+          "Bead Blast",
+          "Tumbled",
+          "Electroless Nickel Plating",
+          "Gold Plating",
+          "Silver Plating",
+          "Zinc Plating",
+          "Electropolish",
+          "Cerakote",
+          "Powder Coating",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.005″ (±0.13mm)",
+          "±.010″ (±0.25mm)",
+          "This part requires tolerances tighter than ±.005″ (±0.13mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Next Available Stainless Steel 303, 304, or 316",
+        "category": "Stainless Steel",
+        "is_metal": true,
+        "tolerance_group": "metal",
+        "cost_tier": "Cost tier 2 of 5",
+        "description": "A flexible option for sourcing the best available 300-series stainless steel with suitable machinability and corrosion resistance.",
+        "supported_finishes": [
+          "Standard",
+          "Black Oxide",
+          "Passivate",
+          "Annealing",
+          "Bead Blast",
+          "Tumbled",
+          "Electroless Nickel Plating",
+          "Gold Plating",
+          "Silver Plating",
+          "Zinc Plating",
+          "Electropolish",
+          "Cerakote",
+          "Powder Coating",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.005″ (±0.13mm)",
+          "±.010″ (±0.25mm)",
+          "This part requires tolerances tighter than ±.005″ (±0.13mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Stainless Steel 410",
+        "category": "Stainless Steel",
+        "is_metal": true,
+        "tolerance_group": "metal",
+        "cost_tier": "Cost tier 4 of 5",
+        "description": "A hardenable stainless steel with good wear resistance, commonly used in cutlery and industrial components.",
+        "supported_finishes": [
+          "Standard",
+          "Black Oxide",
+          "Passivate",
+          "Annealing",
+          "Bead Blast",
+          "Tumbled",
+          "Electroless Nickel Plating",
+          "Gold Plating",
+          "Silver Plating",
+          "Zinc Plating",
+          "Electropolish",
+          "Cerakote",
+          "Powder Coating",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.005″ (±0.13mm)",
+          "±.010″ (±0.25mm)",
+          "This part requires tolerances tighter than ±.005″ (±0.13mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Stainless Steel 416",
+        "category": "Stainless Steel",
+        "is_metal": true,
+        "tolerance_group": "metal",
+        "cost_tier": "Cost tier 4 of 5",
+        "description": "A free-machining stainless steel with high strength and moderate corrosion resistance, used in precision components.",
+        "supported_finishes": [
+          "Standard",
+          "Black Oxide",
+          "Passivate",
+          "Annealing",
+          "Bead Blast",
+          "Tumbled",
+          "Electroless Nickel Plating",
+          "Gold Plating",
+          "Silver Plating",
+          "Zinc Plating",
+          "Electropolish",
+          "Cerakote",
+          "Powder Coating",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.005″ (±0.13mm)",
+          "±.010″ (±0.25mm)",
+          "This part requires tolerances tighter than ±.005″ (±0.13mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Stainless Steel 420",
+        "category": "Stainless Steel",
+        "is_metal": true,
+        "tolerance_group": "metal",
+        "cost_tier": "Cost tier 4 of 5",
+        "description": "A high-hardness stainless steel with good corrosion resistance, often used in surgical instruments and cutlery.",
+        "supported_finishes": [
+          "Standard",
+          "Black Oxide",
+          "Passivate",
+          "Annealing",
+          "Bead Blast",
+          "Tumbled",
+          "Electroless Nickel Plating",
+          "Gold Plating",
+          "Silver Plating",
+          "Zinc Plating",
+          "Electropolish",
+          "Cerakote",
+          "Powder Coating",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.005″ (±0.13mm)",
+          "±.010″ (±0.25mm)",
+          "This part requires tolerances tighter than ±.005″ (±0.13mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Stainless Steel 440C",
+        "category": "Stainless Steel",
+        "is_metal": true,
+        "tolerance_group": "metal",
+        "cost_tier": "Cost tier 4 of 5",
+        "description": "A high-carbon stainless steel with excellent wear resistance and hardness, used in bearings and blades.",
+        "supported_finishes": [
+          "Standard",
+          "Black Oxide",
+          "Passivate",
+          "Annealing",
+          "Bead Blast",
+          "Tumbled",
+          "Electroless Nickel Plating",
+          "Gold Plating",
+          "Silver Plating",
+          "Zinc Plating",
+          "Electropolish",
+          "Cerakote",
+          "Powder Coating",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.005″ (±0.13mm)",
+          "±.010″ (±0.25mm)",
+          "This part requires tolerances tighter than ±.005″ (±0.13mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Steel 1018",
+        "category": "Steel",
+        "is_metal": true,
+        "tolerance_group": "metal",
+        "cost_tier": "Cost tier 2 of 5",
+        "description": "A low-carbon steel with good weldability and machinability, commonly used in general-purpose applications.",
+        "supported_finishes": [
+          "Standard",
+          "Black Oxide",
+          "Annealing",
+          "Case Harden",
+          "Temper",
+          "Through Harden",
+          "Bead Blast",
+          "Tumbled",
+          "Electroless Nickel Plating",
+          "Gold Plating",
+          "Silver Plating",
+          "Zinc Plating",
+          "Cerakote",
+          "Powder Coating",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.005″ (±0.13mm)",
+          "±.010″ (±0.25mm)",
+          "This part requires tolerances tighter than ±.005″ (±0.13mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Steel 1215",
+        "category": "Steel",
+        "is_metal": true,
+        "tolerance_group": "metal",
+        "cost_tier": "Cost tier 3 of 5",
+        "description": "A free-machining carbon steel with high machinability, used in precision components and fasteners.",
+        "supported_finishes": [
+          "Standard",
+          "Black Oxide",
+          "Annealing",
+          "Case Harden",
+          "Temper",
+          "Through Harden",
+          "Bead Blast",
+          "Tumbled",
+          "Electroless Nickel Plating",
+          "Gold Plating",
+          "Silver Plating",
+          "Zinc Plating",
+          "Cerakote",
+          "Powder Coating",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.005″ (±0.13mm)",
+          "±.010″ (±0.25mm)",
+          "This part requires tolerances tighter than ±.005″ (±0.13mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Steel 4130",
+        "category": "Steel",
+        "is_metal": true,
+        "tolerance_group": "metal",
+        "cost_tier": "Cost tier 3 of 5",
+        "description": "A chromium-molybdenum (chromoly) alloy steel with good strength, toughness, and weldability, used in aerospace and automotive applications.",
+        "supported_finishes": [
+          "Standard",
+          "Black Oxide",
+          "Annealing",
+          "Case Harden",
+          "Temper",
+          "Through Harden",
+          "Bead Blast",
+          "Tumbled",
+          "Electroless Nickel Plating",
+          "Gold Plating",
+          "Silver Plating",
+          "Zinc Plating",
+          "Cerakote",
+          "Powder Coating",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.005″ (±0.13mm)",
+          "±.010″ (±0.25mm)",
+          "This part requires tolerances tighter than ±.005″ (±0.13mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Steel 4140",
+        "category": "Steel",
+        "is_metal": true,
+        "tolerance_group": "metal",
+        "cost_tier": "Cost tier 3 of 5",
+        "description": "A high-strength alloy steel with excellent wear resistance, used in structural and mechanical applications.",
+        "supported_finishes": [
+          "Standard",
+          "Black Oxide",
+          "Annealing",
+          "Case Harden",
+          "Temper",
+          "Through Harden",
+          "Bead Blast",
+          "Tumbled",
+          "Electroless Nickel Plating",
+          "Gold Plating",
+          "Silver Plating",
+          "Zinc Plating",
+          "Cerakote",
+          "Powder Coating",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.005″ (±0.13mm)",
+          "±.010″ (±0.25mm)",
+          "This part requires tolerances tighter than ±.005″ (±0.13mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Steel 4140PH",
+        "category": "Steel",
+        "is_metal": true,
+        "tolerance_group": "metal",
+        "cost_tier": "Cost tier 3 of 5",
+        "description": "A pre-hardened version of 4140 steel with improved toughness and machinability.",
+        "supported_finishes": [
+          "Standard",
+          "Black Oxide",
+          "Annealing",
+          "Case Harden",
+          "Temper",
+          "Through Harden",
+          "Bead Blast",
+          "Tumbled",
+          "Electroless Nickel Plating",
+          "Gold Plating",
+          "Silver Plating",
+          "Zinc Plating",
+          "Cerakote",
+          "Powder Coating",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.005″ (±0.13mm)",
+          "±.010″ (±0.25mm)",
+          "This part requires tolerances tighter than ±.005″ (±0.13mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Steel 4340",
+        "category": "Steel",
+        "is_metal": true,
+        "tolerance_group": "metal",
+        "cost_tier": "Cost tier 4 of 5",
+        "description": "A high-strength, tough alloy steel with excellent fatigue resistance, commonly used in aerospace applications.",
+        "supported_finishes": [
+          "Standard",
+          "Black Oxide",
+          "Annealing",
+          "Case Harden",
+          "Temper",
+          "Through Harden",
+          "Bead Blast",
+          "Tumbled",
+          "Electroless Nickel Plating",
+          "Gold Plating",
+          "Silver Plating",
+          "Zinc Plating",
+          "Cerakote",
+          "Powder Coating",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.005″ (±0.13mm)",
+          "±.010″ (±0.25mm)",
+          "This part requires tolerances tighter than ±.005″ (±0.13mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Steel A36",
+        "category": "Steel",
+        "is_metal": true,
+        "tolerance_group": "metal",
+        "cost_tier": "Cost tier 2 of 5",
+        "description": "A low-carbon structural steel with good weldability and machinability, used in construction and general fabrication.",
+        "supported_finishes": [
+          "Standard",
+          "Black Oxide",
+          "Annealing",
+          "Case Harden",
+          "Temper",
+          "Through Harden",
+          "Bead Blast",
+          "Tumbled",
+          "Electroless Nickel Plating",
+          "Gold Plating",
+          "Silver Plating",
+          "Zinc Plating",
+          "Cerakote",
+          "Powder Coating",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.005″ (±0.13mm)",
+          "±.010″ (±0.25mm)",
+          "This part requires tolerances tighter than ±.005″ (±0.13mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Tool Steel A2",
+        "category": "Steel",
+        "is_metal": true,
+        "tolerance_group": "metal",
+        "cost_tier": "Cost tier 2 of 5",
+        "description": "An air-hardening tool steel with high wear resistance and toughness, used for dies and punches.",
+        "supported_finishes": [
+          "Standard",
+          "Black Oxide",
+          "Annealing",
+          "Case Harden",
+          "Temper",
+          "Through Harden",
+          "Bead Blast",
+          "Tumbled",
+          "Electroless Nickel Plating",
+          "Gold Plating",
+          "Silver Plating",
+          "Zinc Plating",
+          "Cerakote",
+          "Powder Coating",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.005″ (±0.13mm)",
+          "±.010″ (±0.25mm)",
+          "This part requires tolerances tighter than ±.005″ (±0.13mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Tool Steel O1",
+        "category": "Steel",
+        "is_metal": true,
+        "tolerance_group": "metal",
+        "cost_tier": "Cost tier 2 of 5",
+        "description": "An oil-hardening tool steel with good toughness and machinability, commonly used in cutting tools.",
+        "supported_finishes": [
+          "Standard",
+          "Black Oxide",
+          "Annealing",
+          "Case Harden",
+          "Temper",
+          "Through Harden",
+          "Bead Blast",
+          "Tumbled",
+          "Electroless Nickel Plating",
+          "Gold Plating",
+          "Silver Plating",
+          "Zinc Plating",
+          "Cerakote",
+          "Powder Coating",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.005″ (±0.13mm)",
+          "±.010″ (±0.25mm)",
+          "This part requires tolerances tighter than ±.005″ (±0.13mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Titanium Grade 2",
+        "category": "Titanium",
+        "is_metal": true,
+        "tolerance_group": "metal",
+        "cost_tier": "Cost tier 5 of 5",
+        "description": "A commercially pure titanium, CPTi, with excellent corrosion resistance and moderate strength, used in marine and medical applications.",
+        "supported_finishes": [
+          "Standard",
+          "Titanium Anodize",
+          "Bead Blast",
+          "Tumbled",
+          "Electroless Nickel Plating",
+          "Gold Plating",
+          "Silver Plating",
+          "Zinc Plating",
+          "Cerakote",
+          "Powder Coating",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.005″ (±0.13mm)",
+          "±.010″ (±0.25mm)",
+          "This part requires tolerances tighter than ±.005″ (±0.13mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Titanium Grade 5",
+        "category": "Titanium",
+        "is_metal": true,
+        "tolerance_group": "metal",
+        "cost_tier": "Cost tier 5 of 5",
+        "description": "A high-strength titanium alloy, Ti-6Al-4V, with excellent corrosion resistance and lightweight properties, widely used in aerospace and biomedical industries.",
+        "supported_finishes": [
+          "Standard",
+          "Titanium Anodize",
+          "Bead Blast",
+          "Tumbled",
+          "Electroless Nickel Plating",
+          "Gold Plating",
+          "Silver Plating",
+          "Zinc Plating",
+          "Cerakote",
+          "Powder Coating",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.005″ (±0.13mm)",
+          "±.010″ (±0.25mm)",
+          "This part requires tolerances tighter than ±.005″ (±0.13mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Other (Metal)",
+        "category": "Other",
+        "is_metal": true,
+        "tolerance_group": "metal",
+        "cost_tier": "Custom",
+        "description": "Custom metal material to be specified in 2D engineering drawings or notes.",
+        "supported_finishes": [
+          "Standard",
+          "Bead Blast",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.005″ (±0.13mm)",
+          "±.010″ (±0.25mm)",
+          "This part requires tolerances tighter than ±.005″ (±0.13mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      },
+      {
+        "name": "Other (Plastic)",
+        "category": "Other",
+        "is_metal": false,
+        "tolerance_group": "plastic",
+        "cost_tier": "Custom",
+        "description": "Custom polymer or composite material to be specified in 2D engineering drawings or notes.",
+        "supported_finishes": [
+          "Standard",
+          "Bead Blast",
+          "Request finish"
+        ],
+        "supported_tolerances": [
+          "±.010″ (±0.25mm)",
+          "±.020″ (±0.5mm)",
+          "This part requires tolerances tighter than ±.010″ (±0.25mm)"
+        ],
+        "supported_roughnesses": [
+          "125uin/3.2um Ra",
+          "63uin/1.6um Ra",
+          "32uin/0.8um Ra",
+          "16uin/0.4um Ra"
+        ]
+      }
+    ],
+    "surface_finishes": [
+      {
+        "name": "Standard",
+        "category": "Standard",
+        "is_default": true,
+        "requires_2d_drawing": false,
+        "description": "Standard as-milled finish. Cutters leave visible tool marks. Surface roughness held to 125uin/3.2um Ra unless specified."
+      },
+      {
+        "name": "Black Anodize",
+        "category": "Anodize",
+        "requires_2d_drawing": false,
+        "description": "Sulfuric acid anodizing (Type II) offering corrosion resistance and matte/gloss black appearance."
+      },
+      {
+        "name": "Black Hardcoat Anodize",
+        "category": "Anodize",
+        "requires_2d_drawing": false,
+        "description": "Hardcoat anodizing (Type III) providing dense, wear-resistant thick ceramic coating in black."
+      },
+      {
+        "name": "Blue Anodize",
+        "category": "Anodize",
+        "requires_2d_drawing": false,
+        "description": "Type II anodize dyed vibrant blue."
+      },
+      {
+        "name": "Clear Anodize",
+        "category": "Anodize",
+        "requires_2d_drawing": false,
+        "description": "Type II anodize without dye, retaining natural silver metallic appearance with enhanced corrosion resistance."
+      },
+      {
+        "name": "Clear Hardcoat Anodize",
+        "category": "Anodize",
+        "requires_2d_drawing": false,
+        "description": "Type III hardcoat anodize with superior wear resistance in natural/clear tone."
+      },
+      {
+        "name": "Gold Anodize",
+        "category": "Anodize",
+        "requires_2d_drawing": false,
+        "description": "Type II anodize dyed gold."
+      },
+      {
+        "name": "Gray Hardcoat Anodize",
+        "category": "Anodize",
+        "requires_2d_drawing": false,
+        "description": "Type III hardcoat anodize with matte gray appearance for heavy duty industrial use."
+      },
+      {
+        "name": "Green Anodize",
+        "category": "Anodize",
+        "requires_2d_drawing": false,
+        "description": "Type II anodize dyed green."
+      },
+      {
+        "name": "Orange Anodize",
+        "category": "Anodize",
+        "requires_2d_drawing": false,
+        "description": "Type II anodize dyed orange."
+      },
+      {
+        "name": "PTFE Impregnated Hard Anodize",
+        "category": "Anodize",
+        "requires_2d_drawing": false,
+        "description": "Type III hardcoat anodize sealed with PTFE particles for ultra-low friction and high abrasion resistance."
+      },
+      {
+        "name": "Purple Anodize",
+        "category": "Anodize",
+        "requires_2d_drawing": false,
+        "description": "Type II anodize dyed purple."
+      },
+      {
+        "name": "Red Anodize",
+        "category": "Anodize",
+        "requires_2d_drawing": false,
+        "description": "Type II anodize dyed red."
+      },
+      {
+        "name": "Yellow Anodize",
+        "category": "Anodize",
+        "requires_2d_drawing": false,
+        "description": "Type II anodize dyed yellow."
+      },
+      {
+        "name": "Titanium Anodize",
+        "category": "Anodize",
+        "requires_2d_drawing": false,
+        "description": "Electrolytic passivation of titanium for color coding, biocompatibility, and anti-galling."
+      },
+      {
+        "name": "Chem Film Clear",
+        "category": "Chemical Conversion",
+        "requires_2d_drawing": false,
+        "description": "Chromate conversion coating (MIL-DTL-5541 Type II Class 3) preserving conductivity and corrosion resistance."
+      },
+      {
+        "name": "Chem Film Gold",
+        "category": "Chemical Conversion",
+        "requires_2d_drawing": false,
+        "description": "Hexavalent or trivalent chromate conversion coating (Class 1A) providing corrosion protection and primer base."
+      },
+      {
+        "name": "Black Oxide",
+        "category": "Chemical Conversion",
+        "requires_2d_drawing": false,
+        "description": "Chemical conversion coating for steel and stainless steel offering mild corrosion resistance and black aesthetic."
+      },
+      {
+        "name": "Passivate",
+        "category": "Chemical Conversion",
+        "requires_2d_drawing": false,
+        "description": "Chemical passivation (ASTM A967) for stainless steel and copper alloys, removing free iron and forming oxide barrier."
+      },
+      {
+        "name": "Annealing",
+        "category": "Heat Treatments",
+        "requires_2d_drawing": false,
+        "description": "Heat treatment altering microstructure to reduce hardness, increase ductility and eliminate internal residual stresses."
+      },
+      {
+        "name": "Case Harden",
+        "category": "Heat Treatments",
+        "requires_2d_drawing": false,
+        "description": "Carburizing or nitriding to harden surface layer while retaining tough, ductile core."
+      },
+      {
+        "name": "Temper",
+        "category": "Heat Treatments",
+        "requires_2d_drawing": false,
+        "description": "Low-temperature thermal processing following quenching to achieve desired toughness and hardness balance."
+      },
+      {
+        "name": "Through Harden",
+        "category": "Heat Treatments",
+        "requires_2d_drawing": false,
+        "description": "Thermal hardening throughout the entire workpiece cross-section."
+      },
+      {
+        "name": "Bead Blast",
+        "category": "Mechanical Finishing",
+        "requires_2d_drawing": false,
+        "description": "Fine glass bead blasting yielding a uniform, non-directional satin or matte textured finish."
+      },
+      {
+        "name": "Tumbled",
+        "category": "Mechanical Finishing",
+        "requires_2d_drawing": false,
+        "description": "Vibratory or centrifugal barrel tumbling to break sharp edges, deburr, and smooth part surfaces."
+      },
+      {
+        "name": "Electroless Nickel Plating",
+        "category": "Plating",
+        "requires_2d_drawing": false,
+        "description": "Autocatalytic chemical deposition of nickel-phosphorus alloy offering uniform thickness on complex geometry."
+      },
+      {
+        "name": "Gold Plating",
+        "category": "Plating",
+        "requires_2d_drawing": false,
+        "description": "Electroplated gold layer for high-end electrical contacts, corrosion immunity, and solderability."
+      },
+      {
+        "name": "Silver Plating",
+        "category": "Plating",
+        "requires_2d_drawing": false,
+        "description": "Electroplated silver layer providing high electrical and thermal conductivity."
+      },
+      {
+        "name": "Zinc Plating",
+        "category": "Plating",
+        "requires_2d_drawing": false,
+        "description": "Sacrificial electroplated zinc barrier for ferrous components preventing atmospheric corrosion."
+      },
+      {
+        "name": "Electropolish",
+        "category": "Other",
+        "requires_2d_drawing": false,
+        "description": "Electrochemical deburring and micro-smoothing yielding brilliant mirror-like passive surface on stainless steel and copper."
+      },
+      {
+        "name": "Cerakote",
+        "category": "Other",
+        "requires_2d_drawing": false,
+        "description": "Polymer-ceramic composite coating providing extreme corrosion, abrasion, and chemical resistance."
+      },
+      {
+        "name": "Powder Coating",
+        "category": "Other",
+        "requires_2d_drawing": false,
+        "description": "Electrostatic dry powder application baked to a durable, decorative protective skin."
+      },
+      {
+        "name": "Request finish",
+        "category": "Other",
+        "requires_2d_drawing": true,
+        "description": "Custom surface treatment not listed above; requires specification details and 2D drawing."
+      }
+    ],
+    "precision_tolerances": [
+      {
+        "tolerance_id": "tol_metal_standard",
+        "applicable_group": "metal",
+        "value": "±.005″ (±0.13mm)",
+        "is_default": true,
+        "inspection_limit": "Standard, Formal, CMM, FAIR, Source, Build & Hold, Custom",
+        "requires_2d_drawing": false,
+        "description": "Standard metal tolerance. Overrides tighter tolerances on drawing except for reamed holes < ø1″."
+      },
+      {
+        "tolerance_id": "tol_metal_loose",
+        "applicable_group": "metal",
+        "value": "±.010″ (±0.25mm)",
+        "is_default": false,
+        "inspection_limit": "Standard Inspection only",
+        "requires_2d_drawing": false,
+        "description": "Cost-effective metal option. Inspection is strictly limited to Standard Inspection."
+      },
+      {
+        "tolerance_id": "tol_metal_tight",
+        "applicable_group": "metal",
+        "value": "This part requires tolerances tighter than ±.005″ (±0.13mm)",
+        "is_default": false,
+        "inspection_limit": "Requires 2D drawing callout",
+        "requires_2d_drawing": true,
+        "description": "Precision tolerance requiring 2D engineering drawing indicating critical dimensions and GD&T."
+      },
+      {
+        "tolerance_id": "tol_plastic_standard",
+        "applicable_group": "plastic",
+        "value": "±.010″ (±0.25mm)",
+        "is_default": true,
+        "inspection_limit": "Standard, Formal, CMM, FAIR, Source, Build & Hold, Custom",
+        "requires_2d_drawing": false,
+        "description": "Standard plastic and composite tolerance."
+      },
+      {
+        "tolerance_id": "tol_plastic_loose",
+        "applicable_group": "plastic",
+        "value": "±.020″ (±0.5mm)",
+        "is_default": false,
+        "inspection_limit": "Standard Inspection only",
+        "requires_2d_drawing": false,
+        "description": "Cost-effective plastic option. Inspection is strictly limited to Standard Inspection."
+      },
+      {
+        "tolerance_id": "tol_plastic_tight",
+        "applicable_group": "plastic",
+        "value": "This part requires tolerances tighter than ±.010″ (±0.25mm)",
+        "is_default": false,
+        "inspection_limit": "Requires 2D drawing callout",
+        "requires_2d_drawing": true,
+        "description": "Precision plastic tolerance requiring 2D engineering drawing indicating critical dimensions."
+      }
+    ],
+    "surface_roughnesses": [
+      {
+        "value": "125uin/3.2um Ra",
+        "is_default": true,
+        "requires_2d_drawing": false,
+        "description": "Standard CNC machining surface roughness held unless otherwise specified."
+      },
+      {
+        "value": "63uin/1.6um Ra",
+        "is_default": false,
+        "requires_2d_drawing": false,
+        "description": "Smooth machine finish requiring fine feed rates and specialized cutters."
+      },
+      {
+        "value": "32uin/0.8um Ra",
+        "is_default": false,
+        "requires_2d_drawing": false,
+        "description": "High precision smooth surface finish for sealing faces, dynamic O-ring lands, and bearing fits."
+      },
+      {
+        "value": "16uin/0.4um Ra",
+        "is_default": false,
+        "requires_2d_drawing": true,
+        "description": "Ultra-smooth fine surface finish; requires 2D drawing designating exact functional inspection surfaces."
+      }
+    ],
+    "threads_and_tapped_holes": {
+      "field_name": "threads_and_tapped_holes",
+      "control_id": "binary-sw-threads-and-tapped-holes-checkbox",
+      "quantity_control_id": "binary-nest-threads-and-tapped-holes-checkbox-nest-0-nest-q-threads-and-tapped-holes-quantity",
+      "default_locations": 1,
+      "requires_2d_drawing": true,
+      "guidance": "Attach a 2D drawing that calls out thread type (e.g. M4x0.7, 1/4-20 UNC) and depth. If no depth is specified, drilling will match CAD depth and thread per standard shop tooling."
+    },
+    "inserts": {
+      "field_name": "inserts",
+      "control_id": "binary-sw-inserts-checkbox",
+      "quantity_control_id": "binary-nest-inserts-checkbox-nest-0-nest-q-inserts-quantity",
+      "default_locations": 1,
+      "requires_2d_drawing": true,
+      "guidance": "Attach a 2D drawing that calls out part numbers, quantities, and installation locations. Helicoils default to stainless steel 1.0*D; dowel pins to full depth."
+    },
+    "part_markings": [
+      {
+        "name": "Silkscreen",
+        "requires_2d_drawing": true,
+        "description": "Mesh transfer ink marking. Requires 2D drawing specifying text, color, and location."
+      },
+      {
+        "name": "Ink Stamp",
+        "requires_2d_drawing": true,
+        "description": "Ink stamp character marking. Requires 2D drawing specifying text, color, and location."
+      },
+      {
+        "name": "Bag and Tag",
+        "requires_2d_drawing": true,
+        "description": "Identification tag attached to individual packaging. Requires 2D drawing specifying tag text."
+      },
+      {
+        "name": "Engraving",
+        "requires_2d_drawing": true,
+        "description": "Physical laser or mechanical engraving removing material to form indented characters. Requires 2D drawing specifying text and location."
+      },
+      {
+        "name": "Laser Mark",
+        "requires_2d_drawing": false,
+        "description": "Laser ablation surface texturing providing permanent high-contrast contrast marking on planar faces without altering geometry."
+      }
+    ],
+    "inspections": [
+      {
+        "name": "Standard Inspection",
+        "code": "STANDARD",
+        "is_default": true,
+        "requires_report": false,
+        "description": "Standard shop verification. Inspection documentation will not ship with parts."
+      },
+      {
+        "name": "Formal Inspection with Dimensional Report",
+        "code": "FORMAL_DIMENSIONAL",
+        "is_default": false,
+        "requires_report": true,
+        "description": "Includes a formal dimensional inspection report documenting critical dimensions."
+      },
+      {
+        "name": "CMM Inspection with Dimensional Report",
+        "code": "CMM_DIMENSIONAL",
+        "is_default": false,
+        "requires_report": true,
+        "description": "Coordinate Measuring Machine dimensional report for complex 3D geometric verifications."
+      },
+      {
+        "name": "First Article Inspection Report (FAIR AS9102)",
+        "code": "FAIR_AS9102",
+        "is_default": false,
+        "requires_report": true,
+        "description": "Complete AS9102 aerospace first article inspection report."
+      },
+      {
+        "name": "Source Inspection",
+        "code": "SOURCE_INSPECTION",
+        "is_default": false,
+        "requires_report": true,
+        "description": "On-site customer witness inspection before shipment."
+      },
+      {
+        "name": "Build and Hold First Article Inspection",
+        "code": "BUILD_AND_HOLD_FAI",
+        "is_default": false,
+        "requires_report": true,
+        "description": "Manufacture and submit FAI piece for buyer sign-off before commencing full production."
+      },
+      {
+        "name": "Custom Inspection",
+        "code": "CUSTOM",
+        "is_default": false,
+        "requires_report": true,
+        "description": "Custom quality control inspection protocol specified in customer QA documents."
+      }
+    ],
+    "certifications": [
+      {
+        "name": "ITAR/EAR Registration",
+        "code": "ITAR_EAR",
+        "description": "Manufacturer is registered with DDTC and compliant with ITAR and EAR export controls."
+      },
+      {
+        "name": "Cybersecurity Maturity Model Certification (CMMC)",
+        "code": "CMMC",
+        "description": "Department of Defense cybersecurity standard adherence."
+      },
+      {
+        "name": "AS9100 Certified",
+        "code": "AS9100",
+        "description": "Aerospace quality management system certification."
+      },
+      {
+        "name": "ISO 9001 Certified",
+        "code": "ISO_9001",
+        "description": "Standard international quality management certification."
+      },
+      {
+        "name": "Hardware Certification",
+        "code": "HARDWARE_CERT",
+        "description": "Manufacturer cert verifying hardware items match manufacturer part numbers."
+      },
+      {
+        "name": "Certificate of Conformance",
+        "code": "C_OF_C",
+        "description": "Certificate of Conformance (C of C) verifying parts meet purchase order requirements."
+      },
+      {
+        "name": "Material Traceability",
+        "code": "MATERIAL_TRACEABILITY",
+        "description": "Lot-level heat/melt traceability tracking from mill source to part."
+      },
+      {
+        "name": "JCP/eJCP Certified",
+        "code": "JCP_CERTIFIED",
+        "description": "Joint Certification Program clearance for military critical technical data access."
+      },
+      {
+        "name": "Material Certification",
+        "code": "MATERIAL_CERT",
+        "description": "Certified Material Test Report (CMTR / Mill Test Certificate) proving chemical and physical composition."
+      }
+    ],
+    "quantities": {
+      "min": 1,
+      "step": 1,
+      "default": 1,
+      "volume_discount_thresholds": [
+        5,
+        10,
+        25,
+        50,
+        100,
+        250,
+        500,
+        1000
+      ]
+    },
+    "lead_time_tiers": [
+      {
+        "tier": "economy",
+        "display_name": "Economy",
+        "description": "Cost-optimized schedule for non-urgent deliveries."
+      },
+      {
+        "tier": "standard",
+        "display_name": "Standard",
+        "description": "Balanced cost and turnaround speed."
+      },
+      {
+        "tier": "fastest",
+        "display_name": "Fastest / Expedited",
+        "description": "Priority machining capacity for urgent deadlines."
+      }
+    ]
+  },
+  "correlation_rules": {
+    "material_to_tolerance_rules": {
+      "metal_rule": {
+        "applicable_categories": [
+          "Aluminum",
+          "Stainless Steel",
+          "Steel",
+          "Brass, Bronze, or Copper",
+          "Titanium",
+          "Other (Metal)"
+        ],
+        "tolerance_group": "metal",
+        "allowed_tolerances": [
+          "±.005″ (±0.13mm)",
+          "±.010″ (±0.25mm)",
+          "This part requires tolerances tighter than ±.005″ (±0.13mm)"
+        ],
+        "default_tolerance": "±.005″ (±0.13mm)"
+      },
+      "plastic_and_composite_rule": {
+        "applicable_categories": [
+          "Plastic",
+          "Composite",
+          "Other (Plastic)"
+        ],
+        "tolerance_group": "plastic",
+        "allowed_tolerances": [
+          "±.010″ (±0.25mm)",
+          "±.020″ (±0.5mm)",
+          "This part requires tolerances tighter than ±.010″ (±0.25mm)"
+        ],
+        "default_tolerance": "±.010″ (±0.25mm)"
+      }
+    },
+    "material_to_finish_rules": {
+      "Aluminum": [
+        "Standard",
+        "Black Anodize",
+        "Black Hardcoat Anodize",
+        "Blue Anodize",
+        "Clear Anodize",
+        "Clear Hardcoat Anodize",
+        "Gold Anodize",
+        "Gray Hardcoat Anodize",
+        "Green Anodize",
+        "Orange Anodize",
+        "PTFE Impregnated Hard Anodize",
+        "Purple Anodize",
+        "Red Anodize",
+        "Yellow Anodize",
+        "Chem Film Clear",
+        "Chem Film Gold",
+        "Case Harden",
+        "Temper",
+        "Through Harden",
+        "Bead Blast",
+        "Tumbled",
+        "Electroless Nickel Plating",
+        "Gold Plating",
+        "Silver Plating",
+        "Zinc Plating",
+        "Electropolish",
+        "Cerakote",
+        "Powder Coating",
+        "Request finish"
+      ],
+      "Stainless Steel": [
+        "Standard",
+        "Black Oxide",
+        "Passivate",
+        "Annealing",
+        "Bead Blast",
+        "Tumbled",
+        "Electroless Nickel Plating",
+        "Gold Plating",
+        "Silver Plating",
+        "Zinc Plating",
+        "Electropolish",
+        "Cerakote",
+        "Powder Coating",
+        "Request finish"
+      ],
+      "Steel": [
+        "Standard",
+        "Black Oxide",
+        "Annealing",
+        "Case Harden",
+        "Temper",
+        "Through Harden",
+        "Bead Blast",
+        "Tumbled",
+        "Electroless Nickel Plating",
+        "Gold Plating",
+        "Silver Plating",
+        "Zinc Plating",
+        "Cerakote",
+        "Powder Coating",
+        "Request finish"
+      ],
+      "Brass, Bronze, or Copper": [
+        "Standard",
+        "Passivate",
+        "Temper",
+        "Bead Blast",
+        "Tumbled",
+        "Electroless Nickel Plating",
+        "Gold Plating",
+        "Silver Plating",
+        "Zinc Plating",
+        "Electropolish",
+        "Cerakote",
+        "Powder Coating",
+        "Request finish"
+      ],
+      "Titanium": [
+        "Standard",
+        "Titanium Anodize",
+        "Bead Blast",
+        "Tumbled",
+        "Electroless Nickel Plating",
+        "Gold Plating",
+        "Silver Plating",
+        "Zinc Plating",
+        "Cerakote",
+        "Powder Coating",
+        "Request finish"
+      ],
+      "Plastic": [
+        "Standard",
+        "Bead Blast",
+        "Request finish"
+      ],
+      "Composite": [
+        "Standard",
+        "Bead Blast",
+        "Request finish"
+      ],
+      "Other": [
+        "Standard",
+        "Bead Blast",
+        "Request finish"
+      ]
+    },
+    "tolerance_to_inspection_rules": {
+      "loose_tolerance_restrictions": {
+        "restricted_tolerances": [
+          "±.010″ (±0.25mm)",
+          "±.020″ (±0.5mm)"
+        ],
+        "allowed_inspection": "Standard Inspection",
+        "error_message": "当选择经济公差（金属±0.010″ / 塑料±0.020″）时，质检方式严格限制为Standard Inspection，不支持Formal/CMM/FAIR报告"
+      }
+    },
+    "tight_tolerance_to_drawing_rules": {
+      "triggers": [
+        "This part requires tolerances tighter than ±.005″ (±0.13mm)",
+        "This part requires tolerances tighter than ±.010″ (±0.25mm)"
+      ],
+      "requires_2d_drawing": true,
+      "reason": "精密公差（严于常规要求）必须上传2D工程图纸标注关键公差尺寸及基准"
+    },
+    "feature_to_drawing_rules": {
+      "threads_and_tapped_holes": {
+        "requires_2d_drawing": true,
+        "reason": "包含螺纹与攻丝孔加工，必须上传2D图纸注明螺纹代号（如M3/M4/UNC）及有效螺纹深度"
+      },
+      "inserts": {
+        "requires_2d_drawing": true,
+        "reason": "包含镶件/钢丝螺套/销钉安装，必须上传2D图纸注明镶件零件号、安装位置与数量"
+      },
+      "part_marking_drawings": {
+        "requires_drawing_markings": [
+          "Silkscreen",
+          "Ink Stamp",
+          "Bag and Tag",
+          "Engraving"
+        ],
+        "requires_2d_drawing": true,
+        "reason": "丝网印刷、油墨盖印、袋装挂签或机械刻字需上传2D图纸明确文字内容、颜色及标记坐标"
+      },
+      "custom_finish_drawing": {
+        "trigger_finish": "Request finish",
+        "requires_2d_drawing": true,
+        "reason": "自定义表面处理要求（Request finish）需在2D图纸中附带详细工艺规范"
+      },
+      "ultra_smooth_roughness": {
+        "trigger_roughness": "16uin/0.4um Ra",
+        "requires_2d_drawing": true,
+        "reason": "极高表面粗糙度要求（16uin/0.4um Ra）需上传2D图纸指定具体受检功能配合面"
+      }
+    }
+  }
+}

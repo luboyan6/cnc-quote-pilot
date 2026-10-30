@@ -1,44 +1,56 @@
-# 04 批量、幂等与定时历史：实施清单
+# 四模块实施与集成计划
 
-当前平台修订（D-17，2026-10-22，用户已答复）：**Xometry US 第一（platform_code=xometry_us，provider_group=xometry），嘉立创 CNC 中国站第二（platform_code=jlc_cnc_cn，provider_group=jlc），RapidDirect 第三并延期**。可信入口为 https://www.jlc-cnc.com/cncOrder/#/placeOrder；不保存跟踪查询。当前目标覆盖前两平台全部既有功能；RapidDirect 要到前两平台功能与整体验收完成后再实施，不作为 02～05 的前置。此前 RD→Xometry 的选择/实测仅保留历史范围，具体以父 decisions.md D-17 为准。用户既有顺序实施授权继续有效，无需重新创建任务或重复审批。
+> 本轮仅创建规划。所有复选框为后续工作；未执行产品代码修改、迁移、真实询价或产品测试。父任务不调用 task.py start，未来按审核后的子项顺序启动。
 
-进入规则：01 按 Xometry US 的真实首平台 G-01～G-07/E2 与安全停止点交接 02；02 真闭环及 01 嘉立创 CNC 的第二平台 E2 满足后才能全面实施 03；04/05 依赖前两平台真实链路。第二家待核验不会阻止首家满足门槛后进入 02；完整 MVP 仍必须两家独立 provider_group 的真实 QUOTED，不用同集团入口、参考价或待审核补数。Xometry 现有 A/B 人工受控报价不是完整 E2/E3；嘉立创目前观察到的系统预估价为 REFERENCE_ESTIMATE，不通过真实报价 gate。产品自动登录/加密会话/关闭重建 context 的实现与验证归 02/03，不能把尚未实现的产品会话能力倒置为 01 开发前置。
+## 启动前检查
 
-当前分工继承[业务 Workflow 与异常分支](../10-21-cnc-pricing-mvp/workflow-design.md)：S01～S11 固定正常步骤，E01～E13 规定出口；Deep Agents 分析未知异常并选择允许策略，代码守卫/复验后恢复，正常步骤不强制模型调用。
+- [ ] 复核父 PRD、design、共享契约和四个子项；确认最新规划之后收到实施授权。
+- [ ] 检查 git status，保留现有用户修改；加载目标层规范，核对当前账号与单次报价真实调用路径。
+- [ ] 确认 CNC 执行首期拓扑为单进程；核验实际数据库为受支持版本，记录实际 Alembic head，禁止自动套用未知 pending revisions。
+- [ ] 为即将执行的子任务运行 task.py validate；启动该子项而不是父项，按 Trellis implement/check 流程执行。
+- [ ] 若后续修改共享接口/状态/指标，先更新共享契约与受影响子项，再实施；其他任务的 Agent 前置不自动继承。
 
-状态：planning，尚未启动产品编码。见本目录 design.md/prd.md；既有顺序实施授权与 D-17 已有效；各自真实前置通过后按 Trellis 启动本子项并加载实际层规范，无需再次批准同一范围。账号持有人手动/受控可行性测试无需等待研发启动。
+## 交付顺序与评审门
 
-## 顺序
+- [ ] T1：批次/子项迁移、快照覆盖、统一执行入口、账号隔离、持久消费、取消请求、Run/Result 原子落库和 API。门槛：12 子项/幂等/互斥/权限/旧单次兼容通过。
+- [ ] T2：错误分类、有限预算、持久冷却、人工状态、Intent 核对、取消栅栏与重启恢复。门槛：崩溃、丢回执和晚到回调无重复副作用。
+- [ ] T3：计划/轮次迁移与 API、同步 builtin 扫描、时点去重、暂停/恢复、重叠/漏跑、失权处理。门槛：并发扫描和事务故障检查通过。
+- [ ] T4：批次/计划页面、结果/指标/比较契约、私有证据、类型/交互和菜单权限。门槛：全链路筛选、金额精度、正式/参考分类、跨用户访问检查通过。
+- [ ] 集成：对照父 AC-01～14 逐项记录命令、环境、结果和证据；真实两轮监测单列，不用模拟结果代替。
 
-- [ ] 读 design.md、父设计/稳定契约、当前平台 JSON/实际证据和目标层规范；核对仓库未提交修改。
-- [ ] 确认进入条件：02/03 两家适配器与配置快照/结果契约稳定且可真实报价。
-- [ ] 按父 workflow-design.md/agent-design.md 复用固定流程与 Deep Agents 恢复能力，展开 12 明细，固定配置/SDK/模型/Skills/流程版本；未知异常绑定独立 incident/thread，恢复同异常沿用 thread，全部事件共享原 item 预算。
-- [ ] 实现 owner 幂等键、同批去重、租约/账号锁/限流、有限重试和取消；提交不明只读协调。
-- [ ] 复用现有 leader/builtin 创建持久监测轮次，重复 tick/重启不重建同轮，错过/重叠有记录。
-- [ ] 追加保存两轮有效观测，同价不去掉；按全部有效参数和商业口径比较，未知或不同口径不强行算差额。
-- [ ] 接入持久 saver/中断恢复/取消和重启协调，保证 Agent 重放、模型重试/子代理、重复 tick 不重复询价或重置总预算；按领域状态聚合进度，执行 TC-DA-05～07/09。
-- [ ] 验证 MVP-R05/06/07/10/11/13/14/15；M-01～08；DV-08/09/11、父 AC-12/13，更新实际结果与证据，不勾选未执行的 live 验收。
-- [ ] 运行本阶段质量检查，交接父任务和后续子项；主会话处理最终 review/提交/归档。
+## 后续检查命令
 
-## 检查入口
+以下测试目录/文件为子任务拟创建位置，必须在实现后才运行；本轮的计划验证不代表这些检查通过。
 
-继承 TC-WF-01～06，按本阶段责任验证固定序列、异常出口、允许策略/复验和恢复位置；完整分支由 02～05 集成核验。
+backend 工作目录：
 
-TC-09/10/13～15/21～25、TC-CFG-06、TC-DA-05～07/09；12 项基准、两轮真实自动监测，Agent thread/版本/预算隔离、幂等/取消/真实 saver 重启/崩溃协调与数据库完整性测试。
+~~~powershell
+uv run pytest tests/cnc/batch tests/cnc/recovery tests/cnc/monitor tests/cnc/results tests/cnc/login tests/cnc/quote tests/test_scheduler_schedulability.py
+uv run ruff check --no-fix app/modules/cnc app/plugin/module_cnc app/modules/task/cronjob/node/handlers/cnc_monitor.py
+~~~
 
-只运行已实现文件和适用的检查；命令/用例名称是实施计划，不能据此声称已通过。固定 JSON 用现有 Python/jsonschema 静态校验，产品测试按实现后实际命令执行。
+类型检查按仓库当前 basedpyright 配置执行，并区分既有基线与本次新增问题。对新增文件运行格式检查；对动态插件路由运行 OpenAPI/HTTP 测试。真实 PostgreSQL 的锁/唯一键/迁移检查必须单独执行并记录，不能用 SQLite 结果替代。
 
-## 变更与回滚
+frontend/web 工作目录：
 
-仅修改责任范围：CNC task/schedule/history、领取/租约与既有 scheduler builtin，相关模型/测试；不重建共享调度器。 保存配置/适配器版本与真实历史；暂停 CNC 新领取/调度后安全停止，回滚新增域/配置，不删用户源模型/历史，不改共享基类或用户存量环境文件。发现依赖契约要改时同步受影响平台/子项并定向回归。
+~~~powershell
+pnpm exec vitest run src/__tests__/cnc-quote-batch.spec.ts src/__tests__/cnc-quote-schedule.spec.ts src/__tests__/cnc-quote-result.spec.ts src/__tests__/cnc-part-config-auto-quote.spec.ts src/__tests__/cnc-account-login.spec.ts
+pnpm run type-check
+pnpm run build
+~~~
 
-## BR-2026-10-21 实施增补（合并共用实现）
+新文件另跑定向 ESLint/Prettier/Stylelint 的检查模式，不对整个用户工作区执行自动修复。
 
-- [ ] 读[统一设计](../../../docs/browser-implementation-design.md)和[BR](../10-21-cnc-browser-reuse/prd.md)；复用基础组件。
-- [ ] SchedulerUtil 只入队；消费同一执行层，同账号持久租约、operation intent 与观测由本任务/02 持有。
-- [ ] 保留 02/03 真闭环依赖；重复 tick/取消/租约丢失/丢回执不重复提交；两轮真实监测独立验收。
-- [ ] 执行 M-BR-01/02 与原用例，记录命令/环境/失败/未验证项；秘密/STEP 不进模型或日志，Trace 仅私有授权诊断。
+## 真实平台集成验收
 
-## D-17 前两平台交付边界
+- [ ] 对当前用户可访问的两份图纸/双平台配置执行数量 1/2/5，逐项核对实际账号、文件与生效参数。
+- [ ] 配置合法周期并执行至少两轮，检查新轮次/新 Run/新观测、同价保留和证据关联。
+- [ ] 将 QUOTED 与 REFERENCE_ESTIMATE/PENDING_REVIEW 分开报告；实际平台只给参考价时记录平台能力边界。
+- [ ] 验证停止/重启恢复的安全边界，不为了测试主动重放不明上传或提交；优先故障注入验证危险窗口。
+- [ ] 保留原账号登录、配置 CRUD、原单次报价和受控人工处理回归证据。
 
-本阶段目标固定为 Xometry US 与嘉立创 CNC 中国站；12 基准、每平台 10 项、两轮监测、Web/CSV/证据及全部原验收保持。RapidDirect 为第三家延期 backlog，不出现在当前批次、监测模板或成功率分母中；前两家完整功能与验收完成后才考虑实施。
+## 回滚点与交接
+
+每个子项自带兼容迁移与功能开关。出现失败时先停止新准入/调度和领取，再协作停止活动项；有远端副作用时只读核对。保留批次、Run、Intent、结果和私有证据，不删除历史。
+
+父项最终检查只覆盖本任务变更与跨子项验收。完成质量门后更新对应 spec、记录真实结果并按工作流交接；不将当前规划落盘描述为功能实现完成。

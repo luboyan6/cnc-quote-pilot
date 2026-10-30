@@ -1,12 +1,9 @@
-{"file": ".trellis/tasks/10-21-cnc-pricing-mvp/decisions.md", "reason": "CURRENT D17 answered: xometry_us / xometry first; jlc_cnc_cn / jlc second; RD third DEFERRED until all first-two functions and P0 acceptance; first-provider gates and independent two-provider QUOTED remain"}
-{"file": ".trellis\\tasks\\10-21-cnc-pricing-mvp\\research\\repository-evidence.md", "reason": "Verified repository integration points and compatibility constraints; no assumed live readiness"}
-{"file": ".trellis\\tasks\\10-21-cnc-pricing-mvp\\research\\mvp-contract.md", "reason": "Compact SRS scope, statuses, safety and real-quote acceptance contract"}
-{"file": ".trellis/tasks/10-21-cnc-pricing-mvp/design.md", "reason": "Reviewed parent architecture, repository compatibility, runtime configuration and safety contracts"}
-{"file": ".trellis/tasks/10-21-cnc-pricing-mvp/research/platform-configs/README.md", "reason": "Per-platform JSON loader/version/dependency contract and TC-CFG-01 through 08; read needed catalog portions instead of injecting entire lists"}
-{"file": ".trellis/tasks/10-21-cnc-pricing-mvp/agent-design.md", "reason": "Current Workflow + Deep Agents exception-recovery roles, observation/strategy guards, budgets, persistence and TC-DA acceptance; D-13 overrides earlier mandatory model/helper drafts"}
-{"file": ".trellis/tasks/10-21-cnc-pricing-mvp/research/deepagents-2026-10-21.md", "reason": "Live-verified latest stable SDK and official API evidence; AgentSeek reference boundaries and repository compatibility limits"}
-{"file": ".trellis/tasks/10-21-cnc-mvp-04-monitoring/prd.md", "reason": "Owning task requirements and acceptance criteria, including the current Deep Agents migration"}
-{"file": ".trellis/tasks/10-21-cnc-mvp-04-monitoring/design.md", "reason": "Owning task design and Deep Agents responsibilities with predecessor gates"}
-{"file": ".trellis/tasks/10-21-cnc-mvp-04-monitoring/implement.md", "reason": "Owning task ordered execution, applicable validation and rollback plan"}
-{"file": ".trellis/tasks/10-21-cnc-pricing-mvp/workflow-design.md", "reason": "Authoritative fixed business S01-S11, exception branches E01-E13, bounded Agent strategy selection/guard/verification/resume and TC-WF-01 through 06 (D-13)"}
-{"file": "docs/browser-implementation-design.md", "reason": "BR-2026-10-21 shared browser ownership, SDK reuse, security and separate live acceptance"}
+{"file":".trellis/spec/backend/index.md","reason":"Current backend guideline index; follow actual package boundaries"}
+{"file":".trellis/spec/backend/cnc-auto-quote.md","reason":"Existing single-run API, frozen file/parameter, result truthfulness and intent contracts"}
+{"file":".trellis/spec/backend/cnc-account-login.md","reason":"Account isolation, permissions, owner lifecycle and fenced lease"}
+{"file":".trellis/spec/backend/browser-executor.md","reason":"Shared browser/file/evidence boundaries and uncertain-mutation handling"}
+{"file":".trellis/spec/frontend/index.md","reason":"Existing Vue component/type/quality guideline index"}
+{"file":".trellis/spec/frontend/cnc-auto-quote.md","reason":"Preserve existing single-run closing behavior, serial polling, human input and decimal status display"}
+{"file":".trellis/spec/guides/cross-layer-thinking-guide.md","reason":"Check data shapes, typed projections and API/UI/DB lifecycle consistency"}
+{"file":".trellis/tasks/10-21-cnc-mvp-04-monitoring/research/planning-revision-2026-10-28.md","reason":"Current scope authority, verified source anchors, preserved historical plan and no implementation approval"}
+{"file":".trellis/tasks/10-21-cnc-mvp-04-monitoring/research/implementation-contract.md","reason":"Owning shared contracts for batches, retries, schedules, metrics, API, migration and rollback"}

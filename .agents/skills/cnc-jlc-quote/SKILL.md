@@ -1,36 +1,138 @@
 ---
 name: cnc-jlc-quote
-description: "Guide an authorized JLC CNC China browser quote workflow with verified STEP upload, site-specific material and finish readback, reference-estimate classification, and inquiry/order boundaries. Use for jlc-cnc.com, not other JLC services."
+description: "Guide an authorized JLC CNC China (嘉立创CNC中国站) browser login and quote workflow with iframe modal login, account/password tab, security slider handling, verified STEP upload & parsing, parameter editor modal, lead-time day selection, and reference-estimate classification."
 ---
 
-# JLC CNC China quote workflow
+# JLC CNC China (嘉立创CNC中国站) 登录与报价工作流规范
 
-Use for the requested JLC CNC China configuration at `https://www.jlc-cnc.com/cncOrder/#/placeOrder`; the current anonymous entry was observed landing at `https://www.jlc-cnc.com/cncOrder/` with no hash. Read [observed DOM and evidence](references/observed-dom-and-evidence.md) before acting. This is an independent site workflow: its material editor, finish choices and inquiry buttons require JLC evidence. Skill completion does not enable a backend adapter or establish real-provider acceptance.
+本规范适用于嘉立创中国站 CNC 平台（`https://www.jlc-cnc.com` 及报价页面 `https://www.jlc-cnc.com/cncOrder/#/placeOrder`）。
+包含完整的受控浏览器登录、安全滑块验证、图纸上传解析、加工参数修改对话框、交期天数选择以及报价读取逻辑。
 
-## Controlled flow
+---
 
-1. **Freeze the authorized input.** Resolve the actual configuration's platform record and trusted configured entry, not a numeric platform enum. Bind actor, authorized enabled account, linked part, process, material, finish, quantity and all applicable extras to a run. Verify third-party upload authorization, trusted storage-root containment, STEP content, size and SHA-256. Use the same frozen bytes through the official file-input/chooser helper; a filename, extension or similar geometry does not establish file identity. Stop on changed input or when no reviewed conservative upload cap is available under the declared limit (see step 4); an untested provider byte boundary does not itself invalidate such a local cap.
-2. **Reuse and verify the correct account.** Use the existing guarded session and single browser owner. The provider's read-only identity query is `https://www.jlc-cnc.com/cncPortal/login/queryLoginUser`; require explicit returned account/email/phone identity to match the intended account. Return only the match result or masked identity. Cookies, page presence and a visible login label are insufficient. If login is needed, retain the CNC app's native `#jlc-cas-login-window` iframe and CAS callback; let the user handle credentials/challenges normally. Suspend automatic actions during human input and reverify in the same quote page without navigation. No enabled JLC account was available in the recorded project inventory; recheck current authorized configuration rather than assuming one exists.
-3. **Record every mutation durably.** Before upload, quantity change, parameter save/apply or a verified quote trigger, persist and claim its scope/run/account/file-hash/parameter-generation/operation in the existing authorized intent store or private task log. Stop if durable recording is unavailable. Confirm receipt and remote part identity before advancing. A timeout, cancellation, restart or failed confirmation leaves the intent claimed/uncertain; perform bounded read-only reconciliation or stop for human help. Never clear an intent or use a new run to bypass it. The historical uncertain quantity click in the reference must not be replayed blindly.
-4. **Use the primary CAD uploader once.** Re-observe `#uploadFileBut` (**拖拽或上传图纸文件**) and the unique current native file input before using the official helper. `#exportModelBut` (**导入零件清单**) imports a part list; it is not the CAD uploader. Initial **跳过/下一步** controls belong to the first-visit walkthrough, not quote submission. The input also accepts supplementary/archives; its `accept` list does not validate primary CAD. Send only the authorized verified STEP payload. If a matching upload already exists, continue only after its receipt binds the exact frozen source to the remote item; do not re-upload. Observe parse completion, remote part identity and positive geometry. UI text declares up to 20 files and individual `<100M`; numeric byte boundaries are unverified. Use a reviewed conservative cap below the declared limit or stop if none is available.
-5. **Inspect JLC's parameter editor and read back the saved result.** The current anonymous entry has empty upload history and no material editor/quantity field. On an existing part, the historical `#material-box .change-info` labeled **修改参数** is an observed editor candidate. Reinspect after an authorized uploaded/reconciled part exists; its modal controls, material options, dependencies, save action and saved-value extraction are not yet verified. Discover them from the current DOM rather than inventing selectors. Match exact site-supported process/material grade/temper, finish and any finish subchoices, quantity and every extra parameter; re-observe options after dependencies change. Do not equate `铝合金-6061` to Xometry `6061-T6x`, or JLC blasting/anodizing to `Standard`. Persist a separate intent before any selection that commits remotely or any save/apply action. Read back all effective values after save; stop on unsupported/ambiguous mappings, unknown keys or incomplete/mismatching readback. An absent source finish does not authorize adopting a historical finish.
-6. **Read the actual result nature and stop at unverified commitments.** **系统预估价** with **系统自动报价仅做参考, 最终以人工审核报价为准** is `REFERENCE_ESTIMATE`. Preserve that qualification even when money and geometry exist. Do not click **提交询价** until its current side effects are established as quote-only within the user's scope; its wording alone does not establish that. Stop before **加入购物车**/`addCarCNC`, order submission, logistics/invoice order details, payment or equivalent commitments. A fresh estimate may be the last available result; do not advance into an order to obtain a final quote.
+## 一、受控登录流程 (Login Workflow)
 
-## Result evidence
+1. **访问首页与触发登录**
+   - 访问平台首页 `https://www.jlc-cnc.com`（或配置的登录地址）。
+   - 定位并点击右上角“登录”按钮（DOM 选择器：`button.login-button` 或 `page.locator("button.login-button").first`）。
+   - 注意：首页存在多处包含“登录”文本的节点，必须使用精确类名或 `.first`，避免 Playwright strict mode 冲突。
 
-Record run/part/quote identifiers, exact file/geometry binding, requested and saved effective parameters, raw platform status, positive finite decimal-string amount, explicit ISO currency evidence, unit/line/total basis, quantity, tax/shipping scope, lead-time wording and observation time. Identify current recalculation/receipt evidence; a new timestamp, pre-existing part or historical amount does not establish same-run freshness. Do not infer CNY solely from `¥`, or turn a promised shipping date/payment cutoff into production days. Retain coupon estimates separately unless actually applied and scoped.
+2. **登录弹窗与 Tab 切换**
+   - 点击登录后，页面加载全局全屏登录遮罩 iframe：`iframe#jlc-cas-login-window`。
+   - iframe 内容来源于 CAS 统一认证服务（`passport.jlc.com`），内嵌 3 个 Tab 切换项：
+     - `扫码登录`（默认微信扫码）
+     - `账号登录`（用户名/密码）
+     - `手机号登录`（短信验证码）
+   - 切换到第 2 个 Tab：“账号登录”：
+     - 选择器：`frame.locator('button:has-text("账号登录"), div:has-text("账号登录")').filter({ hasText: "账号登录" }).first`。
 
-- **REFERENCE_ESTIMATE**: the platform explicitly labels the value as a system/reference estimate.
-- **PENDING_REVIEW**: the platform explicitly confirms pending manual review; missing price alone is insufficient.
-- **QUOTED**: only a fresh final quote for the same verified file, complete effective parameters and current run, with known currency/price basis/lead time and confirmed no-order semantics.
-- **FAILED**: observed rejection or validation failure; never supply a fabricated amount.
+3. **凭据填写与提交**
+   - 账号输入框：`frame.getByPlaceholder("请输入手机号码 / 客户编号 / 邮箱")`。
+   - 密码输入框：`frame.getByPlaceholder("请输入登录密码")`。
+   - 提交按钮：`frame.locator("button.submit, button:has-text('登录')").filter({ hasText: "登录" }).first`。
+   - 填入对应账号与密码后触发提交。
 
-An unresolved identity, upload/quantity/save receipt, editor mapping or inquiry side effect is a blocker with no verified final quote. Report what is observed and what remains unverified; preserve the user's selected platform. Keep only minimal sanitized private evidence. Never retain credentials, auth responses, cookies/storage, tokens, signed file URLs or credential-bearing network logs. Scope DOM/screenshot capture to relevant visible controls and redact sensitive values before storage.
+4. **安全验证滑块处理 (Security Slider)**
+   - 提交后，若平台风控触发安全验证，会弹出“安全验证 - 为了您的账号安全，请完成验证 - 请按住滑块，拖动到最右边”。
+   - 滑块控件特征：包含 `>>` 拖动按钮与轨道。
+   - 处理方式：
+     - 系统会将登录会话状态置为 `WAITING_HUMAN`。
+     - 前端受控浏览器（`ControlledBrowser.vue` / `AccountLoginDialog.vue`）支持实时画面串流与鼠标拖动交互，用户可在对话框中直接拖动滑块完成验证；完成后点击“验证登录”。
 
-## Browser tools
+5. **登录状态与身份校验**
+   - 登录成功后，受控会话在当前上下文中通过以下只读接口核验用户身份：
+     - 门户用户信息：`https://www.jlc-cnc.com/api/cncPortal/login/queryLoginUser`（返回 `casAccountCode`, `customerCode`, `customerName` 等）。
+     - CAS SSO 身份信息：`https://passport.jlc.com/api/cas/sso/get-user-info`（POST `{ appId: "CNC_BIZ_GATEWAY" }`，返回 `customerCode`, `customerAccountCode`, `phone` 如 `192****2291`）。
+   - 账号匹配规则：
+     - 手机号支持前 3 位与后 4 位掩码匹配（如 `19216192291` 匹配 `192****2291`）。
+     - 支持精确匹配客户编号（如 `14271345A`）或客户账号（如 `J14378920`）。
+     - 身份不符时抛出 `IDENTITY_MISMATCH`，禁止跨账号串号。
 
-- **Playwright MCP:** obtain a fresh accessible snapshot/find result, act on current references and use the official file chooser/input mechanism.
-- **Official Chrome DevTools MCP:** use `list_pages` to identify the authorized current `pageId`, then `take_snapshot` for current control `uid` values. Use `click`/`fill` on those controls and `upload_file` only for the confirmed file input, passing a protected immutable local copy whose bytes, size and SHA-256 match the frozen payload. Recheck that copy before use; never pass a mutable source path. Refresh the snapshot after each transition and discard stale `uid` values. If the default profile is occupied, reuse an available owned isolated session or stop; never kill an unrelated browser or hardcode this machine's daemon path/session ID as a reusable default.
-- **CDP bridge:** observe the authorized tab, then act with its fresh `tab_id`, `page_revision` and control reference; re-observe after every action or stale reference.
+---
 
-Never assume a new tab inherits the managed login or replace the user's session with a personal profile. Keep read waits short and bounded while parsing/recalculating; a late response never authorizes repeating a mutation. Leave unrelated user tabs/work intact.
+## 二、跳转报价页面 (Quote Entry Transition)
+
+1. **登录态页面特征**
+   - 登录成功后，首页右上角原“注册 / 登录”按钮区域自动变为：
+     - `购物车`
+     - `在线报价`（`button.order-platform-button`）
+     - 用户头像及客户编号（如 `14271345A`）
+2. **进入报价页面**
+   - 点击右上角“在线报价”按钮，或直接在当前浏览器上下文中导航至报价地址：
+     `https://www.jlc-cnc.com/cncOrder/#/placeOrder`。
+3. **新手引导遮罩处理**
+   - 页面首次加载可能出现引导浮层（如“上传图纸文件 (1/2)”或“新手引导”）：
+   - 点击“跳过”（`button:has-text("跳过")`）或“不用了”遮罩，使主界面处于可交互状态。
+
+---
+
+## 三、图纸上传与解析 (Upload CAD & Parsing)
+
+1. **上传区域与文件选择器**
+   - 主界面包含“上传图纸”区域及“拖拽或上传图纸文件”按钮（`#uploadFileBut`）。
+   - 实际底层原生文件上传控件：`input[type="file"].el-upload__input[name="file"]`。
+   - 支持格式：3D 图纸（必须）`.step` / `.stp`；辅助 2D 图纸 `.dwg` / `.dxf` / `.pdf` 或压缩包。
+   - 文件限制：单次 ≤20 个，单个文件大小 <100M。
+2. **上传操作与解析等待**
+   - 通过 Playwright `setInputFiles` 传入验证过的本地 STEP 副本。
+   - 上传后进入平台服务端几何解析：
+     - 文件越大，特征越复杂，解析等待时间越长（通常数秒至 1~2 分钟不等）。
+   - 解析完成后：
+     - 列表渲染零件条目，展示零件 3D 渲染缩略图、零件名称（如 `L018-5-M12 (已上传 3D 图纸)`）。
+     - 提取几何信息：尺寸（`长*宽*高 mm`）、体积（`mm³`）、表面积（`mm²`）。
+
+---
+
+## 四、加工参数配置修改 (Parameter Editing)
+
+零件上传解析后，默认带有初始参数，必须核对或修改以获取准确报价：
+
+1. **打开参数配置对话框**
+   - 点击零件条目中的“修改参数”按钮（选择器：`.change-info.hand`）。
+   - 弹出对话框：`.el-dialog.material-dialog`，标题为“选择加工参数”。
+2. **各参数字段控制项**
+   - **材料 (`* 材料`)**：
+     - 分类选项卡：`铝合金` / `塑料` / `铜合金` / `合金钢` / `不锈钢`。
+     - 具体材料选项：如 `铝合金-6061`、`铝合金-7075` 等。
+   - **表面处理 (`* 表面处理`)**：
+     - 模式单选：`需要表面处理（支持多个表面处理）` vs `表面不做处理（会有轻微刀痕，表面略有刮花）`。
+     - 若选择需要表面处理：
+       - 表面处理工艺下拉框（如 `喷砂+普通阳极氧化`）
+       - 颜色下拉框（如 `本色`、`黑色` 等）
+       - 光泽单选按钮：`哑光` / `亮光`
+   - **加工数量 (`* 加工数量`)**：
+     - 步进器/数字输入框，附带 `[数量折扣]` 阶梯说明。
+   - **最严公差 (`* 最严公差`)**：
+     - 公差标准下拉框（默认 `GB/T 1804-2000 m级`）。
+     - 是否需要质检报告单选：`不需要` / `需要`。
+   - **外观要求 (`* 外观要求`)**：
+     - 下拉选择：`常规外观` 等。
+   - **是否有螺纹 (`* 是否有螺纹`)**：
+     - 单选按钮：`否` / `是`。
+   - **是否有装配关系 (`* 是否有装配关系`)**：
+     - 单选按钮：`否` / `是`。
+   - **备注**：
+     - 特殊加工工艺要求（文本框，0/200 字）。
+3. **确认保存参数**
+   - 点击对话框右下方“确认”按钮（选择器：`#submit-btn`，按钮文本为 `确  认`）。
+   - 确认后对话框关闭，主页面参数信息同步更新，后台自动触发价格重算。
+
+---
+
+## 五、交期天数选择与报价提取 (Lead Time & Quote Extraction)
+
+1. **零件勾选与右侧联动**
+   - 勾选零件列表对应行复选框（`.el-checkbox`）。
+2. **交期天数选择 (`.delivery-box`)**
+   - 右侧交期卡片提供 3 档生产交期选项（单选框）：
+     - `加急交期：3个工作日`（附带加急单价/总价）
+     - `标准交期：6个工作日`（附带标准单价/总价）
+     - `经济交期：11个工作日`（附带经济单价/总价）
+   - 根据需求点击对应交期单选框（`.el-radio`），系统总价随之切换并展示预计发货时间（如“今日19点前支付, 预计MM-DD HH:mm前发货”）。
+3. **报价数据读取项**
+   - 基础金额：零件单价、零件总价。
+   - 汇总金额：零件数量（如 `1件 1款`）、税费、总计（含税）、新人券后优惠估算价。
+4. **报价结果定级与边界**
+   - **REFERENCE_ESTIMATE**：嘉立创页面明确提示“系统预估价”及“系统自动报价仅做参考，最终以人工审核报价为准”，因此属于系统预估价。
+   - **人工审核/提交询价**：若图纸文件较大、多零件组合、或超出自动化计价规则，需人工报价或点击“提交询价”。
+   - **安全边界**：本流程为报价检索，严禁点击“加入购物车”（`addCarCNC`）、提交订单、填写收货地址发票或进行支付结算。
