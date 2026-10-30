@@ -87,8 +87,10 @@ class ChatSessionCRUD:
         参数:
         - auth (AuthSchema): 认证信息模型
         """
+        if auth.user.id <= 0 or not auth.user.username:
+            raise CustomException(msg="用户身份不可用", code=RET.UNAUTHORIZED.code)
         self.auth = auth
-        self.user_id = auth.user.username or "user"
+        self.user_id = auth.user.username
         self.team_id = TEAM_ID
         self.db = _get_agno_db()
 

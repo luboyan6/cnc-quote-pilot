@@ -31,6 +31,10 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
 
     if settings.CNC_BATCH_ENABLED and settings.WORKERS != 1:
         raise RuntimeError("CNC_BATCH_REQUIRES_SINGLE_WORKER")
+    if settings.AI_CHAT_ENGINE == "deerflow_source":
+        from app.modules.ai.agent.lifecycle import require_chat_integration
+
+        require_chat_integration(settings)
 
     await InitializeData().init_db()
     logger.info(f"✅ {settings.DATABASE_TYPE} 连接初始化完成")
@@ -65,6 +69,10 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
         cleanup.push_async_callback(redis_connect, app, status=False)
         cleanup.push_async_callback(SchedulerUtil.shutdown, wait=True)
         cleanup.push_async_callback(close_login_sessions)
+        if settings.AI_CHAT_ENGINE == "deerflow_source":
+            from app.modules.ai.agent.lifecycle import open_agent_service
+
+            app.state.agent_service = await cleanup.enter_async_context(open_agent_service(settings))
         if settings.CNC_BATCH_ENABLED:
             from app.modules.cnc.batch.dispatcher import QuoteDispatcher
 

@@ -108,6 +108,14 @@ python main.py run --env=dev
 
 Windows 下启动入口使用单进程 Proactor 模式，以支持 CNC/Playwright 子进程，并关闭 Uvicorn 热重载和多 worker，避免重载或 worker 重启时共享监听 socket 触发 `WinError 87`。`DEBUG` 的其他用途不受影响；修改后端代码后请手动停止并重新启动服务。Linux 仍按 `DEBUG` / `WORKERS` 配置启用热重载或多进程。
 
+#### 本地源码 Agent（尚未启用）
+
+当前 `AI_CHAT_ENGINE=agno` 为默认；`deerflow_source` 在聊天会话归属、历史及权限接入完成前会明确拒绝启动。若准备隔离环境，可使用 `uv sync --extra postgres --extra agent`，或在 PostgreSQL 依赖基础上执行 `pip install -r requirements/agent.txt`。源码来源及许可证见 `app/modules/ai/agent/SOURCE_PROVENANCE.md`。
+
+部署人员在明确选择目标 PostgreSQL 数据库后，设置环境变量 `CNC_AGENT_CHECKPOINT_DSN` 并运行 `python scripts/setup_agent_checkpoints.py`，该命令显式创建/升级标准 checkpoint 表；普通请求和应用启动不会自动执行该步骤。不要把连接地址或密码写入源码或日志。Windows 继续使用现有 Proactor 服务循环，checkpoint 连接由单独的 Selector 线程管理，关闭 Agent 时先等待活动生成结束再关闭连接和线程。新执行器当前只支持单 worker 与 PostgreSQL，旧 Agno 和既有数据库设置保持独立。
+
+源码聊天的会话及证据引用使用应用迁移链，当前 head 为 `a816e3b61030`；部署前应先核对目标数据库与迁移计划，本次实现不会自动升级用户数据库。证据投影非空时该迁移拒绝降级，避免删除已保存的引用。旧 Agno 聊天保持原样，不导入源码引擎；回滚到 Agno 后，已保存的源码会话可作为只读历史查看。
+
 ### 代码格式化（ruff）
 
 ```bash

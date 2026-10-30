@@ -141,8 +141,10 @@ def _format_session_data(session: TeamSession | dict[str, Any], with_messages: b
 
 
 async def _ensure_session(crud: ChatSessionCRUD, session_id: str | None) -> str:
-    """会话 ID 为空时创建新会话，返回可用的会话 ID"""
+    """Resolve an existing session only in the authenticated user's scope."""
     if session_id:
+        if not await crud.get_by_id(session_id=session_id):
+            raise CustomException(msg="会话不存在", code=RET.NOT_FOUND.code)
         return session_id
     session = await crud.create(data=ChatSessionCreateSchema(title="新对话"))
     return session.session_id
@@ -179,18 +181,23 @@ class ChatService:
             yield "请输入消息内容"
             return
 
-        logger.info("开始流式生成: session_id={} message={!r}", session_id, message[:80])
+        logger.info("开始流式生成: session_id={}", session_id)
         chunk_count = 0
         try:
             stream = agent.arun(input=message, stream=True)
             if hasattr(stream, "__aiter__"):
-                async for chunk in stream:  # type: ignore[union-attr]
-                    if stop_event is not None and stop_event.is_set():
-                        logger.info("用户主动停止生成: session_id={}", session_id)
-                        return
-                    if chunk and getattr(chunk, "content", None):
-                        chunk_count += 1
-                        yield str(chunk.content)
+                try:
+                    async for chunk in stream:  # type: ignore[union-attr]
+                        if stop_event is not None and stop_event.is_set():
+                            logger.info("用户主动停止生成: session_id={}", session_id)
+                            return
+                        if chunk and getattr(chunk, "content", None):
+                            chunk_count += 1
+                            yield str(chunk.content)
+                finally:
+                    close = getattr(stream, "aclose", None)
+                    if close is not None:
+                        await close()
             else:
                 # 兼容非流式直接返回结果的场景
                 result: Any = stream
@@ -199,8 +206,8 @@ class ChatService:
         except asyncio.CancelledError:
             logger.info("生成任务被取消: session_id={}", session_id)
             raise
-        except Exception as e:
-            logger.error(f"流式生成失败: {e}", exc_info=True)
+        except Exception:
+            logger.error("流式生成失败: session_id={}", session_id)
             yield "抱歉，AI 服务暂时不可用，请稍后重试"
             return
 
@@ -227,8 +234,8 @@ class ChatService:
 
         try:
             response: TeamRunOutput = await agent.arun(input=message)
-        except Exception as e:
-            logger.error(f"非流式对话失败: {e}", exc_info=True)
+        except Exception:
+            logger.error("非流式对话失败: session_id={}", sid)
             return {
                 "response": "抱歉，AI 服务暂时不可用，请稍后重试",
                 "session_id": sid,
@@ -376,15 +383,17 @@ def _open_item(item: dict[str, Any]) -> dict[str, Any]:
 
 
 async def get_user_model_config(redis: Redis, user_id: int) -> dict[str, Any] | None:
-    """读取当前激活的 AI 模型配置；不存在或未激活返回 None。"""
-    active_id = await RedisCURD(redis).get(_ai_model_active_key(user_id))
+    """Return the selected model, or None only when the default is selected."""
+    # RedisCURD.get intentionally converts connectivity errors into None;
+    # that would silently select the default model after a Redis outage.
+    active_id = await redis.get(_ai_model_active_key(user_id))
     if not active_id:
         return None
     items = await list_user_model_configs(redis, user_id)
     for item in items:
         if item.get("id") == active_id:
             return item
-    return None
+    raise CustomException(msg="已选择的模型配置不可用，请重新选择", code=RET.NOT_FOUND.code)
 
 
 async def _read_raw_items(redis: Redis, user_id: int) -> list[dict[str, Any]]:

@@ -1,23 +1,30 @@
 import asyncio
 import json
+import uuid
+from contextlib import aclosing
+from dataclasses import dataclass, field
 from typing import Annotated, Any
 
-from fastapi import APIRouter, Body, Depends, Path, Query, Security, WebSocket, WebSocketDisconnect, status
+from fastapi import APIRouter, Body, Depends, Path, Query, Request, Security, WebSocket, WebSocketDisconnect, status
 from fastapi.responses import JSONResponse
 from redis.asyncio import Redis
 
 from app.common.response import ResponseSchema, SuccessResponse
+from app.config.setting import settings
 from app.core.base_schema import AuthSchema, PageResultSchema, PaginationQueryParam
-from app.core.dependencies import AuthPermission, redis_getter, websocket_authenticate
+from app.core.database import async_db_session
+from app.core.dependencies import AuthPermission, get_current_user, redis_getter, websocket_authenticate
 from app.core.exceptions import CustomException
 from app.core.logger import logger
 from app.core.router_class import OperationLogRoute
 
+from .rollback_sessions import RollbackSessionService
 from .schema import (
     AiChatRequestSchema,
     AiChatResponseSchema,
     AiModelConfigListResponse,
     AiModelConfigSchema,
+    ChatCapabilitiesSchema,
     ChatQuerySchema,
     ChatSessionCreateSchema,
     ChatSessionOutSchema,
@@ -25,6 +32,7 @@ from .schema import (
     ChatSessionUpdateSchema,
 )
 from .service import AiModelConfigService, ChatService, get_user_model_config
+from .source_sessions import SourceSessionService
 
 ChatRouter = APIRouter(route_class=OperationLogRoute, prefix="/chat", tags=["AI管理"])
 
@@ -34,19 +42,66 @@ _WS_CHAT_PERMISSION = "module_ai:chat:query"
 
 def _has_chat_permission(auth: AuthSchema) -> bool:
     """校验当前用户是否具备 AI 聊天权限（超管/通配权限直接放行）"""
+    return _has_permission(auth, _WS_CHAT_PERMISSION)
+
+
+def _has_permission(auth: AuthSchema, required: str) -> bool:
     user = auth.user
-    if user.id is None or user.is_superuser:
+    if user.id <= 0:
+        return False
+    if user.is_superuser:
         return True
     permissions = set(auth.permissions or [])
-    return "*:*:*" in permissions or _WS_CHAT_PERMISSION in permissions
+    return "*:*:*" in permissions or required in permissions
+
+
+def _session_service(auth: AuthSchema) -> RollbackSessionService | SourceSessionService:
+    return SourceSessionService(auth) if settings.AI_CHAT_ENGINE == "deerflow_source" else RollbackSessionService(auth)
+
+
+def _source_http_chat(request: Request, auth: AuthSchema, permission: str = _WS_CHAT_PERMISSION):
+    # Imported only when the gated optional Agent dependency is enabled.
+    from .source_service import SourceChatService
+
+    token = request.headers.get("authorization", "")
+
+    async def refresh_auth() -> AuthSchema:
+        async with async_db_session() as db:
+            current = await get_current_user(db=db, redis=request.app.state.redis, token=token)
+        if current.user.id != auth.user.id or not _has_permission(current, permission):
+            raise PermissionError("CHAT_OWNER_UNAVAILABLE")
+        return current
+
+    return SourceChatService(auth, request.app.state.agent_service, refresh_auth)
+
+
+@ChatRouter.get("/capabilities", summary="获取已启用的聊天能力", response_model=ResponseSchema[ChatCapabilitiesSchema])
+async def chat_capabilities_controller(
+    auth: Annotated[AuthSchema, Security(AuthPermission(["module_ai:chat:query"]))],
+) -> JSONResponse:
+    source_available = False
+    if settings.AI_CHAT_ENGINE == "deerflow_source":
+        from app.modules.ai.agent.lifecycle import SOURCE_CHAT_INTEGRATION_READY
+
+        source_available = SOURCE_CHAT_INTEGRATION_READY
+    result = ChatCapabilitiesSchema(protocol_version=2 if source_available else 1, source_available=source_available)
+    return SuccessResponse(data=result, msg="获取聊天能力成功")
 
 
 @ChatRouter.get("/detail/{session_id}", summary="获取会话详情", response_model=ResponseSchema[ChatSessionOutSchema])
 async def get_session_detail_controller(
     auth: Annotated[AuthSchema, Security(AuthPermission(["module_ai:chat:detail"]))],
     session_id: Annotated[str, Path(description="会话ID")],
+    request: Request,
 ) -> JSONResponse:
-    service = ChatService(auth)
+    if settings.AI_CHAT_ENGINE == "deerflow_source":
+        try:
+            await _source_http_chat(request, auth, "module_ai:chat:detail").repair_history(session_id)
+        except LookupError:
+            from app.common.enums import RET
+
+            raise CustomException(msg="会话不存在", code=RET.NOT_FOUND.code)
+    service = _session_service(auth)
     result = await service.get_session(session_id=session_id)
     return SuccessResponse(data=result, msg="获取会话详情成功")
 
@@ -57,7 +112,7 @@ async def get_session_list_controller(
     page: Annotated[PaginationQueryParam, Depends()],
     search: Annotated[ChatSessionQueryParam, Query()],
 ) -> JSONResponse:
-    service = ChatService(auth)
+    service = _session_service(auth)
     result_dict = await service.page(
         page_no=page.page_no,
         page_size=page.page_size,
@@ -72,7 +127,7 @@ async def create_session_controller(
     auth: Annotated[AuthSchema, Security(AuthPermission(["module_ai:chat:create"]))],
     data: Annotated[ChatSessionCreateSchema, Body(description="会话创建参数")],
 ) -> JSONResponse:
-    service = ChatService(auth)
+    service = _session_service(auth)
     result = await service.create(data=data)
     return SuccessResponse(data=result, msg="创建会话成功")
 
@@ -83,7 +138,7 @@ async def update_session_controller(
     session_id: Annotated[str, Path(description="会话ID")],
     data: Annotated[ChatSessionUpdateSchema, Body(description="会话更新参数")],
 ) -> JSONResponse:
-    service = ChatService(auth)
+    service = _session_service(auth)
     await service.update(session_id=session_id, data=data)
     return SuccessResponse(data=None, msg="更新会话成功")
 
@@ -93,7 +148,7 @@ async def delete_session_controller(
     auth: Annotated[AuthSchema, Security(AuthPermission(["module_ai:chat:delete"]))],
     session_ids: Annotated[list[str], Body(description="会话ID列表")],
 ) -> JSONResponse:
-    service = ChatService(auth)
+    service = _session_service(auth)
     await service.delete(session_ids=session_ids)
     return SuccessResponse(data=None, msg="删除会话成功")
 
@@ -103,15 +158,33 @@ async def ai_chat_controller(
     auth: Annotated[AuthSchema, Security(AuthPermission(["module_ai:chat:query"]))],
     redis: Annotated[Redis, Depends(redis_getter)],
     data: Annotated[AiChatRequestSchema, Body(description="对话请求")],
+    request: Request,
 ) -> JSONResponse:
-    service = ChatService(auth)
     # 与 WebSocket 流式一致：优先使用用户激活的模型配置
     model_config = await get_user_model_config(redis, auth.user.id)
-    result = await service.chat_non_stream(
-        message=data.message,
-        session_id=data.session_id,
-        model_config=model_config,
-    )
+    if settings.AI_CHAT_ENGINE == "deerflow_source":
+        from app.common.enums import RET
+
+        source = _source_http_chat(request, auth)
+        sid = data.session_id
+        if not sid:
+            session = await SourceSessionService(auth).create(ChatSessionCreateSchema(title=data.message[:200]))
+            sid = session.session_id
+        response_parts: list[str] = []
+        succeeded = False
+        async with aclosing(source.stream(session_id=sid, turn_id=uuid.uuid4().hex, message=data.message, skills=None, model_config=model_config)) as events:
+            async for event in events:
+                if event.type == "text.delta" and isinstance(event.payload.get("text"), str):
+                    response_parts.append(event.payload["text"])
+                elif event.type == "turn.completed":
+                    succeeded = True
+                elif event.type in {"turn.failed", "turn.stopped"}:
+                    raise CustomException(msg="AI 服务暂时不可用，请稍后重试", code=RET.SERVERERR.code)
+        if not succeeded:
+            raise CustomException(msg="AI 服务暂时不可用，请稍后重试", code=RET.SERVERERR.code)
+        result = {"response": "".join(response_parts), "session_id": sid, "function_calls": None, "action": None}
+    else:
+        result = await ChatService(auth).chat_non_stream(message=data.message, session_id=data.session_id, model_config=model_config)
     return SuccessResponse(
         data=AiChatResponseSchema(
             response=result["response"],
@@ -178,17 +251,123 @@ async def activate_model_config_controller(
     return SuccessResponse(data=None, msg="已切换模型")
 
 
-async def _send_error_and_close(websocket: WebSocket, message: str) -> None:
-    """发送错误消息并关闭连接"""
-    try:
-        await websocket.send_text(f"错误: {message}")
-    except RuntimeError:
-        pass
-    finally:
+@dataclass(slots=True)
+class _LegacyTurn:
+    """One connection-owned generation; a terminal frame clears it."""
+
+    session_id: str | None
+    stop_event: asyncio.Event = field(default_factory=asyncio.Event)
+    phase: str = "running"
+    task: asyncio.Task[None] | None = None
+
+
+@dataclass(slots=True)
+class _SocketMessage:
+    text: str
+    turn: _LegacyTurn | None = None
+    terminal: bool = False
+
+
+def _cancel_once(task: asyncio.Task[Any] | None) -> None:
+    # A second cancel can interrupt an async generator's resource cleanup.
+    if task is not None and not task.done() and not task.cancelling():
+        task.cancel()
+
+
+async def _run_legacy_socket(websocket: WebSocket, auth: AuthSchema) -> None:
+    """Receive, generate and send independently; retain the legacy wire format."""
+    outgoing: asyncio.Queue[_SocketMessage] = asyncio.Queue(maxsize=32)
+    active_turn: _LegacyTurn | None = None
+    chat_service = ChatService(auth)
+    redis = websocket.app.state.redis
+
+    async def generate(turn: _LegacyTurn, query: ChatQuerySchema) -> None:
         try:
-            await websocket.close()
-        except RuntimeError:
-            pass
+            model_config = await get_user_model_config(redis, auth.user.id)
+            stream = chat_service.chat_query(query=query, stop_event=turn.stop_event, model_config=model_config)
+            async with aclosing(stream):
+                async for chunk in stream:
+                    if chunk and turn.phase == "running":
+                        await outgoing.put(_SocketMessage(chunk, turn))
+        except asyncio.CancelledError:
+            raise
+        except CustomException as exc:
+            turn.phase = "failed"
+            await outgoing.put(_SocketMessage(f"错误: {exc.msg}", turn))
+        except Exception:
+            # Model and transport exceptions may contain private configuration.
+            turn.phase = "failed"
+            logger.error("WebSocket聊天生成失败")
+            await outgoing.put(_SocketMessage("错误: AI 服务暂时不可用，请稍后重试", turn))
+        else:
+            turn.phase = "completed"
+        await outgoing.put(_SocketMessage("[DONE]", turn, terminal=True))
+
+    async def receive() -> None:
+        nonlocal active_turn
+        try:
+            while True:
+                data = await websocket.receive_text()
+                try:
+                    message_data = json.loads(data)
+                    if not isinstance(message_data, dict):
+                        raise ValueError("expected an object")
+                    query = ChatQuerySchema(**message_data)
+                except (ValueError, TypeError):
+                    await outgoing.put(_SocketMessage("消息格式错误，请发送JSON格式的消息"))
+                    continue
+
+                if query.action == "stop":
+                    turn = active_turn
+                    if turn is None or turn.phase != "running" or (query.session_id is not None and query.session_id != turn.session_id):
+                        await outgoing.put(_SocketMessage("当前没有正在进行的生成任务"))
+                        continue
+                    turn.phase = "stopping"
+                    turn.stop_event.set()
+                    _cancel_once(turn.task)
+                    if turn.task is not None:
+                        # Receiver cancellation on disconnect must not cancel
+                        # the generation a second time during its cleanup.
+                        await asyncio.shield(asyncio.gather(turn.task, return_exceptions=True))
+                    turn.phase = "stopped"
+                    await outgoing.put(_SocketMessage("[STOPPED]", turn, terminal=True))
+                    continue
+
+                if active_turn is not None:
+                    await outgoing.put(_SocketMessage("当前有正在进行的生成任务，请稍后再试"))
+                    continue
+                turn = _LegacyTurn(session_id=query.session_id)
+                active_turn = turn
+                turn.task = asyncio.create_task(generate(turn, query))
+        except WebSocketDisconnect:
+            return
+
+    async def send() -> None:
+        nonlocal active_turn
+        while True:
+            item = await outgoing.get()
+            if item.turn is not None and not item.terminal and item.turn.phase in {"stopping", "stopped"}:
+                continue
+            await websocket.send_text(item.text)
+            if item.terminal and active_turn is item.turn:
+                active_turn = None
+
+    receiver = asyncio.create_task(receive())
+    sender = asyncio.create_task(send())
+    try:
+        done, _ = await asyncio.wait((receiver, sender), return_when=asyncio.FIRST_COMPLETED)
+        for completed in done:
+            completed.result()
+    finally:
+        _cancel_once(receiver)
+        _cancel_once(sender)
+        if active_turn is not None:
+            active_turn.stop_event.set()
+            _cancel_once(active_turn.task)
+        tasks = [receiver, sender]
+        if active_turn is not None and active_turn.task is not None:
+            tasks.append(active_turn.task)
+        await asyncio.gather(*tasks, return_exceptions=True)
 
 
 @ChatRouter.websocket("/ws", name="WebSocket聊天")
@@ -220,87 +399,27 @@ async def websocket_chat_controller(websocket: WebSocket) -> None:
         return
 
     await websocket.accept(subprotocol=subprotocol)
-
-    # 跨消息循环共享的停止信号：客户端发送 stop 时 set，生成器检测到后退出
-    stop_event = asyncio.Event()
-    # 标记当前是否在生成中，便于 stop 校验
-    is_generating = asyncio.Event()
-
     try:
-        redis = websocket.app.state.redis
         logger.info("WebSocket连接已建立: {} - 用户: {}", websocket.client, auth.user.username or "未认证")
+        if settings.AI_CHAT_ENGINE == "deerflow_source":
+            from .source_service import SourceChatService
+            from .source_socket import run_source_socket
 
-        chat_service = ChatService(auth)
+            async def refresh_auth() -> AuthSchema:
+                current, _ = await websocket_authenticate(websocket)
+                if current.user.id != auth.user.id or not _has_chat_permission(current):
+                    raise PermissionError("CHAT_OWNER_UNAVAILABLE")
+                return current
 
-        # 消息循环
-        while True:
-            try:
-                data = await websocket.receive_text()
-                try:
-                    message_data = json.loads(data)
-                    query = ChatQuerySchema(**message_data)
-                except json.JSONDecodeError:
-                    logger.warning("收到非JSON消息: {}", data)
-                    await websocket.send_text("消息格式错误，请发送JSON格式的消息")
-                    continue
-                except Exception as e:
-                    logger.warning("消息校验失败: {}", e)
-                    await websocket.send_text(f"消息格式错误: {e}")
-                    continue
-
-                # 处理停止指令
-                if query.action == "stop":
-                    if is_generating.is_set():
-                        stop_event.set()
-                        logger.info("收到停止指令: session={}", query.session_id)
-                        await websocket.send_text("[STOPPED]")
-                    else:
-                        await websocket.send_text("当前没有正在进行的生成任务")
-                    continue
-
-                # 对话指令
-                logger.info("收到聊天查询: session_id={}", query.session_id)
-
-                is_generating.set()
-                stop_event.clear()
-                # 读取用户的 AI 模型配置（每次可动态切换）
-                model_config = await get_user_model_config(redis, auth.user.id)
-
-                stream = chat_service.chat_query(
-                    query=query,
-                    stop_event=stop_event,
-                    model_config=model_config,
-                )
-                try:
-                    async for chunk in stream:
-                        if not chunk:
-                            continue
-                        try:
-                            await websocket.send_text(chunk)
-                        except RuntimeError:
-                            # 客户端已断开：通知生成器停止并关闭底层 LLM 流，避免继续消耗配额
-                            logger.warning("WebSocket连接已关闭，停止发送消息")
-                            return
-                finally:
-                    is_generating.clear()
-                    stop_event.set()
-                    await stream.aclose()
-
-                # 告知前端生成结束
-                try:
-                    await websocket.send_text("[DONE]")
-                except RuntimeError:
-                    return
-
-            except WebSocketDisconnect:
-                logger.info("WebSocket连接已断开: {}", websocket.client)
-                return
-
-    except CustomException as e:
-        # 业务异常（认证已前置，多为会话/模型配置异常）
-        logger.warning("WebSocket业务异常: {}", e.msg)
-        await _send_error_and_close(websocket, e.msg)
-    except Exception as e:
-        # 未知异常
-        logger.exception("WebSocket未知异常: {}", e)
-        await _send_error_and_close(websocket, "服务器内部错误")
+            service = SourceChatService(auth, websocket.app.state.agent_service, refresh_auth)
+            await run_source_socket(websocket, auth, service, websocket.app.state.redis)
+        else:
+            await _run_legacy_socket(websocket, auth)
+    except (RuntimeError, WebSocketDisconnect):
+        logger.info("WebSocket连接已断开: {}", websocket.client)
+    except Exception:
+        logger.error("WebSocket服务异常")
+        try:
+            await websocket.close(code=1011)
+        except RuntimeError:
+            pass

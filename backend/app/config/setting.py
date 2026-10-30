@@ -92,8 +92,8 @@ class Settings(BaseSettings):
     # ================================================= #
     DATABASE_ECHO: bool | Literal["debug"] = False  # 是否显示SQL日志
     ECHO_POOL: bool | Literal["debug"] = False  # 是否显示连接池日志
-    POOL_SIZE: int = 10  # 连接池大小
-    MAX_OVERFLOW: int = 20  # 最大溢出连接数
+    POOL_SIZE: int = 5  # 连接池大小（单进程单库够用；共享库的连接槽位有限，勿盲目放大）
+    MAX_OVERFLOW: int = 5  # 最大溢出连接数（与 POOL_SIZE 合计上限 10，避免启动瞬间挤占共享库槽位）
     POOL_TIMEOUT: int = 30  # 连接超时时间(秒)
     POOL_RECYCLE: int = 1800  # 连接回收时间(秒)
     POOL_USE_LIFO: bool = True  # 是否使用LIFO连接池
@@ -252,6 +252,7 @@ class Settings(BaseSettings):
     OPENAI_API_KEY: str = ""
     OPENAI_MODEL: str = ""
     OPENAI_BASE_URL: str = ""  # API Base URL，如 https://api.minimax.chat/v1
+    AI_CHAT_ENGINE: Literal["agno", "deerflow_source"] = "agno"
 
     @model_validator(mode="after")
     def _merge_localhost_hosts(self) -> "Settings":

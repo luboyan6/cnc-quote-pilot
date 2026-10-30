@@ -2,7 +2,7 @@ import asyncio
 import json
 from typing import Any
 
-from sqlalchemy import func, inspect, select
+from sqlalchemy import func, inspect, select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.common.enums import EnvironmentEnum
@@ -48,6 +48,10 @@ class InitializeData:
     # 树形模型：JSON 含嵌套 children，需递归创建对象
     _RECURSIVE_TABLES: set[str] = {"sys_menu", "sys_dept"}
 
+    # 启动期数据库就绪重试：应对连接槽位被瞬时占满、网络抖动等可自愈的失败
+    _DB_READY_RETRIES: int = 5
+    _DB_READY_BASE_DELAY: float = 1.0
+
     async def init_db(self) -> None:
         """应用数据库迁移并导入种子数据（迁移成功即证明连接正常，失败时异常上抛）"""
         await self.__apply_migrations()
@@ -59,12 +63,47 @@ class InitializeData:
         (STATIC_DIR / "upload").mkdir(parents=True, exist_ok=True)
 
     @staticmethod
+    async def __wait_db_ready() -> None:
+        """等待数据库可接受连接（指数退避重试）。
+
+        共享库的连接槽位可能被其他应用的连接池瞬时占满，此时 PostgreSQL 会在握手阶段
+        直接断开，报 `unexpected connection_lost()` 之类的底层错误，但通常数秒内自愈。
+        这里在真正执行迁移前先做带退避的探活，避免整次启动因瞬时资源紧张而失败。
+        """
+        last_exc: Exception | None = None
+        for attempt in range(1, InitializeData._DB_READY_RETRIES + 1):
+            try:
+                async with async_engine.connect() as conn:
+                    await conn.execute(text("SELECT 1"))
+            except Exception as e:  # noqa: BLE001 - 启动期任何连接异常都应重试，最终统一上抛
+                last_exc = e
+                if attempt >= InitializeData._DB_READY_RETRIES:
+                    break
+                delay = InitializeData._DB_READY_BASE_DELAY * (2 ** (attempt - 1))
+                logger.warning(
+                    f"⚠️ 数据库暂不可用（第 {attempt}/{InitializeData._DB_READY_RETRIES} 次尝试）"
+                    f"{type(e).__name__}: {e}；{delay:.0f}s 后重试"
+                )
+                await asyncio.sleep(delay)
+            else:
+                if attempt > 1:
+                    logger.info(f"✅ 数据库连接已恢复（第 {attempt} 次尝试成功）")
+                return
+
+        logger.error(f"❌ 数据库连接失败，已重试 {InitializeData._DB_READY_RETRIES} 次：{last_exc}")
+        if last_exc is not None:
+            raise last_exc
+
+    @staticmethod
     async def __apply_migrations() -> None:
         """将数据库 schema 带到模型定义的最新的版本（开源项目要求任意方言开箱即用）。"""
         from alembic import command
         from alembic.config import Config
 
         alembic_cfg = Config(str(BASE_DIR / "alembic.ini"))
+
+        # 先确认数据库可接受连接：共享库槽位瞬时耗尽会让下面的首次连接直接失败
+        await InitializeData.__wait_db_ready()
 
         # 以 sys_menu 作为空库哨兵（按依赖排序最先建表），它不存在即视为全新空库
         async with async_engine.connect() as conn:

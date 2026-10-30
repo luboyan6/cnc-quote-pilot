@@ -1,4 +1,5 @@
-from typing import Any
+from typing import Any, Literal
+from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
@@ -12,6 +13,24 @@ class ChatQuerySchema(BaseModel):
     session_id: str | None = Field(None, description="会话ID")
     files: list[dict[str, Any]] | None = Field(None, description="文件信息")
     action: str | None = Field(None, description="动作类型：stop=停止生成 | None=对话")
+    protocol_version: Literal[1, 2] | None = Field(None, description="消息协议；不传时兼容旧客户端")
+    turn_id: str | None = Field(None, max_length=64, description="客户端轮次标识")
+    skills: list[str] | None = Field(None, max_length=32, description="本轮激活的技能名称")
+    drawing_uploads: list[UUID] | None = Field(None, max_length=8, description="本轮引用的私有图纸上传请求标识")
+
+    @field_validator("drawing_uploads")
+    @classmethod
+    def validate_drawing_uploads(cls, value: list[UUID] | None) -> list[UUID] | None:
+        if value is not None and len(value) != len(set(value)):
+            raise ValueError("图纸上传请求标识重复")
+        return value
+
+
+class ChatCapabilitiesSchema(BaseModel):
+    """Capabilities that have passed the application's startup gate."""
+
+    protocol_version: Literal[1, 2]
+    source_available: bool
 
 
 class ChatSessionCreateSchema(BaseModel):
@@ -39,6 +58,7 @@ class ChatSessionMessageSchema(BaseModel):
     role: str = Field(..., description="消息角色")
     content: str = Field(..., description="消息内容")
     created_at: int | None = Field(None, description="创建时间(Unix时间戳)")
+    evidence_result_ids: list[int] = Field(default_factory=list, description="关联的私有证据结果ID")
 
     model_config = ConfigDict(from_attributes=True)
 

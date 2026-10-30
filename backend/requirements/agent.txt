@@ -1,0 +1,10 @@
+# Optional local source-adapted Agent; keep versions aligned with uv.lock.
+# PostgreSQL additionally requires requirements/db/postgres.txt.
+langchain==1.4.7
+langchain-openai==1.7.3
+langgraph==1.2.18
+langgraph-checkpoint==4.3.1
+langgraph-checkpoint-postgres==3.1.3
+langgraph-checkpoint-sqlite==3.1.2
+psycopg-pool==3.3.3
+pyyaml==6.0.3
