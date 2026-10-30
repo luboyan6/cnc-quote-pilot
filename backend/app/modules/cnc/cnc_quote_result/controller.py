@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
 from typing import Annotated
+
 from fastapi import APIRouter, Body, Depends, Path, Query, Security
 from fastapi.responses import FileResponse, JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -10,7 +10,7 @@ from app.core.dependencies import AuthPermission, db_getter
 from app.core.exceptions import CustomException
 from app.core.router_class import OperationLogRoute
 
-from .evidence import resolve_evidence_path
+from .evidence import resolve_evidence_path, resolve_private_evidence_path
 from .schema import (
     CncHistoryPriceItem,
     CncQuoteResultOutSchema,
@@ -33,7 +33,7 @@ CncQuoteResultRouter = APIRouter(
 )
 async def get_quote_stats_controller(
     auth: Annotated[AuthSchema, Security(AuthPermission(["module_cnc:cnc_quote_result:query"]))],
-    search: Annotated[CncQuoteResultQueryParam, Query()],
+    search: Annotated[CncQuoteResultQueryParam, Depends()],
     db: Annotated[AsyncSession, Depends(db_getter)],
 ) -> JSONResponse:
     service = CncQuoteResultService(auth, db)
@@ -49,7 +49,7 @@ async def get_quote_stats_controller(
 async def get_history_prices_controller(
     auth: Annotated[AuthSchema, Security(AuthPermission(["module_cnc:cnc_quote_result:query"]))],
     db: Annotated[AsyncSession, Depends(db_getter)],
-    search: Annotated[CncQuoteResultQueryParam, Query()] = None,
+    search: Annotated[CncQuoteResultQueryParam, Depends()],
     limit: Annotated[int, Query(description="返回最多条数", ge=1, le=200)] = 50,
 ) -> JSONResponse:
     service = CncQuoteResultService(auth, db)
@@ -68,7 +68,7 @@ async def get_history_prices_controller(
 async def get_quote_result_list_controller(
     auth: Annotated[AuthSchema, Security(AuthPermission(["module_cnc:cnc_quote_result:query"]))],
     page: Annotated[PaginationQueryParam, Depends()],
-    search: Annotated[CncQuoteResultQueryParam, Query()],
+    search: Annotated[CncQuoteResultQueryParam, Depends()],
     db: Annotated[AsyncSession, Depends(db_getter)],
 ) -> JSONResponse:
     service = CncQuoteResultService(auth, db)
@@ -89,10 +89,11 @@ async def get_screenshot_controller(
     auth: Annotated[AuthSchema, Security(AuthPermission(["module_cnc:cnc_quote_result:query"]))],
     id: Annotated[int, Path(description="报价结果ID", ge=1)],
     db: Annotated[AsyncSession, Depends(db_getter)],
+    private_only: Annotated[bool, Query(description="仅允许读取已发布的私有证据")] = False,
 ):
     service = CncQuoteResultService(auth, db)
     row = await service.get_authorized_record(id)
-    file_path = resolve_evidence_path(row)
+    file_path = resolve_private_evidence_path(row) if private_only else resolve_evidence_path(row)
 
     if not file_path or not file_path.exists():
         raise CustomException(msg="截图证据不存在或已被清理", code=404)

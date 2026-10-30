@@ -134,9 +134,7 @@ CREATE TABLE IF NOT EXISTS cnc_part (
     size_bytes BIGINT NOT NULL CHECK (size_bytes > 0),
     storage_key TEXT NOT NULL UNIQUE,
     declared_unit VARCHAR(16) NOT NULL DEFAULT 'mm',
-    validation_status VARCHAR(32) NOT NULL DEFAULT 'HEADER_VALID',
     geometry_info_json JSONB DEFAULT '{}'::jsonb,
-    upload_authorized BOOLEAN NOT NULL DEFAULT true,
     revoked_at TIMESTAMPTZ,
     retained_until TIMESTAMPTZ,
     
@@ -160,9 +158,7 @@ COMMENT ON COLUMN cnc_part.sha256 IS '文件SHA256哈希指纹';
 COMMENT ON COLUMN cnc_part.size_bytes IS '文件大小(字节)';
 COMMENT ON COLUMN cnc_part.storage_key IS '私有对象存储Key(非物理路径)';
 COMMENT ON COLUMN cnc_part.declared_unit IS '声明尺寸单位(mm, inch)';
-COMMENT ON COLUMN cnc_part.validation_status IS '图纸校验状态(HEADER_VALID, REJECTED, INVALID_SOLID)';
 COMMENT ON COLUMN cnc_part.geometry_info_json IS '几何尺寸与特征信息(包围盒/体积)';
-COMMENT ON COLUMN cnc_part.upload_authorized IS '用户是否授权上传至第三方平台';
 COMMENT ON COLUMN cnc_part.revoked_at IS '授权撤回时间';
 COMMENT ON COLUMN cnc_part.retained_until IS '文件保存到期时间';
 

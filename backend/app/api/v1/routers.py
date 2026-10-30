@@ -3,7 +3,9 @@
 from fastapi import APIRouter
 
 from app.modules.ai.chat.controller import ChatRouter
+from app.modules.ai.skills.controller import SkillRouter
 from app.modules.cnc.cnc_account.controller import CncAccountRouter
+from app.modules.cnc.cnc_drawing_upload.controller import DrawingUploadRouter
 from app.modules.cnc.cnc_part.controller import CncPartRouter
 from app.modules.cnc.cnc_part_config.controller import CncPartConfigRouter
 from app.modules.cnc.cnc_platform.controller import CncPlatformRouter
@@ -65,10 +67,11 @@ DOMAIN_CONTROLLERS: dict[str, list[APIRouter]] = {
         StorageTransferRouter,
         StorageWorkflowRouter,
     ],
-    "/ai": [ChatRouter],
+    "/ai": [ChatRouter, SkillRouter],
     "/cnc": [
         CncAccountRouter,
         CncPartRouter,
+        DrawingUploadRouter,
         CncPartConfigRouter,
         CncPlatformRouter,
         CncQuoteBatchRouter,

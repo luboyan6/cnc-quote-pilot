@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """CNC 可比价格维度与变化率计算模块。
 
 根据技术与商业口径生成确定性可比指纹（comparison_key）。
@@ -7,10 +6,14 @@
 
 import hashlib
 import json
+import math
+import re
 from decimal import Decimal, InvalidOperation
 from typing import Any
 
-COMPARISON_RULE_VERSION = 1
+# Version 1 omitted shipping and discount terms and accepted missing input
+# dimensions. Its keys cannot establish a complete comparable series.
+COMPARISON_RULE_VERSION = 2
 
 
 def build_comparison_key(
@@ -29,15 +32,43 @@ def build_comparison_key(
     extra_params: dict[str, Any] | None = None,
     lead_time_tier: str | None = None,
     tax_included: bool | None = None,
+    shipping_included: bool | None = None,
+    discount_amount: Decimal | str | None = None,
     version: int = COMPARISON_RULE_VERSION,
 ) -> str | None:
     """生成确定性可比键。
 
-    只有当报价性质为正式报价（QUOTED）或参考估价（REFERENCE_ESTIMATE），
-    且平台、币种、数量、文件哈希等核心维度完备时，才能生成可比较的统一指纹。
+    只有报价性质、图纸、有效参数、币种、数量、价格范围、税运折扣及交期
+    等关键条件均已知时，才生成当前版本的统一指纹。
     缺失关键口径或失败/取消任务返回 None，标记为不可直接比较。
     """
-    if not platform_code or not currency or not quantity:
+    if version != COMPARISON_RULE_VERSION:
+        return None
+    if not platform_code or platform_code.strip().lower() in {"", "unknown"}:
+        return None
+    if account_condition is None or isinstance(account_condition, bool) or not str(account_condition).strip():
+        return None
+    if isinstance(account_condition, int) and account_condition <= 0:
+        return None
+    if not file_sha256 or not re.fullmatch(r"[0-9a-fA-F]{64}", file_sha256.strip()):
+        return None
+    if not isinstance(quantity, int) or isinstance(quantity, bool) or quantity < 1:
+        return None
+    if not currency or not re.fullmatch(r"[A-Za-z]{3}", currency.strip()) or currency.strip().upper() in {"UNK", "XXX"}:
+        return None
+    if not price_scope or price_scope.strip().lower() not in {"unit", "line"}:
+        return None
+    if not material or not material.strip() or not lead_time_tier or not lead_time_tier.strip():
+        return None
+    if not isinstance(extra_params, dict) or not isinstance(tax_included, bool) or not isinstance(shipping_included, bool):
+        return None
+    if discount_amount is None:
+        return None
+    try:
+        discount = Decimal(str(discount_amount))
+    except (InvalidOperation, ValueError, TypeError):
+        return None
+    if not discount.is_finite() or discount < 0:
         return None
     if not quote_kind or quote_kind.strip().upper() not in {"QUOTED", "REFERENCE_ESTIMATE"}:
         return None
@@ -45,10 +76,19 @@ def build_comparison_key(
 
     # 清洗 extra_params，按键排序并排除下划线私有内部键
     cleaned_extra: list[tuple[str, str]] = []
-    if extra_params:
-        for k, v in sorted(extra_params.items()):
-            if not k.startswith("_") and v is not None:
-                cleaned_extra.append((k, str(v).strip()))
+    if not all(isinstance(key, str) for key in extra_params):
+        return None
+    for k, v in sorted(extra_params.items()):
+        if k.startswith("_"):
+            continue
+        if v is None or not isinstance(v, (str, int, float, bool)):
+            return None
+        if isinstance(v, float) and not math.isfinite(v):
+            return None
+        value = str(v).strip()
+        if not value:
+            return None
+        cleaned_extra.append((k, value))
 
     payload = {
         "v": version,
@@ -57,7 +97,7 @@ def build_comparison_key(
         "file_sha256": file_sha256.strip().lower() if file_sha256 else "",
         "quantity": int(quantity),
         "currency": currency.strip().upper(),
-        "price_scope": (price_scope or "unit").strip().lower(),
+        "price_scope": price_scope.strip().lower(),
         "quote_kind": quote_kind.strip().upper(),
         "material": (material or "").strip().lower(),
         "surface_finish": (surface_finish or "").strip().lower(),
@@ -66,6 +106,8 @@ def build_comparison_key(
         "extra_params": cleaned_extra,
         "lead_time_tier": (lead_time_tier or "").strip().lower(),
         "tax_included": tax_included,
+        "shipping_included": shipping_included,
+        "discount_amount": "0" if discount == 0 else format(discount.normalize(), "f"),
     }
 
     serialized = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")

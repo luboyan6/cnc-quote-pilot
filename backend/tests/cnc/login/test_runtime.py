@@ -348,13 +348,20 @@ class InputTests(unittest.TestCase):
         for data in (
             {"kind": "script", "text": "alert(1)"},
             {"kind": "text", "text": "a" * 257},
-            {"kind": "click", "x": 1280, "y": 0},
+            {"kind": "click", "x": 4096, "y": 0},
             {"kind": "key", "key": "Control+L"},
             {"kind": "scroll", "delta_y": 9999},
             {"kind": "click", "x": 2, "y": 3, "text": "secret"},
         ):
             with self.assertRaises(ValueError):
                 LoginInput.model_validate(data)
+
+    def test_input_accepts_quote_run_viewport(self):
+        # 报价运行把页面视口放大到 1600x1200（嘉立创 1440x900），人工点击必须能落到下半屏，
+        # 否则内嵌画面里靠下的按钮会被坐标上限直接拒掉。
+        command = LoginInput.model_validate({"kind": "click", "x": 1014, "y": 860})
+        self.assertEqual((command.x, command.y), (1014, 860))
+        LoginInput.model_validate({"kind": "drag", "x": 0, "y": 0, "x2": 1439, "y2": 899})
 
     def test_scope_owner_is_not_actor_override(self):
         scope = SessionScope(str(ACCOUNT.owner_id), "synthetic", str(ACCOUNT.id))

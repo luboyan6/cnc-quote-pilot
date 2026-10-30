@@ -153,7 +153,7 @@ async def _verify_settled(session, provider, account: XometryAccount | AccountSn
     return False
 
 
-async def _ensure_signed_in(session, provider, account: XometryAccount | AccountSnapshot, input_guard: Callable[[], Awaitable[None]]) -> str:
+async def _ensure_signed_in(session, provider, account: XometryAccount | AccountSnapshot, input_guard: Callable[[], Awaitable[None]], verification_guard: Callable[[Any], Awaitable[None]] | None = None) -> str:
     """先验会话，再真实登录。返回身份指纹；未通过则抛出异常拒绝报价。"""
     await input_guard()
     await session.goto(account.quote_url)
@@ -169,7 +169,11 @@ async def _ensure_signed_in(session, provider, account: XometryAccount | Account
     async with asyncio.timeout(30):
         submitted = await provider.submit(session, account.username, account.password, account.quote_url)
     if not submitted:
-        raise _fail("PROVIDER_VERIFICATION_REQUIRED")
+        # 平台弹出了人机验证/二次校验：交给调用方把运行挂起到 WAITING_HUMAN，
+        # 由人工在同一会话里完成验证后再继续，而不是直接判失败。
+        if verification_guard is None:
+            raise _fail("PROVIDER_VERIFICATION_REQUIRED")
+        await verification_guard(session)
 
     await session.goto(account.quote_url)
     if not await _verify_settled(session, provider, account):
@@ -188,8 +192,15 @@ async def _upload_step_file(
     payload: StepPayload,
     input_guard: Callable[[], Awaitable[None]],
     mutation_guard: Callable[[str], Awaitable[None]],
+    session=None,
+    verification_guard: Callable[..., Awaitable[None]] | None = None,
 ) -> str:
-    """自动上传 STEP 图纸到 Xometry，并处理几何解析与出口管制声明。返回生成的报价号。"""
+    """自动上传 STEP 图纸到 Xometry，并处理几何解析与出口管制声明。返回生成的报价号。
+
+    `session` 只用于把存活会话交给 `verification_guard`：出口声明必须由人工确认，
+    而 Playwright Page 只能由持有会话的任务访问，所以这里不自己操作声明按钮，
+    只把挂起/恢复的控制权交给调用方。
+    """
     logger.info(f"正在向 Xometry 上传 STEP 图纸: {step_file.name}")
     if "/quoting/home" not in page.url and "/quoting/quote/" not in page.url:
         await page.goto(DASHBOARD, wait_until="domcontentloaded")
@@ -250,16 +261,31 @@ async def _upload_step_file(
         except Exception as e:
             logger.warning(f"Clicking instant-quote-continue failed/skipped: {e}")
 
-    # 优先处理出口管制对话框（ITAR / EAR99）
+    # 处理出口管制对话框（ITAR / EAR99）
     try:
-        await page.locator(f"{ITAR_NO_BTN}, {ITAR_YES_BTN}").first.wait_for(state="visible", timeout=15_000)
+        declaration = page.locator(f"{ITAR_NO_BTN}, {ITAR_YES_BTN}").first
+        await declaration.wait_for(state="visible", timeout=15_000)
         itar_no = page.locator(ITAR_NO_BTN).first
         if await itar_no.count() > 0 and await itar_no.is_visible():
             # Legacy booleans carry neither the current full declaration nor
             # its file/version decision record. Only the managed typed command
             # can authorize this mutation; never click through in the shortcut.
+            # 所以这里既不替用户点“否”，也不直接判失败：把运行挂起到 WAITING_HUMAN，
+            # 由人工在同一会话里阅读声明并自行选择，再恢复执行。
             await input_guard()
-            raise _fail("QUOTE_EXPORT_DECLARATION_REQUIRED")
+            if verification_guard is None:
+                raise _fail("QUOTE_EXPORT_DECLARATION_REQUIRED")
+            if session is None:
+                raise _fail("QUOTE_EXECUTION_GUARD_REQUIRED")
+            for _ in range(3):
+                await verification_guard(session, reason="QUOTE_EXPORT_DECLARATION_REQUIRED", stage="upload")
+                try:
+                    await declaration.wait_for(state="hidden", timeout=15_000)
+                    break
+                except Exception:
+                    logger.info("出口管制声明仍未被处理，继续挂起等待人工确认。")
+            else:
+                raise _fail("QUOTE_EXPORT_DECLARATION_REQUIRED")
     except (XometryQuoteError, LoginError, BrowserStop):
         raise
     except Exception as e:
@@ -675,6 +701,7 @@ class XometryQuoteService:
         input_guard: Callable[[], Awaitable[None]] | None = None,
         mutation_guard: Callable[[str], Awaitable[None]] | None = None,
         authenticated_guard: Callable[[str | None, str], Awaitable[None]] | None = None,
+        verification_guard: Callable[[Any], Awaitable[None]] | None = None,
         payload: StepPayload | None = None,
         file_name: str | None = None,
         quantity: int = 1,
@@ -747,7 +774,7 @@ class XometryQuoteService:
                     page.on("popup", lambda popup: asyncio.create_task(popup.close()))
 
                     # 1. 登录态验证与自愈
-                    identity = await _ensure_signed_in(session, provider, account, input_guard)
+                    identity = await _ensure_signed_in(session, provider, account, input_guard, verification_guard)
                     if authenticated_guard is not None:
                         await input_guard()
                         session.confirm_authentication(Authentication(AuthStatus.AUTHENTICATED, scope))
@@ -769,6 +796,8 @@ class XometryQuoteService:
                             payload=payload,
                             input_guard=input_guard,
                             mutation_guard=mutation_guard,
+                            session=session,
+                            verification_guard=verification_guard,
                         )
                         if uploaded_qid:
                             resolved_quote = uploaded_qid

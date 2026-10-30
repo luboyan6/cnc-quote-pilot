@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from datetime import datetime
 from decimal import Decimal
 from typing import Any
@@ -97,9 +96,9 @@ class CncQuoteResultQueryParam(BaseModel):
 class CncPlatformStatItem(BaseModel):
     """各平台统计指标"""
 
-    platform_id: int
-    platform_name: str
-    platform_code: str
+    platform_id: int | None = None
+    platform_name: str | None = None
+    platform_code: str | None = None
     total_quotes: int = 0
     formal_quotes: int = 0
     reference_estimates: int = 0
@@ -111,7 +110,7 @@ class CncPlatformStatItem(BaseModel):
     avg_duration_seconds: float = 0.0
     min_unit_price: str | None = None
     max_unit_price: str | None = None
-    currency: str = "CNY"
+    currency: str | None = None
     latest_quote_time: datetime | None = None
 
 
@@ -148,20 +147,20 @@ class CncHistoryPriceItem(BaseModel):
     config_name: str | None = None
     part_id: int | None = None
     part_name: str | None = None
-    platform_id: int
-    platform_name: str
+    platform_id: int | None = None
+    platform_name: str | None = None
     platform_code: str | None = None
     unit_price: str = "0.0000"
     total_amount: str | None = None
     price_diff: str | None = None
     change_rate: str | None = None
-    currency: str = "CNY"
-    quantity: int = 1
+    currency: str | None = None
+    quantity: int | None = None
     quote_kind: str = "QUOTED"
     comparison_key: str | None = None
     material: str | None = None
     surface_finish: str | None = None
-    duration_seconds: float = 0.0
+    duration_seconds: float | None = None
     evidence_id: str | None = None
     evidence_screenshot: str | None = None
     quoted_time: datetime | None = None

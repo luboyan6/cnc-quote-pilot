@@ -8,7 +8,7 @@ from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 from pathlib import Path
 from typing import Any
-from uuid import uuid4
+from uuid import UUID, uuid4
 
 from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError
@@ -33,6 +33,8 @@ from app.modules.cnc.browser.contracts import (
 from app.modules.cnc.browser.errors import BrowserStop, Reason
 from app.modules.cnc.browser.files import STEP_SUFFIXES, StepPayload, TrustedStep
 from app.modules.cnc.cnc_account.model import CncAccountModel
+from app.modules.cnc.cnc_drawing_upload.model import CncDrawingUpload
+from app.modules.cnc.cnc_drawing_upload.storage import PRIVATE_DRAWING_ROOT, drawing_path
 from app.modules.cnc.cnc_part.model import CncPartModel
 from app.modules.cnc.cnc_part_config.model import CncPartConfigModel
 from app.modules.cnc.cnc_platform.model import CncPlatformModel
@@ -105,7 +107,7 @@ def parameters(config) -> Parameters:
         raise QuoteError("QUOTE_PARAMETERS_INVALID") from None
 
 
-def source_file(part, root: Path, *, require_upload_authorization: bool = True) -> tuple[TrustedStep, StepPayload]:
+def source_file(part, root: Path, *, require_upload_authorization: bool = True, private_binding: tuple[Path, Path, str] | None = None) -> tuple[TrustedStep, StepPayload]:
     if require_upload_authorization and getattr(part, "upload_authorized", True) is not True:
         raise QuoteError("THIRD_PARTY_UPLOAD_NOT_AUTHORIZED")
     if part.validation_status == "REJECTED" or not part.file_path or "." + str(part.extension).lower().lstrip(".") not in STEP_SUFFIXES:
@@ -120,8 +122,18 @@ def source_file(part, root: Path, *, require_upload_authorization: bool = True) 
             candidate = Path(stored)
             path = candidate if candidate.is_absolute() else BASE_DIR / candidate
         path = path.resolve(strict=True)
-        root = root.resolve(strict=True)
-        if not path.is_relative_to(root) or path.suffix.lower() not in STEP_SUFFIXES:
+        root = root.resolve()
+        expected_hash = None
+        if private_binding is not None:
+            if part.validation_status != "HEADER_VALID":
+                raise ValueError
+            private_root, expected_path, expected_hash = private_binding
+            root = private_root.resolve(strict=True)
+            if path != expected_path or not path.is_relative_to(root):
+                raise ValueError
+        elif not path.is_relative_to(root):
+            raise ValueError
+        if not root.is_dir() or path.suffix.lower() not in STEP_SUFFIXES:
             raise ValueError
         if type(part.size_bytes) is not int or not 0 < part.size_bytes <= SOURCE_FILE_LIMIT:
             raise ValueError
@@ -132,6 +144,8 @@ def source_file(part, root: Path, *, require_upload_authorization: bool = True) 
         if not contents.lstrip().startswith(b"ISO-10303-21;") or not contents.rstrip().endswith(b"END-ISO-10303-21;"):
             raise ValueError
         digest = hashlib.sha256(contents).hexdigest()
+        if expected_hash is not None and digest != expected_hash:
+            raise ValueError
         step = TrustedStep(root, path, digest, len(contents), SOURCE_FILE_LIMIT)
         return step, StepPayload(contents, digest)
     except (OSError, ValueError, TypeError, RuntimeError):
@@ -139,7 +153,7 @@ def source_file(part, root: Path, *, require_upload_authorization: bool = True) 
 
 
 class QuoteRepository:
-    def __init__(self, session_factory=None, login_repository=None, storage_root: Path | None = None, authorizer=None):
+    def __init__(self, session_factory=None, login_repository=None, storage_root: Path | None = None, authorizer=None, private_storage_root: Path | None = None):
         if session_factory is None:
             from app.core.database import async_db_session
 
@@ -149,6 +163,7 @@ class QuoteRepository:
         self.authorizer = authorizer or ActorAuthorizer(session_factory)
         upload_root = settings.UPLOAD_FILE_PATH
         self.root = storage_root or (upload_root if upload_root.is_absolute() else BASE_DIR / upload_root)
+        self.private_root = private_storage_root or PRIVATE_DRAWING_ROOT
 
     async def _objects(self, db, auth, config_id, *, lock=False):
         statement = select(CncPartConfigModel).where(CncPartConfigModel.id == config_id)
@@ -200,7 +215,30 @@ class QuoteRepository:
                     raise QuoteError("QUOTE_PARAMETERS_INVALID")
                 requested = Parameters.from_mapping(dict(requested.values) | {"quantity": str(quantity)})
             require_auth = provider.code != "xometry_us"
-            step, payload = source_file(part, self.root, require_upload_authorization=require_auth)
+            private_binding = None
+            if part.file_path:
+                try:
+                    stored = Path(str(part.file_path).replace("\\", "/"))
+                    candidate = (stored if stored.is_absolute() else BASE_DIR / stored).resolve()
+                except (OSError, ValueError, RuntimeError):
+                    raise QuoteError("FILE_INVALID") from None
+                if candidate.is_relative_to(self.private_root.resolve()):
+                    record = await db.scalar(select(CncDrawingUpload).where(CncDrawingUpload.part_id == part.id))
+                    if (
+                        record is None
+                        or record.state != "READY"
+                        or record.owner_id != part.created_id
+                        or record.size_bytes != part.size_bytes
+                        or record.file_name != part.file_name
+                        or record.extension.removeprefix(".") != part.extension
+                    ):
+                        raise QuoteError("FILE_INVALID")
+                    try:
+                        expected = drawing_path(self.private_root, record.owner_id, UUID(record.request_id), record.extension)
+                    except (ValueError, TypeError):
+                        raise QuoteError("FILE_INVALID") from None
+                    private_binding = (self.private_root, expected, record.sha256)
+            step, payload = source_file(part, self.root, require_upload_authorization=require_auth, private_binding=private_binding)
             name = Path((part.file_name or "part.step").replace("\\", "/")).name
             return QuoteSnapshot(config.id, part.id, account, _configuration_revision(config, part, platform), name, step, payload, requested, provider.code)
 

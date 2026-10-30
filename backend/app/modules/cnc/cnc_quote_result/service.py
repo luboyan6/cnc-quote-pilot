@@ -1,19 +1,13 @@
-# -*- coding: utf-8 -*-
-from collections import defaultdict
 from datetime import datetime
 from decimal import Decimal
-from typing import Any
 
 from sqlalchemy import case, desc, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.base_schema import AuthSchema, PageResultSchema
 from app.core.exceptions import CustomException
-from app.utils.common_util import search_to_dict
 
-from .comparison import compute_price_diff_and_rate
-from .crud import CncQuoteResultCRUD
-from .evidence import resolve_evidence_path
+from .comparison import COMPARISON_RULE_VERSION, build_comparison_key, compute_price_diff_and_rate
 from .model import CncQuoteResultModel
 from .schema import (
     CncHistoryPriceItem,
@@ -115,7 +109,8 @@ class CncQuoteResultService:
             page_no=page_no,
             page_size=page_size,
             total=total,
-            rows=items,
+            has_next=offset + len(items) < total,
+            items=items,
         )
 
     async def delete(self, ids: list[int]) -> None:
@@ -146,7 +141,9 @@ class CncQuoteResultService:
         )
         stmt = self._apply_boundary(stmt, search)
 
-        row = (await self.db.execute(stmt)).first()
+        # An aggregate without GROUP BY always returns exactly one row,
+        # including when the visible input set is empty.
+        row = (await self.db.execute(stmt)).one()
         total_quotes = row.total or 0
         quoted_quotes = row.quoted_count or 0
         ref_quotes = row.ref_count or 0
@@ -217,17 +214,14 @@ class CncQuoteResultService:
 
             p_rate = round((p_succ / p_finished * 100), 1) if p_finished > 0 else 0.0
             p_formal_rate = f"{(p_quoted / p_finished * 100):.1f}%" if p_finished > 0 else None
-            p_name = p.platform_name or ("Xometry US" if p.platform_id == 1 else "嘉立创中国")
-            p_code = p.platform_code or ("xometry_us" if p.platform_id == 1 else "jlc_cnc_cn")
-
             min_price_str = f"{p.plat_min_price:.4f}" if p.plat_min_price is not None else None
             max_price_str = f"{p.plat_max_price:.4f}" if p.plat_max_price is not None else None
 
             platform_stats.append(
                 CncPlatformStatItem(
-                    platform_id=p.platform_id or 0,
-                    platform_name=p_name,
-                    platform_code=p_code,
+                    platform_id=p.platform_id,
+                    platform_name=p.platform_name,
+                    platform_code=p.platform_code,
                     total_quotes=p_total,
                     formal_quotes=p_quoted,
                     reference_estimates=p_ref,
@@ -239,7 +233,7 @@ class CncQuoteResultService:
                     avg_duration_seconds=round(float(p.plat_avg_dur or 0), 2),
                     min_unit_price=min_price_str,
                     max_unit_price=max_price_str,
-                    currency=p.currency or ("USD" if p.platform_id == 1 else "CNY"),
+                    currency=p.currency,
                     latest_quote_time=p.plat_latest_time,
                 )
             )
@@ -277,7 +271,7 @@ class CncQuoteResultService:
         规则：
         1. 仅包含有效成功出价（QUOTED 或 REFERENCE_ESTIMATE）且单价非空记录
         2. 先取最近 limit 条（按 observed_at/id 降序），再反转为时点升序
-        3. 按可比系列（comparison_key 或 platform/currency/quantity/quote_kind）计算差额与变化率
+        3. 只按经过完整快照重验的可比键计算差额；未知或旧规则记录不参与比较
         4. 前值为 0 时变化率为 null；不同条件不画零线或强制连线
         """
         stmt = (
@@ -301,15 +295,43 @@ class CncQuoteResultService:
 
         for r in rows_asc:
             unit_price_val = r.unit_price
-            price_str = f"{unit_price_val:.4f}" if unit_price_val is not None else "0.0000"
+            if unit_price_val is None:
+                continue
+            price_str = f"{unit_price_val:.4f}"
             total_str = f"{r.total_amount:.4f}" if r.total_amount is not None else None
 
-            # 可比键：优先使用已持久化的 comparison_key，无则按核心维度退化系列键
-            series_key = r.comparison_key or f"{r.platform_id}_{r.currency}_{r.quantity}_{r.quote_status}"
-            prev_price = series_prev_price.get(series_key)
+            # Old persisted keys were generated even when essential dimensions
+            # were unknown. Rebuild from the actual snapshot before exposing a
+            # key or using it for a comparison; never infer missing terms.
+            snapshot = r.effective_snapshot if isinstance(r.effective_snapshot, dict) else {}
+            verified_key = None
+            if r.comparison_key and r.comparison_version == COMPARISON_RULE_VERSION:
+                candidate = build_comparison_key(
+                    platform_code=r.platform_code,
+                    account_condition=r.account_id,
+                    file_sha256=r.file_sha256,
+                    quantity=r.quantity,
+                    currency=r.currency,
+                    price_scope=r.price_scope,
+                    quote_kind=r.quote_status,
+                    material=r.material,
+                    surface_finish=r.surface_finish,
+                    tolerance=r.tolerance,
+                    roughness=r.roughness,
+                    extra_params=r.extra_params,
+                    lead_time_tier=r.lead_time_raw,
+                    tax_included=r.tax_included,
+                    shipping_included=snapshot.get("shipping_included"),
+                    discount_amount=r.discount_amount,
+                    version=r.comparison_version,
+                )
+                if candidate == r.comparison_key:
+                    verified_key = candidate
 
-            diff_str, rate_str = compute_price_diff_and_rate(unit_price_val, prev_price)
-            series_prev_price[series_key] = unit_price_val
+            diff_str, rate_str = (None, None)
+            if verified_key:
+                diff_str, rate_str = compute_price_diff_and_rate(unit_price_val, series_prev_price.get(verified_key))
+                series_prev_price[verified_key] = unit_price_val
 
             points.append(
                 CncHistoryPriceItem(
@@ -318,23 +340,24 @@ class CncQuoteResultService:
                     config_name=r.config_name,
                     part_id=r.part_id,
                     part_name=r.part_name,
-                    platform_id=r.platform_id or 0,
-                    platform_name=r.platform_name or ("Xometry US" if r.platform_id == 1 else "嘉立创中国"),
+                    platform_id=r.platform_id,
+                    platform_name=r.platform_name,
                     platform_code=r.platform_code,
                     unit_price=price_str,
                     total_amount=total_str,
                     price_diff=diff_str,
                     change_rate=rate_str,
-                    currency=r.currency or "CNY",
-                    quantity=r.quantity or 1,
+                    currency=r.currency,
+                    quantity=r.quantity,
                     quote_kind=r.quote_status,
-                    comparison_key=r.comparison_key,
+                    comparison_key=verified_key,
                     material=r.material,
                     surface_finish=r.surface_finish,
-                    duration_seconds=float(r.duration_seconds or 0.0),
+                    duration_seconds=float(r.duration_seconds) if r.duration_seconds is not None else None,
                     evidence_id=r.evidence_id,
-                    evidence_screenshot=r.evidence_screenshot,
-                    quoted_time=r.created_time,
+                    # Legacy storage paths are not a public evidence API.
+                    evidence_screenshot=None,
+                    quoted_time=r.quoted_at,
                     observed_at=r.observed_at,
                 )
             )

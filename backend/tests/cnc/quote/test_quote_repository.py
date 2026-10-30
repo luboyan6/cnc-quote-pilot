@@ -8,7 +8,7 @@ from types import SimpleNamespace
 from uuid import uuid4
 
 from _quote_support import ACCOUNT, STEP, Account, CncQuoteIntentModel, CncQuoteRunModel, Config, Menu, Part, Platform, QuoteDatabase, Role, User
-from sqlalchemy import func, select, update
+from sqlalchemy import func, select, text, update
 
 from app.core.base_schema import AuthSchema, CoreUserSchema
 from app.modules.cnc.browser.contracts import Geometry, IntentKey, IntentState, Operation, SessionScope, UploadReceipt, item_fingerprint
@@ -179,6 +179,36 @@ class RepositoryTests(QuoteDatabase):
                 parameters(SimpleNamespace(material="Al", quantity=1, surface_finish=None, extra_params=extra))
         requested = parameters(SimpleNamespace(material="Al", quantity=1, surface_finish=None, extra_params={"threads": False, "inserts": True, "roughness": 1.6}))
         self.assertEqual(dict(requested.values), {"material": "Al", "quantity": "1", "threads": "false", "inserts": "true", "roughness": "1.6"})
+
+    async def test_private_upload_requires_owned_ready_binding_and_unchanged_bytes(self):
+        import hashlib
+
+        from app.modules.cnc.cnc_drawing_upload.storage import drawing_path
+
+        request_id = uuid4()
+        private_root = self.root / "private"
+        path = drawing_path(private_root, 7, request_id, ".step")
+        path.parent.mkdir(parents=True)
+        path.write_bytes(STEP)
+        self.repo.private_root = private_root
+        digest = hashlib.sha256(STEP).hexdigest()
+        async with self.sessions.begin() as db:
+            await db.execute(text("CREATE TABLE cnc_drawing_upload (owner_id INTEGER, request_id VARCHAR(36), part_id INTEGER, sha256 VARCHAR(64), size_bytes BIGINT, file_name VARCHAR(255), extension VARCHAR(8), state VARCHAR(16), created_at DATETIME, updated_at DATETIME, PRIMARY KEY (owner_id, request_id))"))
+            await db.execute(text("INSERT INTO cnc_drawing_upload VALUES (:owner, :request, 9, :digest, :size, 'synthetic.step', '.step', 'READY', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)"), {"owner": 7, "request": str(request_id), "digest": digest, "size": len(STEP)})
+            await db.execute(update(Part).values(file_path=str(path), size_bytes=len(STEP)))
+        assert (await self.repo.snapshot(self.auth, 5, 31)).payload.buffer == STEP
+        path.write_bytes(STEP.replace(b"HEADER", b"header"))
+        with self.assertRaisesRegex(QuoteError, "FILE_INVALID"):
+            await self.repo.snapshot(self.auth, 5, 31)
+        path.write_bytes(STEP)
+        async with self.sessions.begin() as db:
+            await db.execute(text("UPDATE cnc_drawing_upload SET state = 'PENDING'"))
+        with self.assertRaisesRegex(QuoteError, "FILE_INVALID"):
+            await self.repo.snapshot(self.auth, 5, 31)
+        async with self.sessions.begin() as db:
+            await db.execute(text("UPDATE cnc_drawing_upload SET state = 'READY', owner_id = 99"))
+        with self.assertRaisesRegex(QuoteError, "FILE_INVALID"):
+            await self.repo.snapshot(self.auth, 5, 31)
 
     async def test_fresh_actor_disable_delete_and_role_menu_revocation(self):
         snapshot = await self.repo.snapshot(self.auth, 5, 31)

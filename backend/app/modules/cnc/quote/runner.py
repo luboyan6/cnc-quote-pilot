@@ -89,9 +89,13 @@ class QuoteActivity:
     def can_input(self):
         return self.view.status == "WAITING_HUMAN"
 
-    async def change(self, status, stage, reason):
+    async def change(self, status, stage, reason, viewport=None):
         declaration = self.view.export_declaration if status == "WAITING_HUMAN" else None
-        candidate = self.view.model_copy(update={"status": status, "stage": stage, "reason": reason, "can_input": status == "WAITING_HUMAN" and declaration is None, "export_declaration": declaration})
+        update = {"status": status, "stage": stage, "reason": reason, "can_input": status == "WAITING_HUMAN" and declaration is None, "export_declaration": declaration}
+        if viewport is not None:
+            # 人工要按这个尺寸把点击换算到真实页面坐标，必须回报当前视口而不是默认值。
+            update["viewport"] = viewport
+        candidate = self.view.model_copy(update=update)
         await self.repository.save(candidate)
         self.view = candidate
 

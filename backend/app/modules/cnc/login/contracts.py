@@ -16,10 +16,13 @@ class LoginError(Exception):
 class LoginInput(BaseModel):
     model_config = ConfigDict(extra="forbid", hide_input_in_errors=True)
     kind: Literal["click", "drag", "scroll", "key", "text"]
-    x: int | None = Field(None, ge=0, lt=1280, strict=True)
-    y: int | None = Field(None, ge=0, lt=720, strict=True)
-    x2: int | None = Field(None, ge=0, lt=1280, strict=True)
-    y2: int | None = Field(None, ge=0, lt=720, strict=True)
+    # 坐标空间跟随各流程的真实视口：登录会话是 1280x720，报价运行是 1600x1200
+    # （嘉立创 1440x900）。客户端按运行视图回报的 viewport 换算，所以这里只留一个
+    # 绝对上限，避免把任意大的数值直接送进 Playwright；具体边界由视口本身保证。
+    x: int | None = Field(None, ge=0, lt=4096, strict=True)
+    y: int | None = Field(None, ge=0, lt=4096, strict=True)
+    x2: int | None = Field(None, ge=0, lt=4096, strict=True)
+    y2: int | None = Field(None, ge=0, lt=4096, strict=True)
     delta_x: int | None = Field(None, ge=-1500, le=1500, strict=True)
     delta_y: int | None = Field(None, ge=-1500, le=1500, strict=True)
     key: Literal["Enter", "Tab", "Shift+Tab", "Backspace", "Delete", "Escape", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Space"] | None = None

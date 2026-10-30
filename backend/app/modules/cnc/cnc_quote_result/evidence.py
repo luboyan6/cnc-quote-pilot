@@ -1,11 +1,12 @@
-# -*- coding: utf-8 -*-
 """CNC 私有证据服务。
 
 负责受控私有截图凭据的定位、写入、路径 containment 校验与 Cache-Control: no-store 保护。
 """
 
 from pathlib import Path
+
 from app.config.path_conf import BASE_DIR, STATIC_DIR
+
 from .model import CncQuoteResultModel
 
 # 私有证据存放根目录（严禁置于静态可公开访问目录）
@@ -15,6 +16,18 @@ PRIVATE_EVIDENCE_DIR: Path = (BASE_DIR / "data" / "evidence" / "private").resolv
 def ensure_private_evidence_dir() -> Path:
     PRIVATE_EVIDENCE_DIR.mkdir(parents=True, exist_ok=True)
     return PRIVATE_EVIDENCE_DIR
+
+
+def resolve_private_evidence_path(result: CncQuoteResultModel) -> Path | None:
+    """Resolve only an explicitly available private evidence ID, with no legacy fallback."""
+    if not result.evidence_id or result.evidence_state != "available":
+        return None
+    if Path(result.evidence_id).name != result.evidence_id:
+        return None
+    target = (PRIVATE_EVIDENCE_DIR / f"{result.evidence_id}.png").resolve()
+    if target.is_relative_to(PRIVATE_EVIDENCE_DIR) and target.exists() and target.is_file():
+        return target
+    return None
 
 
 def resolve_evidence_path(result: CncQuoteResultModel) -> Path | None:

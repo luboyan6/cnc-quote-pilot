@@ -11,6 +11,9 @@ from .providers import resolve_quote_adapter
 from .repository import QuoteRepository
 from .runner import QuoteActivity
 
+# 平台要求人工验证时，运行最多在 WAITING_HUMAN 停留这么久（与登录运行时的人工等待上限一致）。
+MANUAL_WAIT_SECONDS = 900
+
 
 class QuoteService:
     def __init__(self, repository=None, manager=None, adapter_factory=resolve_quote_adapter):
@@ -21,6 +24,9 @@ class QuoteService:
         self._start_lock = asyncio.Lock()
         self._jlc_tasks: dict[str, asyncio.Task] = {}
         self._xometry_tasks: dict[str, asyncio.Task] = {}
+        # 单条报价走 shortcut 驱动时，平台要求人工验证会把运行挂起在 WAITING_HUMAN；
+        # 这里持有存活的浏览器会话，供 frame/input/resume 指令访问。
+        self._shortcut_waits: dict[str, dict] = {}
 
     async def start(self, auth, config_id, data):
         async with self._start_lock:
@@ -320,6 +326,59 @@ class QuoteService:
 
             await activity.change("RUNNING", "upload", "UPLOADING_FILE")
 
+            async def verification_guard(session, reason="PROVIDER_VERIFICATION_REQUIRED", stage="login"):
+                """平台要求人工验证：挂起到 WAITING_HUMAN，并保留存活的浏览器会话。
+
+                Playwright Page 只能由持有会话的任务访问（BrowserSession.check_active），
+                所以这里不把 Page 交给 HTTP 处理函数，而是由本任务消费命令队列：
+                前端发来的 frame / input 变成队列指令，由这里代为执行；
+                resume 只负责置位，让循环退出、重新核验身份后继续报价。
+
+                reason/stage 由调用点给出：登录人机校验是 PROVIDER_VERIFICATION_REQUIRED，
+                出口管制声明是 QUOTE_EXPORT_DECLARATION_REQUIRED（stage=upload）。
+                """
+                run_id = activity.activity_id
+                queue: asyncio.Queue = asyncio.Queue()
+                waiter = {"queue": queue, "resume": asyncio.Event()}
+                self._shortcut_waits[run_id] = waiter
+                loop = asyncio.get_running_loop()
+                deadline = loop.time() + MANUAL_WAIT_SECONDS
+
+                def live_viewport():
+                    """回报当前真实视口，前端据此把内嵌画面上的点击换算成页面坐标。"""
+                    size = getattr(session.page, "viewport_size", None) or {}
+                    width, height = size.get("width"), size.get("height")
+                    if isinstance(width, int) and isinstance(height, int) and width > 0 and height > 0:
+                        return {"width": width, "height": height}
+                    return None
+
+                try:
+                    await activity.change("WAITING_HUMAN", stage, reason, viewport=live_viewport())
+                    while not waiter["resume"].is_set():
+                        remaining = deadline - loop.time()
+                        if remaining <= 0:
+                            raise LoginError("QUOTE_MANUAL_INPUT_TIMEOUT")
+                        try:
+                            command, payload, future = await asyncio.wait_for(queue.get(), timeout=min(1.0, remaining))
+                        except TimeoutError:
+                            continue
+                        if future.done():
+                            continue
+                        try:
+                            if command == "frame":
+                                future.set_result(await session.page.screenshot(type="jpeg", quality=65, timeout=8000))
+                            elif command == "input":
+                                await self._forward_input(session, payload)
+                                future.set_result(None)
+                            else:
+                                future.set_exception(QuoteError("QUOTE_MANUAL_COMMAND_UNSUPPORTED"))
+                        except Exception as exc:  # 命令失败只回传错误，不打断等待
+                            if not future.done():
+                                future.set_exception(exc)
+                finally:
+                    self._shortcut_waits.pop(run_id, None)
+                await activity.change("RUNNING", stage, "CHECKING_LOGIN" if stage == "login" else "QUOTE_CONTINUING")
+
             raw = await execute_xometry_quote(
                 file_path,
                 account=snapshot.account,
@@ -328,6 +387,7 @@ class QuoteService:
                 mutation_guard=activity.mutation_guard,
                 authenticated_guard=activity.authenticated_guard,
                 export_controlled=activity.export_controlled,
+                verification_guard=verification_guard,
                 quantity=quantity,
                 material=mapped["material"],
                 surface_finish=mapped["surface_finish"],
@@ -515,6 +575,56 @@ class QuoteService:
             raise
         return activity.view
 
+    async def _shortcut_command(self, activity, run_id, kind, payload=None):
+        """把单条报价的人工指令投递给持有会话的任务（HTTP 任务不能直接碰 Page）。
+
+        与登录运行时保持同一套语义：frame 取 JPEG 画面，input 转发鼠标/键盘，
+        resume 唤醒挂起的报价任务并让它重新核验身份后继续。
+        """
+        waiter = self._shortcut_waits.get(run_id)
+        if kind == "frame":
+            if waiter is None:
+                raise QuoteError("QUOTE_RUN_NOT_WAITING_FOR_HUMAN")
+            future = asyncio.get_running_loop().create_future()
+            await waiter["queue"].put(("frame", None, future))
+            async with asyncio.timeout(25):
+                return await future
+        if kind in {"input", "resume"}:
+            if waiter is None or not activity.can_input or not activity.view.can_input:
+                raise QuoteError("QUOTE_MANUAL_INPUT_NOT_ALLOWED")
+            if kind == "input":
+                future = asyncio.get_running_loop().create_future()
+                await waiter["queue"].put(("input", payload, future))
+                async with asyncio.timeout(25):
+                    await future
+                return activity.view
+            waiter["resume"].set()
+            return activity.view
+        return activity.view
+
+    @staticmethod
+    async def _forward_input(session, command):
+        page = session.page
+        if command.kind == "click":
+            await page.mouse.click(command.x, command.y)
+        elif command.kind == "drag":
+            await page.mouse.move(command.x, command.y)
+            await page.mouse.down()
+            for step in range(1, 13):
+                await page.mouse.move(
+                    command.x + (command.x2 - command.x) * step / 12,
+                    command.y + (command.y2 - command.y) * step / 12,
+                )
+                await page.wait_for_timeout(16)
+            await page.mouse.up()
+        elif command.kind == "scroll":
+            await page.mouse.wheel(command.delta_x or 0, command.delta_y or 0)
+        elif command.kind == "key":
+            await page.keyboard.press(command.key)
+        elif command.kind == "text":
+            await page.keyboard.insert_text(command.text)
+        session.check_active()
+
     async def command(self, auth, config_id, run_id, kind, payload=None):
         view, activity = await self._load(auth, config_id, run_id)
         if view.status in TERMINAL:
@@ -531,7 +641,7 @@ class QuoteService:
                 if not activity.pending_result:
                     await activity.finish("SESSION_CLOSED")
                 return activity.view
-            return activity.view
+            return await self._shortcut_command(activity, run_id, kind, payload)
         if activity is None:
             if kind == "close":
                 return await self.repository.cancel_orphan(auth, config_id, run_id)
