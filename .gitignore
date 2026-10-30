@@ -47,6 +47,7 @@ backend/logs
 backend/*.db
 # 用户上传目录，禁止入库
 backend/static/upload/
+backend/private/
 backend/env/.env.dev
 backend/env/.env.prod
 backend/env/.env.test
@@ -83,4 +84,12 @@ backend/*.sql
 backend/sql/**/*.sql
 *.dump
 .playwright-mcp/
+.playwright-cli/
 backend/tests/.tmp/
+
+# 本地草稿/临时验证产物，不入库
+/scratch/
+backend/scratch/
+
+# AI 助手本地记忆与会话数据（非项目代码）
+.workbuddy-ai/
